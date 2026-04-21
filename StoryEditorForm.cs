@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -14,9 +16,9 @@ namespace Jw_Quiz_Development
         private TextBox solutionBox;
         private TextBox engagementBox;
 
-        private TextBox[] visibleEmojiBoxes;
-        private TextBox[] hiddenEmojiBoxes;
-        private TextBox hintEmojiBox;
+        private TextBox[] visibleImageBoxes;
+        private TextBox[] hiddenImageBoxes;
+        private TextBox hintImageBox;
 
         public StoryEditorForm()
         {
@@ -26,8 +28,8 @@ namespace Jw_Quiz_Development
         private void InitializeUi()
         {
             Text = "Crea Nuova Storia";
-            Width = 860;
-            Height = 760;
+            Width = 920;
+            Height = 820;
             StartPosition = FormStartPosition.CenterParent;
             BackColor = Color.FromArgb(248, 250, 255);
 
@@ -39,14 +41,14 @@ namespace Jw_Quiz_Development
                 RowCount = 16,
                 Padding = new Padding(20)
             };
-            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 180));
+            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 190));
             panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
             Controls.Add(panel);
 
             AddLabel(panel, "Titolo", 0);
             titleBox = AddText(panel, 0);
 
-            AddLabel(panel, "Riferimento", 1);
+            AddLabel(panel, "Riferimento biblico", 1);
             scriptureBox = AddText(panel, 1);
 
             AddLabel(panel, "Parola chiave", 2);
@@ -61,21 +63,21 @@ namespace Jw_Quiz_Development
             AddLabel(panel, "Nota engagement", 5);
             engagementBox = AddMultilineText(panel, 5, 80);
 
-            AddLabel(panel, "5 emoji visibili", 6);
-            panel.Controls.Add(BuildEmojiInputRow(out visibleEmojiBoxes, 5), 1, 6);
+            AddLabel(panel, "5 immagini visibili", 6);
+            panel.Controls.Add(BuildImageInputRow(out visibleImageBoxes, 5), 1, 6);
 
-            AddLabel(panel, "2 emoji nascosti", 7);
-            panel.Controls.Add(BuildEmojiInputRow(out hiddenEmojiBoxes, 2), 1, 7);
+            AddLabel(panel, "2 immagini nascoste", 7);
+            panel.Controls.Add(BuildImageInputRow(out hiddenImageBoxes, 2), 1, 7);
 
-            AddLabel(panel, "Emoji suggerimento", 8);
-            hintEmojiBox = AddText(panel, 8);
-            hintEmojiBox.MaxLength = 4;
+            AddLabel(panel, "Immagine indizio", 8);
+            panel.Controls.Add(BuildSingleImageInput(out hintImageBox), 1, 8);
 
             var buttons = new FlowLayoutPanel
             {
                 Dock = DockStyle.Fill,
                 FlowDirection = FlowDirection.LeftToRight,
-                AutoSize = true
+                AutoSize = true,
+                Margin = new Padding(0, 10, 0, 0)
             };
             panel.Controls.Add(buttons, 1, 10);
 
@@ -141,7 +143,56 @@ namespace Jw_Quiz_Development
             return box;
         }
 
-        private Control BuildEmojiInputRow(out TextBox[] boxes, int count)
+        // Builds a row of image-key inputs, each with a "Scegli..." pick button.
+        private Control BuildImageInputRow(out TextBox[] boxes, int count)
+        {
+            var row = new FlowLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                AutoSize = true,
+                WrapContents = true
+            };
+
+            boxes = new TextBox[count];
+            for (int i = 0; i < count; i++)
+            {
+                var box = new TextBox
+                {
+                    Width = 160,
+                    Font = new Font("Segoe UI", 9, FontStyle.Regular),
+                    TextAlign = HorizontalAlignment.Left
+                };
+                boxes[i] = box;
+
+                var pick = new Button
+                {
+                    Text = "Scegli...",
+                    Width = 72,
+                    Height = box.Height + 4,
+                    FlatStyle = FlatStyle.Flat,
+                    BackColor = Color.FromArgb(52, 73, 94),
+                    ForeColor = Color.White,
+                    Margin = new Padding(0, 0, 8, 0)
+                };
+                var capturedBox = box; // capture for closure
+                pick.Click += (s, e) =>
+                {
+                    string chosen = ShowImagePicker();
+                    if (chosen != null) capturedBox.Text = chosen;
+                };
+
+                var cell = new Panel { Width = 240, Height = 28, Margin = new Padding(0, 2, 0, 2) };
+                box.Left = 0; box.Top = 0; box.Width = 160; box.Height = 24;
+                pick.Left = 164; pick.Top = 0; pick.Width = 72; pick.Height = 24;
+                cell.Controls.Add(box);
+                cell.Controls.Add(pick);
+                row.Controls.Add(cell);
+            }
+            return row;
+        }
+
+        // Builds a single image-key input with a pick button (for hint).
+        private Control BuildSingleImageInput(out TextBox box)
         {
             var row = new FlowLayoutPanel
             {
@@ -149,29 +200,165 @@ namespace Jw_Quiz_Development
                 AutoSize = true
             };
 
-            boxes = new TextBox[count];
-            for (int i = 0; i < count; i++)
+            box = new TextBox
             {
-                boxes[i] = new TextBox
-                {
-                    Width = 56,
-                    Font = new Font("Segoe UI Emoji", 14, FontStyle.Regular),
-                    MaxLength = 4,
-                    TextAlign = HorizontalAlignment.Center
-                };
-                row.Controls.Add(boxes[i]);
-            }
+                Width = 160,
+                Font = new Font("Segoe UI", 9, FontStyle.Regular),
+                TextAlign = HorizontalAlignment.Left
+            };
+
+            var pick = new Button
+            {
+                Text = "Scegli...",
+                Width = 72,
+                Height = box.Height + 4,
+                FlatStyle = FlatStyle.Flat,
+                BackColor = Color.FromArgb(52, 73, 94),
+                ForeColor = Color.White
+            };
+            var capturedBox = box;
+            pick.Click += (s, e) =>
+            {
+                string chosen = ShowImagePicker();
+                if (chosen != null) capturedBox.Text = chosen;
+            };
+            row.Controls.Add(box);
+            row.Controls.Add(pick);
             return row;
+        }
+
+        // Shows a gallery of all available colored PNG resources; returns the chosen resource key.
+        private string ShowImagePicker()
+        {
+            var keys = GetAvailableImageKeys();
+            if (keys.Count == 0)
+            {
+                MessageBox.Show("Nessuna immagine disponibile.", "Galleria", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return null;
+            }
+
+            string chosen = null;
+
+            using (var picker = new Form())
+            {
+                picker.Text = "Scegli un'immagine";
+                picker.Width = 780;
+                picker.Height = 560;
+                picker.StartPosition = FormStartPosition.CenterParent;
+                picker.BackColor = Color.FromArgb(30, 40, 55);
+
+                var info = new Label
+                {
+                    Text = "Clicca su un'immagine per selezionarla",
+                    Dock = DockStyle.Top,
+                    Height = 30,
+                    TextAlign = ContentAlignment.MiddleCenter,
+                    ForeColor = Color.FromArgb(200, 220, 255),
+                    Font = new Font("Segoe UI", 10, FontStyle.Regular),
+                    BackColor = Color.FromArgb(44, 62, 80)
+                };
+                picker.Controls.Add(info);
+
+                var flow = new FlowLayoutPanel
+                {
+                    Dock = DockStyle.Fill,
+                    AutoScroll = true,
+                    BackColor = Color.FromArgb(22, 35, 56),
+                    Padding = new Padding(8)
+                };
+                picker.Controls.Add(flow);
+
+                foreach (var key in keys)
+                {
+                    var img = Properties.Resources.ResourceManager.GetObject(key) as Image;
+                    if (img == null) continue;
+
+                    var cell = new Panel
+                    {
+                        Width = 100,
+                        Height = 120,
+                        Margin = new Padding(4),
+                        BackColor = Color.FromArgb(34, 52, 77),
+                        Cursor = Cursors.Hand
+                    };
+
+                    var pb = new PictureBox
+                    {
+                        Width = 90,
+                        Height = 90,
+                        Left = 5,
+                        Top = 4,
+                        SizeMode = PictureBoxSizeMode.Zoom,
+                        Image = img,
+                        BackColor = Color.Transparent,
+                        Cursor = Cursors.Hand
+                    };
+
+                    // Short label: last part of key (trim long filenames)
+                    string displayKey = key.Length > 14 ? key.Substring(0, 12) + "…" : key;
+                    var lbl = new Label
+                    {
+                        Text = displayKey,
+                        Left = 2,
+                        Top = 96,
+                        Width = 96,
+                        Height = 22,
+                        TextAlign = ContentAlignment.MiddleCenter,
+                        Font = new Font("Segoe UI", 7, FontStyle.Regular),
+                        ForeColor = Color.FromArgb(180, 210, 255),
+                        BackColor = Color.Transparent
+                    };
+
+                    var capturedKey = key;
+                    EventHandler selectAction = (s, e) =>
+                    {
+                        chosen = capturedKey;
+                        picker.DialogResult = DialogResult.OK;
+                        picker.Close();
+                    };
+
+                    cell.Click += selectAction;
+                    pb.Click += selectAction;
+                    lbl.Click += selectAction;
+
+                    cell.Controls.Add(pb);
+                    cell.Controls.Add(lbl);
+                    flow.Controls.Add(cell);
+                }
+
+                picker.ShowDialog(this);
+            }
+
+            return chosen;
+        }
+
+        // Enumerates all image/bitmap resources from the embedded Resources.
+        private static List<string> GetAvailableImageKeys()
+        {
+            var result = new List<string>();
+            var rm = Properties.Resources.ResourceManager;
+            var rs = rm.GetResourceSet(
+                System.Globalization.CultureInfo.InvariantCulture, true, true);
+            if (rs != null)
+            {
+                foreach (DictionaryEntry entry in rs)
+                {
+                    if (entry.Value is Image)
+                        result.Add((string)entry.Key);
+                }
+            }
+            result.Sort();
+            return result;
         }
 
         private Story BuildStoryFromInputs()
         {
-            var visible = visibleEmojiBoxes.Select(x => x.Text.Trim()).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
-            var hidden = hiddenEmojiBoxes.Select(x => x.Text.Trim()).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
+            var visible = visibleImageBoxes.Select(x => x.Text.Trim()).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
+            var hidden  = hiddenImageBoxes.Select(x => x.Text.Trim()).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
 
-            if (visible.Length < 5 || hidden.Length < 2 || string.IsNullOrWhiteSpace(hintEmojiBox.Text))
+            if (visible.Length < 5 || hidden.Length < 2 || string.IsNullOrWhiteSpace(hintImageBox.Text))
             {
-                throw new InvalidOperationException("Inserisci 5 emoji visibili, 2 emoji nascoste e 1 emoji suggerimento.");
+                throw new InvalidOperationException("Inserisci 5 immagini visibili, 2 immagini nascoste e 1 immagine indizio.");
             }
 
             return new Story
@@ -184,7 +371,7 @@ namespace Jw_Quiz_Development
                 EngagementNote = engagementBox.Text.Trim(),
                 VisibleEmojis = visible,
                 HiddenEmojis = hidden,
-                HintEmoji = hintEmojiBox.Text.Trim(),
+                HintEmoji = hintImageBox.Text.Trim(),
                 IsDynamic = true,
                 IsUserCreated = true
             };
@@ -224,3 +411,4 @@ namespace Jw_Quiz_Development
         }
     }
 }
+

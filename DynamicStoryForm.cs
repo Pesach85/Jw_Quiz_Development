@@ -8,11 +8,11 @@ namespace Jw_Quiz_Development
     public class DynamicStoryForm : Form
     {
         private readonly Story story;
-        private readonly bool[] revealed = new bool[3]; // 0/1 = hidden emoji, 2 = hint
+        private readonly bool[] revealed = new bool[3]; // 0/1 = hidden images, 2 = hint
 
         private Label titleLabel;
         private Label referenceLabel;
-        private Label[] emojiLabels;
+        private PictureBox[] picBoxes;   // 0-4 visible, 5-6 hidden, 7 hint
         private Label solutionLabel;
         private Label xpLabel;
         private Button revealButton;
@@ -21,7 +21,6 @@ namespace Jw_Quiz_Development
         private Button nextButton;
         private Timer hintPulseTimer;
         private bool hintPulseGrow;
-
         private bool storyCompleted;
 
         public DynamicStoryForm(Story story)
@@ -33,7 +32,7 @@ namespace Jw_Quiz_Development
 
         private void InitializeUi()
         {
-            Text = "JW Quiz - Episodio Dinamico";
+            Text = "JW Quiz - Indovina la Storia";
             BackColor = Color.FromArgb(18, 28, 44);
             ForeColor = Color.White;
             Width = 1050;
@@ -81,34 +80,33 @@ namespace Jw_Quiz_Development
             };
             header.Controls.Add(xpLabel);
 
-            var emojiPanel = new Panel
+            var imagePanel = new Panel
             {
                 Dock = DockStyle.Top,
                 Height = 260,
                 BackColor = Color.FromArgb(22, 35, 56)
             };
-            Controls.Add(emojiPanel);
+            Controls.Add(imagePanel);
 
-            emojiLabels = new Label[8];
-            for (int i = 0; i < emojiLabels.Length; i++)
+            picBoxes = new PictureBox[8];
+            for (int i = 0; i < picBoxes.Length; i++)
             {
-                var lbl = new Label
+                var pb = new PictureBox
                 {
                     Width = 110,
                     Height = 110,
-                    Font = new Font("Segoe UI Emoji", 46, FontStyle.Regular),
-                    TextAlign = ContentAlignment.MiddleCenter,
+                    SizeMode = PictureBoxSizeMode.Zoom,
                     BackColor = Color.FromArgb(34, 52, 77),
-                    ForeColor = Color.White,
-                    BorderStyle = BorderStyle.FixedSingle
+                    BorderStyle = BorderStyle.FixedSingle,
+                    Padding = new Padding(4)
                 };
 
                 int row = i / 4;
                 int col = i % 4;
-                lbl.Left = 95 + col * 210;
-                lbl.Top = 20 + row * 120;
-                emojiPanel.Controls.Add(lbl);
-                emojiLabels[i] = lbl;
+                pb.Left = 95 + col * 210;
+                pb.Top = 20 + row * 120;
+                imagePanel.Controls.Add(pb);
+                picBoxes[i] = pb;
             }
 
             var center = new Panel
@@ -142,7 +140,7 @@ namespace Jw_Quiz_Development
             };
             center.Controls.Add(buttons);
 
-            revealButton = CreateActionButton("Rivela 2 simboli", Color.FromArgb(52, 152, 219));
+            revealButton = CreateActionButton("Rivela 2 immagini", Color.FromArgb(52, 152, 219));
             revealButton.Click += RevealButton_Click;
             buttons.Controls.Add(revealButton);
 
@@ -158,7 +156,7 @@ namespace Jw_Quiz_Development
             nextButton.Click += NextButton_Click;
             buttons.Controls.Add(nextButton);
 
-            hintPulseTimer = new Timer { Interval = 240 };
+            hintPulseTimer = new Timer { Interval = 300 };
             hintPulseTimer.Tick += HintPulseTimer_Tick;
             hintPulseTimer.Start();
         }
@@ -168,20 +166,14 @@ namespace Jw_Quiz_Development
             if (revealed[2])
             {
                 hintPulseTimer.Stop();
-                emojiLabels[7].BackColor = Color.FromArgb(34, 52, 77);
-                emojiLabels[7].Font = new Font("Segoe UI Emoji", 46, FontStyle.Regular);
+                picBoxes[7].BackColor = Color.FromArgb(34, 52, 77);
                 return;
             }
 
             hintPulseGrow = !hintPulseGrow;
-            emojiLabels[7].BackColor = hintPulseGrow
-                ? Color.FromArgb(76, 62, 20)
-                : Color.FromArgb(34, 52, 77);
-
-            emojiLabels[7].Font = new Font(
-                "Segoe UI Emoji",
-                hintPulseGrow ? 52 : 46,
-                FontStyle.Regular);
+            picBoxes[7].BackColor = hintPulseGrow
+                ? Color.FromArgb(180, 130, 0)   // amber glow
+                : Color.FromArgb(34, 52, 77);   // normal dark
         }
 
         private Button CreateActionButton(string text, Color color)
@@ -199,29 +191,43 @@ namespace Jw_Quiz_Development
             };
         }
 
+        // Loads a colored PNG from embedded resources by its resource key (filename without extension).
+        private static Image GetResourceImage(string resourceKey)
+        {
+            if (string.IsNullOrWhiteSpace(resourceKey)) return null;
+            return Properties.Resources.ResourceManager.GetObject(resourceKey) as Image;
+        }
+
         private void RenderStory()
         {
-            titleLabel.Text = "Storia " + story.Id + " - " + story.Title;
-            referenceLabel.Text = story.ScriptureReference + "   |   Tema: " + story.Keyword;
+            // Hide title and scripture reference — player must guess them!
+            titleLabel.Text = "Episodio " + story.Id + "  —  Indovina la storia!";
+            referenceLabel.Text = "Categoria: " + story.Keyword;
 
-            string[] visible = story.VisibleEmojis ?? new[] { "❔", "❔", "❔", "❔", "❔" };
-            string[] hidden = story.HiddenEmojis ?? new[] { "❔", "❔" };
+            var fallback = GetResourceImage("2753"); // ❓ placeholder
+            string[] visible = story.VisibleEmojis ?? new string[0];
+            string[] hidden  = story.HiddenEmojis  ?? new string[0];
 
+            // Slots 0-4: visible colored images
             for (int i = 0; i < 5; i++)
             {
-                emojiLabels[i].Text = i < visible.Length ? visible[i] : "❔";
+                string key = i < visible.Length ? visible[i] : null;
+                picBoxes[i].Image = (string.IsNullOrWhiteSpace(key) ? null : GetResourceImage(key)) ?? fallback;
             }
 
-            emojiLabels[5].Text = "❓";
-            emojiLabels[6].Text = "❓";
-            emojiLabels[7].Text = "💡";
+            // Slots 5-6: hidden — show "?" until revealed
+            picBoxes[5].Image = fallback;
+            picBoxes[6].Image = fallback;
+            picBoxes[5].Tag   = hidden.Length > 0 ? hidden[0] : null;
+            picBoxes[6].Tag   = hidden.Length > 1 ? hidden[1] : null;
 
-            emojiLabels[5].Tag = hidden.Length > 0 ? hidden[0] : "❔";
-            emojiLabels[6].Tag = hidden.Length > 1 ? hidden[1] : "❔";
-            emojiLabels[7].Tag = string.IsNullOrWhiteSpace(story.HintEmoji) ? "💡" : story.HintEmoji;
+            // Slot 7: hint — show 🔥 placeholder, pulses amber until clicked
+            picBoxes[7].Tag   = story.HintEmoji;
+            picBoxes[7].Image = GetResourceImage("1F525") ?? fallback; // 🔥 fire = "hot clue"
 
-            solutionLabel.Text = "Soluzione: " + story.Solution + Environment.NewLine + Environment.NewLine +
-                                 "Nota: " + story.EngagementNote;
+            solutionLabel.Text = "Soluzione: " + story.Solution
+                + Environment.NewLine + Environment.NewLine
+                + "Nota: " + story.EngagementNote;
             UpdateXpLabel();
         }
 
@@ -241,24 +247,27 @@ namespace Jw_Quiz_Development
         {
             if (!revealed[0])
             {
-                emojiLabels[5].Text = (string)emojiLabels[5].Tag;
+                var img = GetResourceImage(picBoxes[5].Tag as string);
+                if (img != null) picBoxes[5].Image = img;
                 revealed[0] = true;
+                UpdateXpLabel();
             }
             else if (!revealed[1])
             {
-                emojiLabels[6].Text = (string)emojiLabels[6].Tag;
+                var img = GetResourceImage(picBoxes[6].Tag as string);
+                if (img != null) picBoxes[6].Image = img;
                 revealed[1] = true;
                 revealButton.Enabled = false;
+                UpdateXpLabel();
             }
-
-            UpdateXpLabel();
         }
 
         private void HintButton_Click(object sender, EventArgs e)
         {
             if (!revealed[2])
             {
-                emojiLabels[7].Text = (string)emojiLabels[7].Tag;
+                var img = GetResourceImage(picBoxes[7].Tag as string);
+                if (img != null) picBoxes[7].Image = img;
                 revealed[2] = true;
                 hintButton.Enabled = false;
                 UpdateXpLabel();
@@ -269,6 +278,18 @@ namespace Jw_Quiz_Development
         {
             solutionLabel.Visible = !solutionLabel.Visible;
             solutionButton.Text = solutionLabel.Visible ? "Nascondi soluzione" : "Rivela soluzione";
+
+            // Reveal (or hide) the story title and scripture reference together with the solution panel
+            if (solutionLabel.Visible)
+            {
+                titleLabel.Text = "Episodio " + story.Id + "  —  " + story.Title;
+                referenceLabel.Text = story.ScriptureReference + "   |   Categoria: " + story.Keyword;
+            }
+            else
+            {
+                titleLabel.Text = "Episodio " + story.Id + "  —  Indovina la storia!";
+                referenceLabel.Text = "Categoria: " + story.Keyword;
+            }
         }
 
         private void NextButton_Click(object sender, EventArgs e)

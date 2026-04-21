@@ -157,6 +157,7 @@ namespace Jw_Quiz_Development
             },
 
             // ── EPISODI DINAMICI (ID 13-18) ──────────────────────────────────────
+            // VisibleEmojis/HiddenEmojis/HintEmoji contengono chiavi di risorsa PNG (nome file senza estensione)
             new Story
             {
                 Id = 13,
@@ -168,9 +169,9 @@ namespace Jw_Quiz_Development
                 EngagementNote = "Con Geova, anche i giganti cadono.",
                 ImageResourceName = "DavidGoliath",
                 IsDynamic = true,
-                VisibleEmojis = new[] { "\U0001F466", "\U0001F411", "\u2694\uFE0F", "\U0001F632", "\u2753" },
-                HiddenEmojis = new[] { "\U0001F3C6", "\U0001F480" },
-                HintEmoji = "\U0001FAA8"
+                VisibleEmojis = new[] { "038-boy-1", "1F411", "2694", "1F632", "2753" },
+                HiddenEmojis = new[] { "1F480", "1F451" },
+                HintEmoji = "1F4AA-1F3FD"
             },
             new Story
             {
@@ -183,9 +184,9 @@ namespace Jw_Quiz_Development
                 EngagementNote = "Anche le ingiustizie piu' dure possono far parte del piano di Dio.",
                 ImageResourceName = "Joseph",
                 IsDynamic = true,
-                VisibleEmojis = new[] { "\U0001F33E", "\U0001F42A", "\U0001F4B0", "\U0001F629", "\U0001F622" },
-                HiddenEmojis = new[] { "\U0001F91D", "\U0001F496" },
-                HintEmoji = "\U0001F38B"
+                VisibleEmojis = new[] { "1F468-1F3FB-200D-1F33E", "1F42A", "1F4B0", "1F629", "1F632" },
+                HiddenEmojis = new[] { "1F46D", "1F498" },
+                HintEmoji = "1F4D6"
             },
             new Story
             {
@@ -198,9 +199,9 @@ namespace Jw_Quiz_Development
                 EngagementNote = "La lealta' a Geova va oltre le frontiere etniche e culturali.",
                 ImageResourceName = "Ruth",
                 IsDynamic = true,
-                VisibleEmojis = new[] { "\U0001F6B6\u200D\u2640\uFE0F", "\U0001F475", "\U0001F33E", "\U0001F468", "\U0001F496" },
-                HiddenEmojis = new[] { "\U0001F4B0", "\U0001F476" },
-                HintEmoji = "\U0001F411"
+                VisibleEmojis = new[] { "1F6B6-200D-2640-FE0F", "094-user", "1F468-1F3FB-200D-1F33E", "036-man-1", "1F498" },
+                HiddenEmojis = new[] { "1F4B0", "039-baby" },
+                HintEmoji = "1F411"
             },
             new Story
             {
@@ -213,9 +214,9 @@ namespace Jw_Quiz_Development
                 EngagementNote = "Geova usa anche le circostanze piu' disperate per proteggere i Suoi servitori.",
                 ImageResourceName = "Moses",
                 IsDynamic = true,
-                VisibleEmojis = new[] { "\U0001F476", "\U0001F30A", "\U0001F3F0", "\U0001F451", "\U0001F33F" },
-                HiddenEmojis = new[] { "\U0001F932", "\U0001F47C" },
-                HintEmoji = "\U0001F440"
+                VisibleEmojis = new[] { "039-baby", "1F30A", "1F3F0", "1F451", "1F333" },
+                HiddenEmojis = new[] { "1F932-1F3FC", "1F47C" },
+                HintEmoji = "1F440"
             },
             new Story
             {
@@ -224,13 +225,13 @@ namespace Jw_Quiz_Development
                 ScriptureReference = "1 Samuele 1",
                 Keyword = "Preghiera",
                 Hint = "Una donna in lacrime al tempio prega con tale fervore da sembrare ubriaca.",
-                Solution = "Anna prego' Geova con tutto il cuore prometiendo di consacrare il figlio. Geova la ascolto': nacque Samuele. 1 Samuele 1:27.",
+                Solution = "Anna prego' Geova con tutto il cuore promettendo di consacrare il figlio. Geova la ascolto': nacque Samuele. 1 Samuele 1:27.",
                 EngagementNote = "La preghiera sincera viene sempre ascoltata da Geova.",
                 ImageResourceName = "Samuel",
                 IsDynamic = true,
-                VisibleEmojis = new[] { "\U0001F932", "\U0001F622", "\U0001F3DB\uFE0F", "\U0001F3B6", "\U0001F5FA\uFE0F" },
-                HiddenEmojis = new[] { "\U0001F476", "\U0001F4D6" },
-                HintEmoji = "\u203C\uFE0F"
+                VisibleEmojis = new[] { "1F932-1F3FC", "1F629", "1F3DB", "1F3B6", "1F5FA" },
+                HiddenEmojis = new[] { "039-baby", "1F4D6" },
+                HintEmoji = "203C"
             },
             new Story
             {
@@ -243,9 +244,9 @@ namespace Jw_Quiz_Development
                 EngagementNote = "L'amore per il prossimo non ha confini etnici o religiosi.",
                 ImageResourceName = "Samaritan",
                 IsDynamic = true,
-                VisibleEmojis = new[] { "\U0001F6B6", "\U0001F9B8", "\U0001F434", "\U0001F4AA", "\U0001F4B0" },
-                HiddenEmojis = new[] { "\u26D4", "\U0001F496" },
-                HintEmoji = "\U0001F440"
+                VisibleEmojis = new[] { "1F6B6-1F3FF-200D-2642-FE0F", "1F4AA-1F3FD", "Hackney-100", "1F4B0", "2753" },
+                HiddenEmojis = new[] { "26D4", "1F498" },
+                HintEmoji = "1F440"
             }
             };
             return list;
