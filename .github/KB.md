@@ -39,11 +39,12 @@
 | `ProgressPanel.cs` | UI pannello progresso |
 | `Resources/` | PNG colorati (~100 file) usati come simboli nel rebus |
 | `Properties/Resources.Designer.cs` | Accesso fortemente tipizzato alle risorse |
-| `webapp/index.html` | Shell UI web MVP (episodi 13-18) |
-| `webapp/app.js` | Logica gameplay web (reveal/hint/soluzione/XP) |
+| `webapp/index.html` | Shell UI web con gameplay + editor locale episodi |
+| `webapp/app.js` | Logica gameplay web, persistenza locale, merge episodi built-in/user-created |
+| `webapp/assets.js` | Manifest JS delle chiavi PNG disponibili nel picker immagini web |
 | `webapp/stories.js` | Dataset storie dinamiche per la versione web |
 | `webapp/styles.css` | Tema visuale web responsive |
-| `webapp/assets/*.png` | Asset PNG minimali necessari al MVP web |
+| `webapp/assets/*.png` | Asset PNG deployati per gioco e editor web |
 
 ---
 
@@ -173,6 +174,9 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 - Persistenza estesa: `ImageCaptions[]` serializzato/deserializzato in `UserStories.dat`
 - Fallback immagini utente normalizzati su chiavi PNG (`2753`, `1F525`), mai emoji unicode
 - ID assegnato incrementalmente oltre 1000
+- Webapp: editor locale in-browser con `localStorage` (`jwquiz_web_user_stories_v1`)
+- Webapp: galleria immagini alimentata da `assets.js`, con ricerca per chiave PNG e anteprima per ogni slot
+- Webapp: episodi creati lato browser vengono uniti ai 18 built-in nel selettore senza mostrare il titolo
 
 ---
 
@@ -227,6 +231,8 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-04-22 | **Webapp completata**: aggiunti episodi 1-12 in `stories.js` (18 episodi totali, 56 PNG mappati) | ✅ Implementato |
 | 2026-04-22 | **UX webapp**: dropdown mostra solo "Episodio X" (no titolo storia per evitare spoiler) | ✅ Implementato |
 | 2026-04-22 | **Assets webapp**: copiati 49 PNG aggiuntivi per episodi 1-12 → 80 PNG totali self-contained | ✅ Implementato |
+| 2026-04-22 | **Editor web episodi**: aggiunta creazione locale nuovi episodi con picker PNG, merge selettore e persistenza `localStorage` | ✅ Implementato |
+| 2026-04-22 | **Asset parity web**: sincronizzati tutti i PNG da `Resources/` a `webapp/assets/` per avere galleria completa come desktop | ✅ Implementato |
 
 ---
 

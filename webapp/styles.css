@@ -57,6 +57,7 @@ body {
   display: flex;
   gap: 12px;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .select {
@@ -172,6 +173,12 @@ body {
 .btn-hint { background: var(--hint); }
 .btn-solution { background: var(--solution); }
 .btn-next { background: var(--next); }
+.btn-create { background: #8a3ffc; }
+.btn-ghost {
+  background: #fff;
+  color: var(--ink);
+  border: 1px solid #cbb489;
+}
 
 .solution {
   margin-top: 18px;
@@ -193,6 +200,197 @@ body {
   font-size: 16px;
 }
 
+.editor,
+.picker {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  background: rgba(16, 24, 39, 0.62);
+  padding: 24px;
+  overflow: auto;
+}
+
+.editor-card,
+.picker-card {
+  max-width: 1080px;
+  margin: 0 auto;
+  background: linear-gradient(180deg, #fffdf7, #fff4de);
+  border: 1px solid #d7bc92;
+  border-radius: 18px;
+  box-shadow: 0 22px 60px rgba(15, 23, 42, 0.24);
+  padding: 20px;
+}
+
+.picker-card {
+  max-width: 980px;
+}
+
+.editor-head,
+.picker-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 18px;
+}
+
+.editor-head h3,
+.picker-head h3 {
+  margin: 0;
+  font-family: "Bree Serif", Georgia, serif;
+  font-size: 28px;
+  color: var(--brand);
+}
+
+.editor-head p {
+  margin: 6px 0 0;
+  color: #5f4b24;
+  font-size: 15px;
+}
+
+.editor-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field span {
+  font-size: 14px;
+  font-weight: 800;
+  color: #5e4300;
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid #cdb186;
+  background: #fff;
+  padding: 10px 12px;
+  font: inherit;
+  color: var(--ink);
+}
+
+.field-wide {
+  grid-column: 1 / -1;
+}
+
+.editor-section {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid #dfcaa6;
+}
+
+.editor-section h4 {
+  margin: 0 0 12px;
+  font-family: "Bree Serif", Georgia, serif;
+  color: #7a4a00;
+  font-size: 22px;
+}
+
+.slot-editor-list {
+  display: grid;
+  gap: 12px;
+}
+
+.slot-editor-row {
+  display: grid;
+  grid-template-columns: 140px minmax(0, 1fr) 110px 110px;
+  gap: 10px;
+  align-items: center;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid #dfc79d;
+  border-radius: 12px;
+}
+
+.slot-editor-row-extended {
+  grid-template-columns: 140px minmax(0, 1fr) 110px 72px minmax(0, 1.3fr);
+}
+
+.slot-editor-label {
+  font-weight: 800;
+  color: #6d4900;
+}
+
+.slot-editor-preview {
+  width: 64px;
+  height: 64px;
+  border-radius: 10px;
+  border: 1px solid #d4b584;
+  background: #fffaf0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.slot-editor-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 6px;
+}
+
+.editor-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.editor-status {
+  font-weight: 700;
+  color: #684700;
+}
+
+.asset-grid {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 10px;
+  max-height: 58vh;
+  overflow: auto;
+}
+
+.asset-card {
+  border: 1px solid #d5b985;
+  background: #fff;
+  border-radius: 12px;
+  padding: 8px;
+  min-height: 122px;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.asset-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(123, 88, 23, 0.18);
+}
+
+.asset-card img {
+  width: 100%;
+  height: 74px;
+  object-fit: contain;
+}
+
+.asset-card span {
+  margin-top: 8px;
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: #5b4308;
+  word-break: break-word;
+}
+
 @keyframes pulseHint {
   0% { box-shadow: 0 0 0 0 rgba(221, 148, 0, 0.46); border-color: #b56a00; }
   70% { box-shadow: 0 0 0 14px rgba(221, 148, 0, 0); border-color: #e3a53a; }
@@ -209,4 +407,9 @@ body {
   .caption { font-size: 16px; }
   .slots { grid-template-columns: repeat(2, minmax(110px, 1fr)); }
   .select { min-width: 210px; }
+  .editor-grid { grid-template-columns: 1fr; }
+  .slot-editor-row,
+  .slot-editor-row-extended { grid-template-columns: 1fr; }
+  .editor,
+  .picker { padding: 12px; }
 }
