@@ -32,14 +32,23 @@ This is a Windows Forms application developed in C# using .NET Framework 4.7.2. 
 - Visual Studio 2019+ or MSBuild
 
 ### Building EXE
+#### Option 1: Automated Script
+Run `build.bat` in the project directory.
+
+#### Option 2: Manual Build
 1. Open the solution in Visual Studio
 2. Build in Release mode
 3. EXE will be in `bin\Release\Jw_Quiz_Development.exe`
 
-### Command Line Build
+#### Option 3: Command Line
 ```bash
 msbuild Jw_Quiz_Development.csproj /p:Configuration=Release
 ```
+
+### Distribution
+- Copy the entire `bin\Release\` folder to target Windows machine
+- Ensure .NET Framework 4.7.2 is installed
+- Run `Jw_Quiz_Development.exe`
 
 ## Dependencies
 - System.Windows.Forms
