@@ -12,9 +12,22 @@ namespace Jw_Quiz_Development
 {
     public partial class Form13 : Form
     {
+        private int StoryId = 12;
+        private bool storyCompleted = false;
+
         public Form13()
         {
             InitializeComponent();
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
+            if (!storyCompleted)
+            {
+                ProgressTracker.Instance.CompleteStory(StoryId);
+                storyCompleted = true;
+            }
         }
 
         private void tuttoSchermoToolStripMenuItem_Click(object sender, EventArgs e)
@@ -127,7 +140,7 @@ namespace Jw_Quiz_Development
         private void button2_Click(object sender, EventArgs e)
         {
             this.Hide();
-            new Forms_list().Fine();
+            new Forms_list().Storia13();
             this.Close();
         }
 

@@ -12,9 +12,22 @@ namespace Jw_Quiz_Development
 {
     public partial class Form11 : Form
     {
+        private int StoryId = 10;
+        private bool storyCompleted = false;
+
         public Form11()
         {
             InitializeComponent();
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
+            if (!storyCompleted)
+            {
+                ProgressTracker.Instance.CompleteStory(StoryId);
+                storyCompleted = true;
+            }
         }
 
         private void button2_Click_1(object sender, EventArgs e)

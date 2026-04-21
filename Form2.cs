@@ -12,13 +12,32 @@ namespace Jw_Quiz_Development
 {
     public partial class Form2 : Form
     {
+        private int StoryId = 1; // Form2 = Storia 1
+        private bool storyCompleted = false;
+
         public Form2()
         {
             InitializeComponent();
         }
 
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
+            // Salva il progresso quando chiudi il form
+            if (!storyCompleted)
+            {
+                ProgressTracker.Instance.CompleteStory(StoryId);
+                storyCompleted = true;
+            }
+        }
+
         private void Button2_Click(object sender, EventArgs e)
         {
+            if (!storyCompleted)
+            {
+                ProgressTracker.Instance.CompleteStory(StoryId);
+                storyCompleted = true;
+            }
             this.Hide();
             new Forms_list().Storia2();
             this.Close();

@@ -12,9 +12,22 @@ namespace Jw_Quiz_Development
 {
     public partial class Form3 : Form
     {
+        private int StoryId = 2;
+        private bool storyCompleted = false;
+
         public Form3()
         {
             InitializeComponent();
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
+            if (!storyCompleted)
+            {
+                ProgressTracker.Instance.CompleteStory(StoryId);
+                storyCompleted = true;
+            }
         }
 
         private void storia2ToolStripMenuItem_Click(object sender, EventArgs e)

@@ -44,8 +44,7 @@
             this.esciToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.impostazioniToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tuttoschermoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.minimizzaSchermoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.guidaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.minimizzaSchermoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();            this.statisticheToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();            this.guidaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aiutoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -177,7 +176,8 @@
             // 
             this.impostazioniToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tuttoschermoToolStripMenuItem,
-            this.minimizzaSchermoToolStripMenuItem});
+            this.minimizzaSchermoToolStripMenuItem,
+            this.statisticheToolStripMenuItem});
             this.impostazioniToolStripMenuItem.Name = "impostazioniToolStripMenuItem";
             this.impostazioniToolStripMenuItem.Size = new System.Drawing.Size(87, 20);
             this.impostazioniToolStripMenuItem.Text = "Impostazioni";
@@ -195,6 +195,13 @@
             this.minimizzaSchermoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.minimizzaSchermoToolStripMenuItem.Text = "Minimizza schermo";
             this.minimizzaSchermoToolStripMenuItem.Click += new System.EventHandler(this.minimizzaSchermoToolStripMenuItem_Click_1);
+            // 
+            // statisticheToolStripMenuItem
+            // 
+            this.statisticheToolStripMenuItem.Name = "statisticheToolStripMenuItem";
+            this.statisticheToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.statisticheToolStripMenuItem.Text = "Statistiche Dettagliate";
+            this.statisticheToolStripMenuItem.Click += new System.EventHandler(this.statisticheToolStripMenuItem_Click);
             // 
             // guidaToolStripMenuItem
             // 
@@ -288,6 +295,7 @@
         private System.Windows.Forms.ToolStripMenuItem impostazioniToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem tuttoschermoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem minimizzaSchermoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem statisticheToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
     }

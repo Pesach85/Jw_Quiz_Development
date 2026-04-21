@@ -10,14 +10,26 @@ namespace Jw_Quiz_Development
             return StoryLibrary.Stories;
         }
 
+        public static IReadOnlyList<Story> GetDynamicStories()
+        {
+            return StoryLibrary.Stories.Where(s => s.IsDynamic).ToList();
+        }
+
+        public static IReadOnlyList<Story> GetAllStoriesIncludingUser()
+        {
+            var all = new List<Story>(StoryLibrary.Stories);
+            all.AddRange(UserStoryLibrary.GetUserStories());
+            return all;
+        }
+
         public static Story GetStory(int id)
         {
-            return StoryLibrary.Stories.FirstOrDefault(s => s.Id == id);
+            return GetAllStoriesIncludingUser().FirstOrDefault(s => s.Id == id);
         }
 
         public static Story GetNextStory(int currentId)
         {
-            return StoryLibrary.Stories.FirstOrDefault(s => s.Id == currentId + 1);
+            return GetAllStoriesIncludingUser().FirstOrDefault(s => s.Id == currentId + 1);
         }
 
         public static Story GetFirstStory()
@@ -26,5 +38,6 @@ namespace Jw_Quiz_Development
         }
 
         public static int TotalStories => StoryLibrary.Stories.Count;
+        public static int TotalStoriesIncludingUser => GetAllStoriesIncludingUser().Count;
     }
 }

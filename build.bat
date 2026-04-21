@@ -22,7 +22,7 @@ if exist "C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Curren
 )
 
 echo Using MSBuild: %MSBUILD%
-%MSBUILD% Jw_Quiz_Development.csproj /p:Configuration=Release /p:Platform="Any CPU"
+%MSBUILD% Jw_Quiz_Development.csproj /p:Configuration=Release /p:Platform=AnyCPU
 if %errorlevel% neq 0 (
     echo Build failed!
     pause

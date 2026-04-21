@@ -140,11 +140,118 @@ namespace Jw_Quiz_Development
             f13.PerformAutoScale();
         }
 
+        public void Storia13()
+        {
+            Story story = StoryEngine.GetStory(13);
+            if (story != null)
+            {
+                DynamicStoryForm f = new DynamicStoryForm(story);
+                f.ShowDialog();
+                f.PerformAutoScale();
+            }
+        }
+
+        public void Storia14()
+        {
+            Story story = StoryEngine.GetStory(14);
+            if (story != null)
+            {
+                DynamicStoryForm f = new DynamicStoryForm(story);
+                f.ShowDialog();
+                f.PerformAutoScale();
+            }
+        }
+
+        public void Storia15()
+        {
+            Story story = StoryEngine.GetStory(15);
+            if (story != null)
+            {
+                DynamicStoryForm f = new DynamicStoryForm(story);
+                f.ShowDialog();
+                f.PerformAutoScale();
+            }
+        }
+
+        public void Storia16()
+        {
+            Story story = StoryEngine.GetStory(16);
+            if (story != null)
+            {
+                DynamicStoryForm f = new DynamicStoryForm(story);
+                f.ShowDialog();
+                f.PerformAutoScale();
+            }
+        }
+
+        public void Storia17()
+        {
+            Story story = StoryEngine.GetStory(17);
+            if (story != null)
+            {
+                DynamicStoryForm f = new DynamicStoryForm(story);
+                f.ShowDialog();
+                f.PerformAutoScale();
+            }
+        }
+
+        public void Storia18()
+        {
+            Story story = StoryEngine.GetStory(18);
+            if (story != null)
+            {
+                DynamicStoryForm f = new DynamicStoryForm(story);
+                f.ShowDialog();
+                f.PerformAutoScale();
+            }
+        }
+
+        public void ApriStoria(int id)
+        {
+            switch (id)
+            {
+                case 1: Storia1(); break;
+                case 2: Storia2(); break;
+                case 3: Storia3(); break;
+                case 4: Storia4(); break;
+                case 5: Storia5(); break;
+                case 6: Storia6(); break;
+                case 7: Storia7(); break;
+                case 8: Storia8(); break;
+                case 9: Storia9(); break;
+                case 10: Storia10(); break;
+                case 11: Storia11(); break;
+                case 12: Storia12(); break;
+                case 13: Storia13(); break;
+                case 14: Storia14(); break;
+                case 15: Storia15(); break;
+                case 16: Storia16(); break;
+                case 17: Storia17(); break;
+                case 18: Storia18(); break;
+                default:
+                    var userStory = StoryEngine.GetStory(id);
+                    if (userStory != null && userStory.IsDynamic)
+                    {
+                        new DynamicStoryForm(userStory).ShowDialog();
+                    }
+                    else
+                    {
+                        Fine();
+                    }
+                    break;
+            }
+        }
+
         public void Fine()
         {
             FINE fine = new FINE();
             fine.ShowDialog();
             fine.PerformAutoScale();
+        }
+
+        public void Conclusione()
+        {
+            Fine();
         }
 
     }
