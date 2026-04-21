@@ -1,0 +1,14 @@
+bin/
+obj/
+.vs/
+*.user
+*.suo
+*.tmp
+*.log
+*.exe
+*.dll
+*.pdb
+*.cache
+*.manifest
+publish.htm
+app.publish/
