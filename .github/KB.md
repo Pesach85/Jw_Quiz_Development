@@ -39,6 +39,11 @@
 | `ProgressPanel.cs` | UI pannello progresso |
 | `Resources/` | PNG colorati (~100 file) usati come simboli nel rebus |
 | `Properties/Resources.Designer.cs` | Accesso fortemente tipizzato alle risorse |
+| `webapp/index.html` | Shell UI web MVP (episodi 13-18) |
+| `webapp/app.js` | Logica gameplay web (reveal/hint/soluzione/XP) |
+| `webapp/stories.js` | Dataset storie dinamiche per la versione web |
+| `webapp/styles.css` | Tema visuale web responsive |
+| `webapp/assets/*.png` | Asset PNG minimali necessari al MVP web |
 
 ---
 
@@ -218,6 +223,7 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-04-22 | `ProgressTracker`: persistenza `StoryAttempts` + soglie badge robuste (`>=`) | ✅ Implementato |
 | 2026-04-22 | `UserStoryLibrary`: serializzazione `ImageCaptions[]` + fallback PNG keys (no unicode emoji) | ✅ Implementato |
 | 2026-04-22 | Compatibilità legacy preservata: API pubblica `Forms_list` mantenuta a istanza (no regressioni static forms) | ✅ Validato |
+| 2026-04-22 | Web MVP immediato: creata webapp statica self-contained (episodi 13-18) pronta per hosting gratuito | ✅ Implementato |
 
 ---
 
@@ -227,6 +233,7 @@ Aggiornare questa sezione ad ogni sessione di lavoro.
 
 | Priorità | Area | Proposta |
 |---------|------|---------|
+| Alta | Web | Migrare anche storie statiche 1-12 nel renderer web unificato |
 | Alta | Gamification | **Sistema a Stelle** (1-3 per storia): 3=nessun aiuto, 2=1 aiuto, 1=tutti aiuti — visual memorabile per proiezione |
 | Alta | Gameplay | Form statici (2–13): indizio animato come DynamicStoryForm (pulsazione su pictureBox8) |
 | Alta | Content | Aggiungere ImageCaptions[] anche alle storie statiche id 1-12 (attualmente solo ID 13-18) |

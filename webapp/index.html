@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JW Quiz Web MVP</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bree+Serif&family=Nunito+Sans:wght@400;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="topbar">
+        <h1 class="brand">JW Quiz Web</h1>
+        <div class="controls">
+          <select id="storySelect" class="select"></select>
+          <div class="xp-box">XP Totali: <span id="xpValue">0</span></div>
+        </div>
+      </section>
+
+      <section class="header">
+        <h2 id="storyTitle" class="story-title"></h2>
+        <div id="storyRef" class="story-ref"></div>
+        <div>XP Previsti: <strong id="xpExpected">100</strong></div>
+      </section>
+
+      <section id="caption" class="caption"></section>
+
+      <section id="slots" class="slots"></section>
+
+      <section class="actions">
+        <button id="btnReveal" class="btn btn-reveal" type="button">Rivela 2 immagini</button>
+        <button id="btnHint" class="btn btn-hint" type="button">Mostra indizio</button>
+        <button id="btnSolution" class="btn btn-solution" type="button">Rivela soluzione</button>
+        <button id="btnNext" class="btn btn-next" type="button">Prossima storia</button>
+      </section>
+
+      <section id="solutionPanel" class="solution" hidden>
+        <h3>Soluzione</h3>
+        <p id="solutionText"></p>
+        <p id="scriptureQuote"></p>
+        <p><strong>Nota:</strong> <span id="engagementNote"></span></p>
+      </section>
+    </main>
+
+    <script src="stories.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

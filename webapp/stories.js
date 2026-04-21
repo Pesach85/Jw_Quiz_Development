@@ -1,0 +1,140 @@
+window.JW_STORIES = [
+  {
+    id: 13,
+    title: "Davide e Golia",
+    scriptureReference: "1 Samuele 17",
+    keyword: "Coraggio",
+    hint: "Un giovane pastore sconfigge un guerriero gigante con la fede in Geova.",
+    solution: "Davide disse: 'Geova salvera', perche' questa e' la sua battaglia! Con una fionda e una pietra, abbatte' Golia. 1 Samuele 17:45-47.",
+    scriptureQuote: "...tutta questa assemblea sapra' che Geova non salva per mezzo di spada e lancia; perche' la battaglia appartiene a Geova, ed egli vi consegnera' nelle nostre mani. - 1 Samuele 17:47 (TNM)",
+    engagementNote: "Con Geova, anche i giganti cadono.",
+    visibleKeys: ["038-boy-1", "1F411", "2694", "1F632", "2753"],
+    hiddenKeys: ["1F480", "1F451"],
+    hintKey: "1F4AA-1F3FD",
+    imageCaptions: [
+      "Un giovane pastore di Betlemme",
+      "Le pecore al suo pascolo",
+      "Armi e combattimento",
+      "Paura e sorpresa nel campo",
+      "Qualcosa manca in questa storia...",
+      "Il destino del gigante",
+      "La vittoria e il regno",
+      "La forza che viene da Geova"
+    ]
+  },
+  {
+    id: 14,
+    title: "Giuseppe Perdona i Fratelli",
+    scriptureReference: "Genesi 45",
+    keyword: "Perdono",
+    hint: "Anni di schiavitu' e prigione nascondevano un piano di Dio.",
+    solution: "Giuseppe si fece conoscere ai fratelli in lacrime: 'Non sono io che vi ho mandato qui, ma Dio!' Genesi 45:5-7.",
+    scriptureQuote: "...non siete stati voi a mandarmi qui, ma e' Dio; e mi ha posto come padre per il faraone e come signore di tutta la sua casa e come governante su tutto il paese d'Egitto. - Genesi 45:8 (TNM)",
+    engagementNote: "Anche le ingiustizie piu' dure possono far parte del piano di Dio.",
+    visibleKeys: ["1F468-1F3FB-200D-1F33E", "1F42A", "1F4B0", "1F629", "1F632"],
+    hiddenKeys: ["1F46D", "1F498"],
+    hintKey: "1F4D6",
+    imageCaptions: [
+      "Un governatore d'Egitto",
+      "Il viaggio nel deserto",
+      "Argento e commercio",
+      "Anni di sofferenza",
+      "Un riconoscimento inaspettato",
+      "I fratelli riconciliati",
+      "L'amore fraterno restaurato",
+      "Un messaggio di speranza"
+    ]
+  },
+  {
+    id: 15,
+    title: "Rut e Boaz",
+    scriptureReference: "Rut 1-4",
+    keyword: "Devozione",
+    hint: "Una vedova straniera scelse di seguire il Dio della suocera.",
+    solution: "Rut dicharo': 'Il tuo popolo sara' il mio popolo, il tuo Dio il mio Dio.' Boaz la sposo' ed ella divenne antenata del Messia. Rut 1:16.",
+    scriptureQuote: "Dove tu andrai, io andro', e dove tu passerai la notte, anch'io passero' la notte. Il tuo popolo sara' il mio popolo e il tuo Dio sara' il mio Dio. - Rut 1:16 (TNM)",
+    engagementNote: "La lealta' a Geova va oltre le frontiere etniche e culturali.",
+    visibleKeys: ["1F6B6-200D-2640-FE0F", "094-user", "1F468-1F3FB-200D-1F33E", "036-man-1", "1F498"],
+    hiddenKeys: ["1F4B0", "039-baby"],
+    hintKey: "1F411",
+    imageCaptions: [
+      "Una donna che cammina verso l'ignoto",
+      "La suocera Naomi",
+      "Il campo di grano",
+      "Il parente redentore",
+      "Un amore nascente",
+      "Il riscatto del terreno",
+      "Il frutto della devozione",
+      "Il popolo di Geova"
+    ]
+  },
+  {
+    id: 16,
+    title: "La Nascita di Mose'",
+    scriptureReference: "Esodo 2:1-10",
+    keyword: "Protezione",
+    hint: "Una madre intreccia una cesta di giunchi per salvare il suo bambino dal Nilo.",
+    solution: "La madre di Mose' lo mise in una cesta e la affido' al Nilo. La figlia del faraone lo salvo' e Mose' crebbe a palazzo. Esodo 2:1-10.",
+    scriptureQuote: "Ma quando non pote' nasconderlo piu' a lungo, prese per lui una cesta di papiro e la spalmo' di asfalto e di pece; poi vi pose il bambino e mise la cesta tra i canneti lungo la sponda del fiume Nilo. - Esodo 2:3 (TNM)",
+    engagementNote: "Geova usa anche le circostanze piu' disperate per proteggere i Suoi servitori.",
+    visibleKeys: ["039-baby", "1F30A", "1F3F0", "1F451", "1F333"],
+    hiddenKeys: ["1F932-1F3FC", "1F47C"],
+    hintKey: "1F440",
+    imageCaptions: [
+      "Un neonato da salvare",
+      "Il fiume Nilo",
+      "Il palazzo del faraone",
+      "La figlia del faraone",
+      "I giunchi della riva del Nilo",
+      "Le mani che lo tengono al sicuro",
+      "Protetto come un dono celeste",
+      "Lo sguardo vigilante di Geova"
+    ]
+  },
+  {
+    id: 17,
+    title: "Anna e Samuele",
+    scriptureReference: "1 Samuele 1",
+    keyword: "Preghiera",
+    hint: "Una donna in lacrime al tempio prega con tale fervore da sembrare ubriaca.",
+    solution: "Anna prego' Geova con tutto il cuore promettendo di consacrare il figlio. Geova la ascolto': nacque Samuele. 1 Samuele 1:27.",
+    scriptureQuote: "Per questo ragazzo ho pregato, e Geova ha concesso la mia richiesta che gli ho fatto. - 1 Samuele 1:27 (TNM)",
+    engagementNote: "La preghiera sincera viene sempre ascoltata da Geova.",
+    visibleKeys: ["1F932-1F3FC", "1F629", "1F3DB", "1F3B6", "1F5FA"],
+    hiddenKeys: ["039-baby", "1F4D6"],
+    hintKey: "203C",
+    imageCaptions: [
+      "Una preghiera fervente al Signore",
+      "Lacrime e tormento interiore",
+      "Il santuario di Silo",
+      "Un canto di lode a Geova",
+      "Un percorso di fede",
+      "Il dono tanto atteso",
+      "Una vita consacrata alla Parola",
+      "Geova ha ascoltato!"
+    ]
+  },
+  {
+    id: 18,
+    title: "Il Buon Samaritano",
+    scriptureReference: "Luca 10:30-37",
+    keyword: "Amore per il Prossimo",
+    hint: "Sacerdote e levita passarono oltre. Solo uno straniero si fermo'.",
+    solution: "Gesu' racconta come un Samaritano soccorse un uomo abbandonato. Luca 10:36-37: chi mostro' misericordia fu il vero prossimo.",
+    scriptureQuote: "Gesu' gli disse: 'Va' e fa' anche tu la stessa cosa.' - Luca 10:37 (TNM)",
+    engagementNote: "L'amore per il prossimo non ha confini etnici o religiosi.",
+    visibleKeys: ["1F6B6-1F3FF-200D-2642-FE0F", "1F4AA-1F3FD", "Hackney-100", "1F4B0", "2753"],
+    hiddenKeys: ["26D4", "1F498"],
+    hintKey: "1F440",
+    imageCaptions: [
+      "Un uomo derubato e abbandonato",
+      "La violenza dei briganti",
+      "L'asino del Samaritano",
+      "Denari lasciati per le cure",
+      "Chi si fermera' ad aiutare?",
+      "Chi passo' oltre senza fermarsi",
+      "L'amore per il prossimo",
+      "Geova vede chi mostra misericordia"
+    ]
+  }
+];

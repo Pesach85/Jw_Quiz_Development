@@ -1,0 +1,212 @@
+:root {
+  --ink: #1f2937;
+  --paper: #fffaf0;
+  --paper-2: #fff2d9;
+  --brand: #0f4c81;
+  --reveal: #1e88e5;
+  --hint: #b56a00;
+  --solution: #e27d00;
+  --next: #2e7d32;
+  --card: #fffdf8;
+  --line: #d9c39d;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Nunito Sans", "Segoe UI", sans-serif;
+  color: var(--ink);
+  background: radial-gradient(circle at 15% 20%, #ffe8b6 0%, #fff7e5 35%, #f3f9ff 100%);
+  min-height: 100vh;
+}
+
+.shell {
+  max-width: 1120px;
+  margin: 24px auto;
+  padding: 18px;
+  background: linear-gradient(165deg, var(--paper), var(--paper-2));
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  box-shadow: 0 16px 45px rgba(31, 41, 55, 0.12);
+}
+
+.topbar {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+}
+
+.brand {
+  margin: 0;
+  font-family: "Bree Serif", Georgia, serif;
+  font-size: 30px;
+  letter-spacing: 0.2px;
+  color: var(--brand);
+}
+
+.controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.select {
+  min-width: 280px;
+  border-radius: 10px;
+  border: 1px solid #c5a979;
+  padding: 8px 10px;
+  background: #fff;
+  font-size: 15px;
+}
+
+.xp-box {
+  font-weight: 800;
+  font-size: 16px;
+  color: #6f4a00;
+}
+
+.header {
+  margin-top: 14px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+}
+
+.story-title {
+  margin: 0;
+  font-family: "Bree Serif", Georgia, serif;
+  font-size: 34px;
+  line-height: 1.12;
+}
+
+.story-ref {
+  margin-top: 8px;
+  font-size: 17px;
+}
+
+.caption {
+  margin-top: 14px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid #7da5cb;
+  background: #e9f3ff;
+  font-size: 18px;
+  font-weight: 700;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+}
+
+.caption-highlight {
+  background: #ffe8b6;
+  border-color: #da9700;
+  color: #5e3a00;
+}
+
+.slots {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(110px, 1fr));
+  gap: 16px;
+}
+
+.slot {
+  border: 2px solid #9bb6d2;
+  border-radius: 14px;
+  background: #f8fcff;
+  height: 126px;
+  cursor: pointer;
+  transition: transform 0.16s ease, box-shadow 0.16s ease;
+  animation: riseIn 0.35s ease both;
+}
+
+.slot:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(15, 76, 129, 0.18);
+}
+
+.slot img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 8px;
+}
+
+.pulse {
+  animation: pulseHint 0.9s ease-in-out infinite;
+}
+
+.actions {
+  margin-top: 18px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  border: 0;
+  color: #fff;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.btn:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+}
+
+.btn-reveal { background: var(--reveal); }
+.btn-hint { background: var(--hint); }
+.btn-solution { background: var(--solution); }
+.btn-next { background: var(--next); }
+
+.solution {
+  margin-top: 18px;
+  border-radius: 12px;
+  border: 1px solid #cfb58a;
+  background: #fff;
+  padding: 14px 16px;
+}
+
+.solution h3 {
+  margin: 0 0 8px;
+  font-family: "Bree Serif", Georgia, serif;
+  color: #8a4b00;
+}
+
+.solution p {
+  margin: 6px 0;
+  line-height: 1.45;
+  font-size: 16px;
+}
+
+@keyframes pulseHint {
+  0% { box-shadow: 0 0 0 0 rgba(221, 148, 0, 0.46); border-color: #b56a00; }
+  70% { box-shadow: 0 0 0 14px rgba(221, 148, 0, 0); border-color: #e3a53a; }
+  100% { box-shadow: 0 0 0 0 rgba(221, 148, 0, 0); border-color: #b56a00; }
+}
+
+@keyframes riseIn {
+  from { opacity: 0; transform: translateY(7px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 860px) {
+  .story-title { font-size: 26px; }
+  .caption { font-size: 16px; }
+  .slots { grid-template-columns: repeat(2, minmax(110px, 1fr)); }
+  .select { min-width: 210px; }
+}
