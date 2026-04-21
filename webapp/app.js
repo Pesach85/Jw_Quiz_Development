@@ -48,7 +48,7 @@
     window.JW_STORIES.forEach(function (s, i) {
       var option = document.createElement("option");
       option.value = String(i);
-      option.textContent = "Episodio " + s.id + " - " + s.title;
+      option.textContent = "Episodio " + s.id;
       selectorEl.appendChild(option);
     });
 
