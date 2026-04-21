@@ -224,6 +224,9 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-04-22 | `UserStoryLibrary`: serializzazione `ImageCaptions[]` + fallback PNG keys (no unicode emoji) | ✅ Implementato |
 | 2026-04-22 | Compatibilità legacy preservata: API pubblica `Forms_list` mantenuta a istanza (no regressioni static forms) | ✅ Validato |
 | 2026-04-22 | Web MVP immediato: creata webapp statica self-contained (episodi 13-18) pronta per hosting gratuito | ✅ Implementato |
+| 2026-04-22 | **Webapp completata**: aggiunti episodi 1-12 in `stories.js` (18 episodi totali, 56 PNG mappati) | ✅ Implementato |
+| 2026-04-22 | **UX webapp**: dropdown mostra solo "Episodio X" (no titolo storia per evitare spoiler) | ✅ Implementato |
+| 2026-04-22 | **Assets webapp**: copiati 49 PNG aggiuntivi per episodi 1-12 → 80 PNG totali self-contained | ✅ Implementato |
 
 ---
 
@@ -233,7 +236,7 @@ Aggiornare questa sezione ad ogni sessione di lavoro.
 
 | Priorità | Area | Proposta |
 |---------|------|---------|
-| Alta | Web | Migrare anche storie statiche 1-12 nel renderer web unificato |
+| Alta | Web | ~~Migrare anche storie statiche 1-12 nel renderer web unificato~~ ✅ **COMPLETATO** |
 | Alta | Gamification | **Sistema a Stelle** (1-3 per storia): 3=nessun aiuto, 2=1 aiuto, 1=tutti aiuti — visual memorabile per proiezione |
 | Alta | Gameplay | Form statici (2–13): indizio animato come DynamicStoryForm (pulsazione su pictureBox8) |
 | Alta | Content | Aggiungere ImageCaptions[] anche alle storie statiche id 1-12 (attualmente solo ID 13-18) |
