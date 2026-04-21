@@ -96,7 +96,7 @@ namespace Jw_Quiz_Development
         private void CheckBadges()
         {
             // Badge: "Primi Passi" - Completa 1 storia
-            if (CompletedStories.Count == 1 && !HasBadge("PrimiPassi"))
+            if (CompletedStories.Count >= 1 && !HasBadge("PrimiPassi"))
             {
                 UnlockedBadges.Add(new Badge 
                 { 
@@ -108,7 +108,7 @@ namespace Jw_Quiz_Development
             }
 
             // Badge: "Studioso" - Completa 5 storie
-            if (CompletedStories.Count == 5 && !HasBadge("Studioso"))
+            if (CompletedStories.Count >= 5 && !HasBadge("Studioso"))
             {
                 UnlockedBadges.Add(new Badge 
                 { 
@@ -120,7 +120,8 @@ namespace Jw_Quiz_Development
             }
 
             // Badge: "Esperto" - Completa tutte le 12 storie
-            if (CompletedStories.Count == 12 && !HasBadge("Esperto"))
+            // Threshold 12 = minimum for mastery (stays meaningful even as story count grows)
+            if (CompletedStories.Count >= 12 && !HasBadge("Esperto"))
             {
                 UnlockedBadges.Add(new Badge 
                 { 
@@ -161,6 +162,11 @@ namespace Jw_Quiz_Development
                 sb.AppendLine(TotalCompletions.ToString());
                 sb.AppendLine(CurrentXP.ToString());
                 sb.AppendLine(string.Join(",", CompletedStories.OrderBy(x => x)));
+                // Line 5: StoryAttempts  format  "id:count,id:count,..."
+                var attemptsStr = string.Join(",", StoryAttempts
+                    .OrderBy(kv => kv.Key)
+                    .Select(kv => kv.Key + ":" + kv.Value));
+                sb.Append(attemptsStr);
                 
                 File.WriteAllText(PROGRESS_FILE, sb.ToString());
             }
@@ -192,11 +198,21 @@ namespace Jw_Quiz_Development
 
                         if (!string.IsNullOrWhiteSpace(lines[3]))
                         {
-                            var storyIds = lines[3].Split(',');
-                            foreach (var id in storyIds)
-                            {
+                            foreach (var id in lines[3].Split(','))
                                 if (int.TryParse(id.Trim(), out int storyId))
                                     tracker.CompletedStories.Add(storyId);
+                        }
+
+                        // Line 5 (optional): StoryAttempts  "id:count,id:count,..."
+                        if (lines.Length >= 5 && !string.IsNullOrWhiteSpace(lines[4]))
+                        {
+                            foreach (var pair in lines[4].Split(','))
+                            {
+                                var parts = pair.Split(':');
+                                if (parts.Length == 2
+                                    && int.TryParse(parts[0].Trim(), out int sid)
+                                    && int.TryParse(parts[1].Trim(), out int cnt))
+                                    tracker.StoryAttempts[sid] = cnt;
                             }
                         }
                     }

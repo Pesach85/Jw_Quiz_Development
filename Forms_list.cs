@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace Jw_Quiz_Development
 {
@@ -51,7 +43,7 @@ namespace Jw_Quiz_Development
 
     public partial class Forms_list : Form
     {
-        // Restore fullscreen when a new form opens, if the session is in fullscreen mode
+        // Restore fullscreen when a new form opens if the session is in fullscreen mode.
         private static void ShowForm(Form f)
         {
             if (Screen_size.IsFullscreen)
@@ -60,10 +52,7 @@ namespace Jw_Quiz_Development
             f.PerformAutoScale();
         }
 
-        public void Home()
-        {
-            ShowForm(new Form1());
-        }
+        public void Home() { ShowForm(new Form1()); }
 
         public void Storia1()  { ShowForm(new Form2());  }
         public void Storia2()  { ShowForm(new Form3());  }
@@ -125,11 +114,7 @@ namespace Jw_Quiz_Development
         }
 
         public void Fine() { ShowForm(new FINE()); }
-
-        public void Conclusione()
-        {
-            Fine();
-        }
+        public void Conclusione() { Fine(); }
 
     }
 }

@@ -124,8 +124,7 @@ namespace Jw_Quiz_Development
         private void storia1ToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
             this.Hide();
-            Forms_list f1 = new Forms_list();
-            f1.Storia1();
+            new Forms_list().Storia1();
             this.Close();
         }
 
@@ -139,8 +138,7 @@ namespace Jw_Quiz_Development
         private void pictureBox1_Click(object sender, EventArgs e)
         {
             this.Hide();          
-            Forms_list f1 = new Forms_list();
-            f1.Storia1();
+            new Forms_list().Storia1();
             this.Close();
         }
 
@@ -220,7 +218,7 @@ namespace Jw_Quiz_Development
             string stats = $"STATISTICHE GIOCATORE\n\n";
             stats += $"Livello: {tracker.GetLevel()}\n";
             stats += $"Esperienza (XP): {tracker.CurrentXP}\n";
-            stats += $"Progresso: {tracker.CompletedStories.Count}/12 storie\n";
+            stats += $"Progresso: {tracker.CompletedStories.Count}/{StoryEngine.TotalStories} storie\n";
             stats += $"Percentuale: {tracker.GetProgressPercentage()}%\n";
             stats += $"Data Inizio: {tracker.StartDate:dd/MM/yyyy HH:mm}\n";
             stats += $"Badge Sbloccati: {tracker.UnlockedBadges.Count}\n\n";

@@ -270,7 +270,7 @@ namespace Jw_Quiz_Development
 
                 foreach (var key in keys)
                 {
-                    var img = Properties.Resources.ResourceManager.GetObject(key) as Image;
+                    var img = StoryResources.GetImage(key);
                     if (img == null) continue;
 
                     var cell = new Panel

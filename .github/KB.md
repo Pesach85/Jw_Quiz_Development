@@ -55,6 +55,7 @@
 - 8 `PictureBox` (slot 0–4 visibili, 5–6 nascosti, 7 indizio)
 - Slot 5–6 mostrano `2753.png` (❓) finché non rivelati
 - Slot 7 mostra `1F525.png` (🔥) con animazione pulsante ambra (Timer 300ms) finché indizio non cliccato
+- Didascalia click immagini: label dedicata ad alto contrasto **in alto al pannello** (non sovrapposta alle immagini)
 - Pulsante "Rivela 2 immagini": rivela slot 5, poi 6 (secondo click)
 - XP base 100, -20 per ogni aiuto usato (minimo 20)
 - Header: titolo e riferimento biblico **NASCOSTI** fino a "Rivela soluzione"
@@ -164,6 +165,8 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 - `UserStoryLibrary.cs`: gestisce `UserStories.dat`
 - `StoryEditorForm.cs`: form editor con galleria visiva PNG (`Scegli...` per ogni slot immagine)
 - Storie salvate con `IsUserCreated = true`, `IsDynamic = true`
+- Persistenza estesa: `ImageCaptions[]` serializzato/deserializzato in `UserStories.dat`
+- Fallback immagini utente normalizzati su chiavi PNG (`2753`, `1F525`), mai emoji unicode
 - ID assegnato incrementalmente oltre 1000
 
 ---
@@ -172,6 +175,7 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 
 - **PlaceholderText** non disponibile in .NET Framework 4.7.2 (solo .NET 5+) — non usare
 - **ResourceManager.GetObject** con chiave esatta (senza estensione) per caricare PNG
+- Caricamento risorse centralizzato in `StoryResources.cs` (evitare accesso diretto duplicato al ResourceManager)
 - **BinaryFormatter** deprecato in .NET 5+ ma funziona in net472
 - **DockStyle.Fill** deve essere aggiunto per primo (`Controls.Add`) per corretta precedenza z-order
 - **Designer.cs** dei form statici: NON modificare via codice — modifiche vanno fatte via VS Designer o con grande cautela
@@ -209,6 +213,11 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-04-22 | DynamicStoryForm: citazione TNM visibile nel pannello soluzione | ✅ Implementato |
 | 2026-04-22 | Screen_size.IsFullscreen: stato persistente tra apertura di nuovi form | ✅ Implementato |
 | 2026-04-22 | Forms_list.ShowForm(): helper centralizzato che ripristina fullscreen + refactoring metodi | ✅ Implementato |
+| 2026-04-22 | Refactor architetturale: loader immagini centralizzato (`StoryResources`) + cleanup chiamate duplicate | ✅ Implementato |
+| 2026-04-22 | DynamicStoryForm: didascalia click immagini resa sempre leggibile (alto contrasto + posizione non sovrapposta) | ✅ Implementato |
+| 2026-04-22 | `ProgressTracker`: persistenza `StoryAttempts` + soglie badge robuste (`>=`) | ✅ Implementato |
+| 2026-04-22 | `UserStoryLibrary`: serializzazione `ImageCaptions[]` + fallback PNG keys (no unicode emoji) | ✅ Implementato |
+| 2026-04-22 | Compatibilità legacy preservata: API pubblica `Forms_list` mantenuta a istanza (no regressioni static forms) | ✅ Validato |
 
 ---
 

@@ -84,10 +84,25 @@ namespace Jw_Quiz_Development
             var imagePanel = new Panel
             {
                 Dock = DockStyle.Top,
-                Height = 260,
+                Height = 300,
                 BackColor = Color.FromArgb(22, 35, 56)
             };
             Controls.Add(imagePanel);
+
+            captionLabel = new Label
+            {
+                Left = 16,
+                Top = 10,
+                Width = 1000,
+                Height = 36,
+                Font = new Font("Segoe UI", 11, FontStyle.Bold),
+                TextAlign = ContentAlignment.MiddleCenter,
+                ForeColor = Color.FromArgb(230, 242, 255),
+                BackColor = Color.FromArgb(19, 37, 59),
+                BorderStyle = BorderStyle.FixedSingle,
+                Text = "Clicca su un'immagine per scoprire un indizio sul racconto"
+            };
+            imagePanel.Controls.Add(captionLabel);
 
             picBoxes = new PictureBox[8];
             for (int i = 0; i < picBoxes.Length; i++)
@@ -105,7 +120,7 @@ namespace Jw_Quiz_Development
                 int row = i / 4;
                 int col = i % 4;
                 pb.Left = 95 + col * 210;
-                pb.Top = 20 + row * 120;
+                pb.Top = 58 + row * 120;
 
                 int capturedIndex = i;
                 pb.Click += (s, e) => ShowCaption(capturedIndex);
@@ -114,18 +129,6 @@ namespace Jw_Quiz_Development
                 imagePanel.Controls.Add(pb);
                 picBoxes[i] = pb;
             }
-
-            captionLabel = new Label
-            {
-                Dock = DockStyle.Bottom,
-                Height = 32,
-                Font = new Font("Segoe UI", 10, FontStyle.Italic),
-                TextAlign = ContentAlignment.MiddleCenter,
-                ForeColor = Color.FromArgb(180, 210, 255),
-                BackColor = Color.FromArgb(22, 35, 56),
-                Text = "Clicca su un'immagine per scoprire un indizio sul racconto"
-            };
-            imagePanel.Controls.Add(captionLabel);
 
             var center = new Panel
             {
@@ -210,11 +213,8 @@ namespace Jw_Quiz_Development
         }
 
         // Loads a colored PNG from embedded resources by its resource key (filename without extension).
-        private static Image GetResourceImage(string resourceKey)
-        {
-            if (string.IsNullOrWhiteSpace(resourceKey)) return null;
-            return Properties.Resources.ResourceManager.GetObject(resourceKey) as Image;
-        }
+        // Delegate to the central resource loader (StoryResources).
+        private static Image GetResourceImage(string key) => StoryResources.GetImage(key);
 
         protected override void OnShown(EventArgs e)
         {
@@ -233,16 +233,21 @@ namespace Jw_Quiz_Development
                 return;
 
             captionLabel.Text = "\u25B6  " + text;
-            captionLabel.ForeColor = Color.FromArgb(255, 220, 100); // warm gold on click
+            captionLabel.ForeColor = Color.FromArgb(255, 236, 142); // warm gold on click
+            captionLabel.BackColor = Color.FromArgb(44, 62, 80);
         }
 
         private void RenderStory()
         {
+            captionLabel.Text = "Clicca su un'immagine per scoprire un indizio sul racconto";
+            captionLabel.ForeColor = Color.FromArgb(230, 242, 255);
+            captionLabel.BackColor = Color.FromArgb(19, 37, 59);
+
             // Hide title and scripture reference — player must guess them!
             titleLabel.Text = "Episodio " + story.Id + "  —  Indovina la storia!";
             referenceLabel.Text = "Categoria: " + story.Keyword;
 
-            var fallback = GetResourceImage("2753"); // ❓ placeholder
+            var fallback = GetResourceImage(StoryResources.KeyUnknown); // ❓ placeholder
             string[] visible = story.VisibleEmojis ?? new string[0];
             string[] hidden  = story.HiddenEmojis  ?? new string[0];
 
@@ -261,7 +266,7 @@ namespace Jw_Quiz_Development
 
             // Slot 7: hint — show 🔥 placeholder, pulses amber until clicked
             picBoxes[7].Tag   = story.HintEmoji;
-            picBoxes[7].Image = GetResourceImage("1F525") ?? fallback; // 🔥 fire = "hot clue"
+            picBoxes[7].Image = GetResourceImage(StoryResources.KeyHint) ?? fallback; // 🔥 fire = "hot clue"
 
             // Build solution text with scripture quote if available
             var sb = new System.Text.StringBuilder();

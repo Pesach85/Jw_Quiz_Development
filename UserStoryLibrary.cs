@@ -77,6 +77,11 @@ namespace Jw_Quiz_Development
                         case "VisibleEmojis": current.VisibleEmojis = SplitPipe(value, 5); break;
                         case "HiddenEmojis": current.HiddenEmojis = SplitPipe(value, 2); break;
                         case "HintEmoji": current.HintEmoji = value; break;
+                                            case "ImageCaptions":
+                                                current.ImageCaptions = string.IsNullOrWhiteSpace(value)
+                                                    ? null
+                                                    : value.Split('|');
+                                                break;
                     }
                 }
             }
@@ -117,6 +122,9 @@ namespace Jw_Quiz_Development
                 "VisibleEmojis=" + string.Join("|", story.VisibleEmojis ?? new string[0]),
                 "HiddenEmojis=" + string.Join("|", story.HiddenEmojis ?? new string[0]),
                 "HintEmoji=" + NullSafe(story.HintEmoji),
+                "ImageCaptions=" + (story.ImageCaptions != null
+                    ? string.Join("|", story.ImageCaptions)
+                    : string.Empty),
                 "[END]"
             };
 
@@ -134,7 +142,7 @@ namespace Jw_Quiz_Development
 
             while (parts.Count < expected)
             {
-                parts.Add("❔");
+                parts.Add(StoryResources.KeyUnknown); // use PNG key, not Unicode emoji
             }
 
             return parts.ToArray();
@@ -160,9 +168,7 @@ namespace Jw_Quiz_Development
             }
 
             if (string.IsNullOrWhiteSpace(story.HintEmoji))
-            {
-                story.HintEmoji = "💡";
-            }
+                story.HintEmoji = StoryResources.KeyHint; // 🔥 PNG key, not Unicode emoji
         }
 
         private static string NullSafe(string value)

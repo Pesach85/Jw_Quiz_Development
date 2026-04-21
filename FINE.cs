@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Jw_Quiz_Development
@@ -104,8 +97,7 @@ namespace Jw_Quiz_Development
         {
             this.Hide();
             this.Close();
-            Forms_list f0 = new Forms_list();
-            f0.Home();
+            new Forms_list().Home();
         }
 
         private void tuttoSchermoToolStripMenuItem_Click(object sender, EventArgs e)
@@ -122,8 +114,7 @@ namespace Jw_Quiz_Development
         {
             this.Hide();
             this.Close();
-            Forms_list f0 = new Forms_list();
-            f0.Home();
+            new Forms_list().Home();
         }
     }
 }
