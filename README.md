@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # JW Quiz Development
 
 ## Project Overview
@@ -27,10 +26,17 @@ This is a Windows Forms application developed in C# using .NET Framework 4.7.2. 
 - **Form2-Form13**: Quiz sections with interactive buttons for revealing content
 - **FINE**: Final form with navigation back to sections
 
+## Gameplay Enrichment Plan
+- Move from duplicated story forms to a single data-driven story engine.
+- Anchor each section to a biblical keyword, scripture reference, hint, and solution.
+- Add engagement context: spiritual takeaway, character purpose, and loyalty themes.
+- Future UI goals: progress tracking, badges, study notes, and replay motivation.
+
 ## Build Instructions
 ### Prerequisites
 - .NET Framework 4.7.2 or compatible
 - Visual Studio 2019+ or MSBuild
+- Targeting Pack .NET Framework 4.7.2
 
 ### Building EXE
 #### Option 1: Automated Script
@@ -45,6 +51,13 @@ Run `build.bat` in the project directory.
 ```bash
 msbuild Jw_Quiz_Development.csproj /p:Configuration=Release
 ```
+
+### Validazione build
+La validazione del progetto è stata eseguita utilizzando MSBuild in:
+- `D:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin\amd64\MSBuild.exe`
+
+L'esecuzione ha restituito un errore perché mancano gli assembly di riferimento per il framework `.NETFramework,Version=v4.7.2`.
+Per completare la compilazione, è necessario installare il Targeting Pack per .NET Framework 4.7.2 oppure un ambiente di sviluppo che lo includa.
 
 ### Distribution
 - Copy the entire `bin\Release\` folder to target Windows machine
@@ -68,3 +81,4 @@ msbuild Jw_Quiz_Development.csproj /p:Configuration=Release
 - Set up GitHub remote repository
 - Push code to GitHub
 - Consider migration to .NET Core/.NET 5+ for modern Windows deployment
+- Begin UI integration for the new data-driven story engine with progress tracking and scripture engagement notes
