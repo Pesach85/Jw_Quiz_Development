@@ -1,638 +1,71 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{462A038E-C4A7-49B7-A703-2FFD07F7E8F4}</ProjectGuid>
     <OutputType>WinExe</OutputType>
+    <TargetFramework>net472</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
     <RootNamespace>Jw_Quiz_Development</RootNamespace>
     <AssemblyName>Jw_Quiz_Development</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <LangVersion>7.3</LangVersion>
     <Deterministic>true</Deterministic>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>ftp://ftp.pctechnic.netsons.org/app/</PublishUrl>
-    <Install>false</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
-    <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>1</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <PublishWizardCompleted>true</PublishWizardCompleted>
-    <BootstrapperEnabled>false</BootstrapperEnabled>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>3</WarningLevel>
-    <Prefer32Bit>true</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x86\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>true</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>bin\x86\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>true</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignManifests>false</SignManifests>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ManifestCertificateThumbprint>5A5D9019B530696CB75FADF7363F5CFD25E79BB5</ManifestCertificateThumbprint>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ManifestKeyFile>Jw_Quiz_Development_TemporaryKey.pfx</ManifestKeyFile>
-  </PropertyGroup>
-  <PropertyGroup>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <GenerateManifests>false</GenerateManifests>
+    <SignManifests>false</SignManifests>
+    <SignAssembly>false</SignAssembly>
+    <BootstrapperEnabled>false</BootstrapperEnabled>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <Platforms>AnyCPU;x86</Platforms>
   </PropertyGroup>
-  <PropertyGroup>
-    <TargetZone>LocalIntranet</TargetZone>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>bin\\Debug\\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>bin\\Release\\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+    <OutputPath>bin\\x86\\Debug\\</OutputPath>
+    <PlatformTarget>x86</PlatformTarget>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+    <OutputPath>bin\\x86\\Release\\</OutputPath>
+    <PlatformTarget>x86</PlatformTarget>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
+    <Compile Remove="**\\*.Designer.cs" />
+    <Compile Include="**\\*.Designer.cs" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="Form12.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form12.Designer.cs">
-      <DependentUpon>Form12.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Form13.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form13.Designer.cs">
-      <DependentUpon>Form13.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms_list.cs" />
-    <Compile Include="Forms_list.Designer.cs">
-      <DependentUpon>Forms_list.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FINE.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FINE.Designer.cs">
-      <DependentUpon>FINE.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Form1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Form10.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form10.Designer.cs">
-      <DependentUpon>Form10.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Form11.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form11.Designer.cs">
-      <DependentUpon>Form11.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Form2.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form2.Designer.cs">
-      <DependentUpon>Form2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Form3.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form3.Designer.cs">
-      <DependentUpon>Form3.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Form4.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form4.Designer.cs">
-      <DependentUpon>Form4.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Form5.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form5.Designer.cs">
-      <DependentUpon>Form5.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Form6.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form6.Designer.cs">
-      <DependentUpon>Form6.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Form7.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form7.Designer.cs">
-      <DependentUpon>Form7.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Form8.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form8.Designer.cs">
-      <DependentUpon>Form8.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Form9.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form9.Designer.cs">
-      <DependentUpon>Form9.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Program.cs" />
-    <Compile Include="ProgressPanel.cs" />
-    <Compile Include="ProgressTracker.cs" />
-    <Compile Include="DynamicStoryForm.cs" />
-    <Compile Include="StoryEditorForm.cs" />
-    <Compile Include="UserStoryLibrary.cs" />
-    <Compile Include="Story.cs" />
-    <Compile Include="StoryEngine.cs" />
-    <Compile Include="StoryLibrary.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="FINE.resx">
-      <DependentUpon>FINE.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form10.resx">
-      <DependentUpon>Form10.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form11.resx">
-      <DependentUpon>Form11.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form12.resx">
-      <DependentUpon>Form12.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form13.resx">
-      <DependentUpon>Form13.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form2.resx">
-      <DependentUpon>Form2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form3.resx">
-      <DependentUpon>Form3.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form4.resx">
-      <DependentUpon>Form4.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form5.resx">
-      <DependentUpon>Form5.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form6.resx">
-      <DependentUpon>Form6.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form7.resx">
-      <DependentUpon>Form7.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form8.resx">
-      <DependentUpon>Form8.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form9.resx">
-      <DependentUpon>Form9.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms_list.resx">
-      <DependentUpon>Forms_list.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
+    <EmbeddedResource Update="Properties\\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
-    <None Include="Jw_Quiz_Development_TemporaryKey.pfx" />
-    <None Include="Properties\app.manifest" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Include="Properties\Resources.Designer.cs">
+    <Compile Update="Properties\\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
+
+    <None Update="Properties\\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Update="Properties\\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Intro.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\FINE.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\093-users.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F333.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F34E.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F632.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F480.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F457.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F456.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F40D.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F4AA-1F3FD.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F498.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\159-dancer.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F487-1F3FC-200D-2642-FE0F.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\26D4.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F440.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\203C.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F3DB.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\26F5.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F3CA-1F3FF-200D-2640-FE0F.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F3CA-1F3FB-200D-2642-FE0F.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F433.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F932-1F3FD.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F334.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F3F0.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F4E3.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\2694.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F411.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F410.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F451.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F1EE-1F1F1.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F3B8.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F468-1F3FC-200D-1F52C.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F468-1F3FE-200D-1F680.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F468-1F3FB-200D-1F3EB.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F468-1F3FB-200D-1F33E.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F468-200D-1F468-200D-1F466-200D-1F466.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F468-1F3FC-200D-1F52C1.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F468-1F3FD-200D-1F527.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F468-1F3FC-200D-1F3ED.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F6B6-1F3FB-200D-2640-FE0F.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F6B6-1F3FF-200D-2642-FE0F.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F6B6-200D-2640-FE0F.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F6B6-200D-2640-FE0F1.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\031-man-2.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\036-man-1.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\139-man.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F3B6.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F468-1F3FB-200D-1F3EB1.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F468-1F3FD-200D-2696-FE0F.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F51F.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F431.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F438.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F318.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F463.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F41C.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F193.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F997.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1FA78.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\270B-1F3FD.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\2614.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F932-1F3FC.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F525.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F404.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\2601.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F327.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F6BE.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\039-baby.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F6BC.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F634.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F4E31.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F442-1F3FF.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F442-1F3FE.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\japanese-dolls-facebook.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F473-1F3FB.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F473-1F3FC-200D-2642-FE0F.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F473-200D-2640-FE0F.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F473-200D-2640-FE0F1.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F473-1F3FC.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F473-1F3FD.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F473-200D-2642-FE0F.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F6B8.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F42A.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F52A.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\094-user.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F5FB.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\ewe.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1f411-w.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1f4111.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\sheep-png-image-5a21c1ddd47754.6430326015121617578703.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1f4112.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\038-boy-1.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\75-750986_download-svg-download-png-old-woman-emoji-transparent.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F4B0.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F37A.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F629.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F416.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\412-4121149_twins-clipart-emoji-dancing-girls-emoji-png-transparent.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F51A.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\2935.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F981.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F199.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F5FA.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\kisspng-emmer-sheaf-cereal-straw-bale-5af5ce02d72972.2310751415260584988813.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F6A2.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F413.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F308.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\kisspng-emoji-transparency-herb-noto-fonts-food-5d49064dbb9963.6567762015650668297684.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F47C-1F3FF.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F47C-1F3FE.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F47C-1F3FD.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F47C.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F46D.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F4D6.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\2753.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Hackney-100.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\1F30A.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
-      <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4.7.2 %28x86 e x64%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

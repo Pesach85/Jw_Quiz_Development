@@ -19,6 +19,8 @@ namespace Jw_Quiz_Development
         private Button hintButton;
         private Button solutionButton;
         private Button nextButton;
+        private Timer hintPulseTimer;
+        private bool hintPulseGrow;
 
         private bool storyCompleted;
 
@@ -155,6 +157,31 @@ namespace Jw_Quiz_Development
             nextButton = CreateActionButton("Prossima storia", Color.FromArgb(39, 174, 96));
             nextButton.Click += NextButton_Click;
             buttons.Controls.Add(nextButton);
+
+            hintPulseTimer = new Timer { Interval = 240 };
+            hintPulseTimer.Tick += HintPulseTimer_Tick;
+            hintPulseTimer.Start();
+        }
+
+        private void HintPulseTimer_Tick(object sender, EventArgs e)
+        {
+            if (revealed[2])
+            {
+                hintPulseTimer.Stop();
+                emojiLabels[7].BackColor = Color.FromArgb(34, 52, 77);
+                emojiLabels[7].Font = new Font("Segoe UI Emoji", 46, FontStyle.Regular);
+                return;
+            }
+
+            hintPulseGrow = !hintPulseGrow;
+            emojiLabels[7].BackColor = hintPulseGrow
+                ? Color.FromArgb(76, 62, 20)
+                : Color.FromArgb(34, 52, 77);
+
+            emojiLabels[7].Font = new Font(
+                "Segoe UI Emoji",
+                hintPulseGrow ? 52 : 46,
+                FontStyle.Regular);
         }
 
         private Button CreateActionButton(string text, Color color)
@@ -268,6 +295,11 @@ namespace Jw_Quiz_Development
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             base.OnFormClosing(e);
+            if (hintPulseTimer != null)
+            {
+                hintPulseTimer.Stop();
+                hintPulseTimer.Dispose();
+            }
             CompleteStoryIfNeeded();
         }
 

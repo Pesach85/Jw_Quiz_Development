@@ -82,3 +82,27 @@ Per completare la compilazione, è necessario installare il Targeting Pack per .
 - Push code to GitHub
 - Consider migration to .NET Core/.NET 5+ for modern Windows deployment
 - Begin UI integration for the new data-driven story engine with progress tracking and scripture engagement notes
+
+## KB Update 2026-04-22 (Decisioni e Valutazioni)
+
+### Decisioni confermate
+- Libreria storie riallineata alla mappatura reale dei form (ID 1-12) e non piu' alla vecchia lista errata.
+- Aggiunti 6 episodi dinamici (ID 13-18) con rendering unico tramite DynamicStoryForm.
+- Introdotto StoryEditorForm con salvataggio su UserStories.dat per generare nuove storie direttamente dall'app.
+- Scoring XP dinamico in base agli aiuti usati (100 base, -20 per reveal/hint, minimo 20).
+- Progress panel rinnovato con indicatori livello/badge e statistiche rapide.
+
+### Correzione errore C# Dev Kit
+- Il progetto e' stato convertito da formato legacy non-SDK a SDK-style:
+	- Sdk: Microsoft.NET.Sdk.WindowsDesktop
+	- TargetFramework: net472
+	- UseWindowsForms: true
+- Questa conversione elimina il warning di progetto non supportato in C# Dev Kit.
+
+### Miglioria UX richiesta oggi
+- Il suggerimento nelle storie a rebus dinamiche e' ora animato con effetto pulsante (colore + dimensione emoji), fino alla rivelazione dell'indizio.
+
+### Valutazione tecnica
+- Build locale validata con MSBuild (Debug AnyCPU) dopo conversione SDK-style.
+- Compatibilita' mantenuta con WinForms .NET Framework 4.7.2.
+- Nessuna modifica distruttiva ai form statici esistenti; estensioni fatte in modo incrementale.
