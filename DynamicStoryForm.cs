@@ -13,6 +13,7 @@ namespace Jw_Quiz_Development
         private Label titleLabel;
         private Label referenceLabel;
         private PictureBox[] picBoxes;   // 0-4 visible, 5-6 hidden, 7 hint
+        private Label captionLabel;      // shows image description on click
         private Label solutionLabel;
         private Label xpLabel;
         private Button revealButton;
@@ -105,9 +106,26 @@ namespace Jw_Quiz_Development
                 int col = i % 4;
                 pb.Left = 95 + col * 210;
                 pb.Top = 20 + row * 120;
+
+                int capturedIndex = i;
+                pb.Click += (s, e) => ShowCaption(capturedIndex);
+                pb.Cursor = Cursors.Hand;
+
                 imagePanel.Controls.Add(pb);
                 picBoxes[i] = pb;
             }
+
+            captionLabel = new Label
+            {
+                Dock = DockStyle.Bottom,
+                Height = 32,
+                Font = new Font("Segoe UI", 10, FontStyle.Italic),
+                TextAlign = ContentAlignment.MiddleCenter,
+                ForeColor = Color.FromArgb(180, 210, 255),
+                BackColor = Color.FromArgb(22, 35, 56),
+                Text = "Clicca su un'immagine per scoprire un indizio sul racconto"
+            };
+            imagePanel.Controls.Add(captionLabel);
 
             var center = new Panel
             {
@@ -198,6 +216,26 @@ namespace Jw_Quiz_Development
             return Properties.Resources.ResourceManager.GetObject(resourceKey) as Image;
         }
 
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+            if (Screen_size.IsFullscreen)
+                Screen_size.GoFullscreen(true);
+        }
+
+        private void ShowCaption(int slotIndex)
+        {
+            string[] captions = story.ImageCaptions;
+            if (captions == null || slotIndex >= captions.Length)
+                return;
+            string text = captions[slotIndex];
+            if (string.IsNullOrWhiteSpace(text))
+                return;
+
+            captionLabel.Text = "\u25B6  " + text;
+            captionLabel.ForeColor = Color.FromArgb(255, 220, 100); // warm gold on click
+        }
+
         private void RenderStory()
         {
             // Hide title and scripture reference — player must guess them!
@@ -225,9 +263,19 @@ namespace Jw_Quiz_Development
             picBoxes[7].Tag   = story.HintEmoji;
             picBoxes[7].Image = GetResourceImage("1F525") ?? fallback; // 🔥 fire = "hot clue"
 
-            solutionLabel.Text = "Soluzione: " + story.Solution
-                + Environment.NewLine + Environment.NewLine
-                + "Nota: " + story.EngagementNote;
+            // Build solution text with scripture quote if available
+            var sb = new System.Text.StringBuilder();
+            sb.AppendLine("Soluzione: " + story.Solution);
+            if (!string.IsNullOrWhiteSpace(story.ScriptureQuote))
+            {
+                sb.AppendLine();
+                sb.AppendLine(story.ScriptureQuote);
+            }
+            sb.AppendLine();
+            sb.Append("Nota: " + story.EngagementNote);
+            solutionLabel.Text = sb.ToString();
+            solutionLabel.Height = string.IsNullOrWhiteSpace(story.ScriptureQuote) ? 120 : 160;
+
             UpdateXpLabel();
         }
 
@@ -284,6 +332,8 @@ namespace Jw_Quiz_Development
             {
                 titleLabel.Text = "Episodio " + story.Id + "  —  " + story.Title;
                 referenceLabel.Text = story.ScriptureReference + "   |   Categoria: " + story.Keyword;
+                // Reset caption label to neutral invite color when solution is revealed
+                captionLabel.ForeColor = Color.FromArgb(180, 210, 255);
             }
             else
             {

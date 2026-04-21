@@ -203,6 +203,12 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-04-22 | StoryEditorForm: galleria visiva con miniature cliccabili | ✅ Implementata |
 | 2026-04-22 | csproj convertito in SDK-style (net472) per C# Dev Kit | ✅ Applicata |
 | 2026-04-22 | StoryLibrary ID 13–18: chiavi PNG al posto di caratteri unicode emoji | ✅ Applicata |
+| 2026-04-22 | Story model: aggiunti campi ImageCaptions[] (8 slot) e ScriptureQuote | ✅ Implementato |
+| 2026-04-22 | StoryLibrary ID 13–18: ImageCaptions + citazioni NMW (ScriptureQuote) | ✅ Popolate |
+| 2026-04-22 | DynamicStoryForm: click su immagine mostra didascalia descrittiva | ✅ Implementato |
+| 2026-04-22 | DynamicStoryForm: citazione TNM visibile nel pannello soluzione | ✅ Implementato |
+| 2026-04-22 | Screen_size.IsFullscreen: stato persistente tra apertura di nuovi form | ✅ Implementato |
+| 2026-04-22 | Forms_list.ShowForm(): helper centralizzato che ripristina fullscreen + refactoring metodi | ✅ Implementato |
 
 ---
 
@@ -212,10 +218,17 @@ Aggiornare questa sezione ad ogni sessione di lavoro.
 
 | Priorità | Area | Proposta |
 |---------|------|---------|
-| Alta | UX | Aggiungere label descrittiva sotto ogni PictureBox nei form dinamici (nome icona visibile all'host) |
+| Alta | Gamification | **Sistema a Stelle** (1-3 per storia): 3=nessun aiuto, 2=1 aiuto, 1=tutti aiuti — visual memorabile per proiezione |
 | Alta | Gameplay | Form statici (2–13): indizio animato come DynamicStoryForm (pulsazione su pictureBox8) |
+| Alta | Content | Aggiungere ImageCaptions[] anche alle storie statiche id 1-12 (attualmente solo ID 13-18) |
+| Media | Gamification | **Streak + Badge**: N storie consecutive senza hint = badge "Saggio/Profeta/Apostolo" |
+| Media | Gamification | **Classifica sessione locale**: 2-8 partecipanti inseriscono nome, XP aggregati, classifica finale |
+| Media | Gamification | **Percorsi Tematici**: raccolte storie per tema (Fede/Amore/Coraggio) con barra progresso sbloccabile |
 | Media | UX | ProgressPanel: aggiungere grafico barre XP e lista storie completate |
 | Media | Content | Aggiungere storia ID 19+ (es. La Torre di Babele, Marta e Maria, Saul → Paolo) |
-| Media | Tecnica | Sostituire BinaryFormatter con `System.Text.Json` + file JSON per persistenza |
+| Bassa | Gamification | **Timer di indovinamento**: 60s opzionale, bonus XP se risposta entro scadenza |
+| Bassa | Gamification | **Modalità Riflessione**: dopo soluzione, domanda aperta da leggere al gruppo |
+| Bassa | Gamification | **Storia del Giorno**: selezione automatica basata sulla data del calendario |
+| Bassa | Tecnica | Sostituire BinaryFormatter con `System.Text.Json` + file JSON per persistenza |
 | Bassa | UX grafiche | Hero image per ogni storia (immagine panoramica nell'header) |
 | Bassa | Distribuzione | Build script Release + copia automatica in cartella distribuzione |

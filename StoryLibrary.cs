@@ -158,6 +158,7 @@ namespace Jw_Quiz_Development
 
             // ── EPISODI DINAMICI (ID 13-18) ──────────────────────────────────────
             // VisibleEmojis/HiddenEmojis/HintEmoji contengono chiavi di risorsa PNG (nome file senza estensione)
+            // ImageCaptions[0-4] = slot visibili, [5-6] = slot nascosti, [7] = indizio
             new Story
             {
                 Id = 13,
@@ -166,12 +167,23 @@ namespace Jw_Quiz_Development
                 Keyword = "Coraggio",
                 Hint = "Un giovane pastore sconfigge un guerriero gigante con la fede in Geova.",
                 Solution = "Davide disse: 'Geova salvera', perche' questa e' la sua battaglia!' Con una fionda e una pietra, abbatte' Golia. 1 Samuele 17:45-47.",
+                ScriptureQuote = "«...tutta questa assemblea sapra' che Geova non salva per mezzo di spada e lancia; perche' la battaglia appartiene a Geova, ed egli vi consegnera' nelle nostre mani.» — 1 Samuele 17:47 (TNM)",
                 EngagementNote = "Con Geova, anche i giganti cadono.",
                 ImageResourceName = "DavidGoliath",
                 IsDynamic = true,
                 VisibleEmojis = new[] { "038-boy-1", "1F411", "2694", "1F632", "2753" },
                 HiddenEmojis = new[] { "1F480", "1F451" },
-                HintEmoji = "1F4AA-1F3FD"
+                HintEmoji = "1F4AA-1F3FD",
+                ImageCaptions = new[] {
+                    "Un giovane pastore di Betlemme",
+                    "Le pecore al suo pascolo",
+                    "Armi e combattimento",
+                    "Paura e sorpresa nel campo",
+                    "Qualcosa manca in questa storia...",
+                    "Il destino del gigante",      // nascosto 1
+                    "La vittoria e il regno",       // nascosto 2
+                    "La forza che viene da Geova"   // indizio
+                }
             },
             new Story
             {
@@ -181,12 +193,23 @@ namespace Jw_Quiz_Development
                 Keyword = "Perdono",
                 Hint = "Anni di schiavitu' e prigione nascondevano un piano di Dio.",
                 Solution = "Giuseppe si fece conoscere ai fratelli in lacrime: 'Non sono io che vi ho mandato qui, ma Dio!' Genesi 45:5-7.",
+                ScriptureQuote = "«...non siete stati voi a mandarmi qui, ma e' Dio; e mi ha posto come padre per il faraone e come signore di tutta la sua casa e come governante su tutto il paese d'Egitto.» — Genesi 45:8 (TNM)",
                 EngagementNote = "Anche le ingiustizie piu' dure possono far parte del piano di Dio.",
                 ImageResourceName = "Joseph",
                 IsDynamic = true,
                 VisibleEmojis = new[] { "1F468-1F3FB-200D-1F33E", "1F42A", "1F4B0", "1F629", "1F632" },
                 HiddenEmojis = new[] { "1F46D", "1F498" },
-                HintEmoji = "1F4D6"
+                HintEmoji = "1F4D6",
+                ImageCaptions = new[] {
+                    "Un governatore d'Egitto",
+                    "Il viaggio nel deserto",
+                    "Argento e commercio",
+                    "Anni di sofferenza",
+                    "Un riconoscimento inaspettato",
+                    "I fratelli riconciliati",       // nascosto 1
+                    "L'amore fraterno restaurato",  // nascosto 2
+                    "Un messaggio di speranza"       // indizio
+                }
             },
             new Story
             {
@@ -196,12 +219,23 @@ namespace Jw_Quiz_Development
                 Keyword = "Devozione",
                 Hint = "Una vedova straniera scelse di seguire il Dio della suocera.",
                 Solution = "Rut dicharo': 'Il tuo popolo sara' il mio popolo, il tuo Dio il mio Dio.' Boaz la sposo' ed ella divenne antenata del Messia. Rut 1:16.",
+                ScriptureQuote = "«Dove tu andrai, io andro', e dove tu passerai la notte, anch'io passero' la notte. Il tuo popolo sara' il mio popolo e il tuo Dio sara' il mio Dio.» — Rut 1:16 (TNM)",
                 EngagementNote = "La lealta' a Geova va oltre le frontiere etniche e culturali.",
                 ImageResourceName = "Ruth",
                 IsDynamic = true,
                 VisibleEmojis = new[] { "1F6B6-200D-2640-FE0F", "094-user", "1F468-1F3FB-200D-1F33E", "036-man-1", "1F498" },
                 HiddenEmojis = new[] { "1F4B0", "039-baby" },
-                HintEmoji = "1F411"
+                HintEmoji = "1F411",
+                ImageCaptions = new[] {
+                    "Una donna che cammina verso l'ignoto",
+                    "La suocera Naomi",
+                    "Il campo di grano",
+                    "Il parente redentore",
+                    "Un amore nascente",
+                    "Il riscatto del terreno",      // nascosto 1
+                    "Il frutto della devozione",    // nascosto 2
+                    "Il popolo di Geova"            // indizio
+                }
             },
             new Story
             {
@@ -211,12 +245,23 @@ namespace Jw_Quiz_Development
                 Keyword = "Protezione",
                 Hint = "Una madre intreccia una cesta di giunchi per salvare il suo bambino dal Nilo.",
                 Solution = "La madre di Mose' lo mise in una cesta e la affido' al Nilo. La figlia del faraone lo salvo' e Mose' crebbe a palazzo. Esodo 2:1-10.",
+                ScriptureQuote = "«Ma quando non pote' nasconderlo piu' a lungo, prese per lui una cesta di papiro e la spalmò di asfalto e di pece; poi vi pose il bambino e mise la cesta tra i canneti lungo la sponda del fiume Nilo.» — Esodo 2:3 (TNM)",
                 EngagementNote = "Geova usa anche le circostanze piu' disperate per proteggere i Suoi servitori.",
                 ImageResourceName = "Moses",
                 IsDynamic = true,
                 VisibleEmojis = new[] { "039-baby", "1F30A", "1F3F0", "1F451", "1F333" },
                 HiddenEmojis = new[] { "1F932-1F3FC", "1F47C" },
-                HintEmoji = "1F440"
+                HintEmoji = "1F440",
+                ImageCaptions = new[] {
+                    "Un neonato da salvare",
+                    "Il fiume Nilo",
+                    "Il palazzo del faraone",
+                    "La figlia del faraone",
+                    "I giunchi della riva del Nilo",
+                    "Le mani che lo tengono al sicuro",  // nascosto 1
+                    "Protetto come un dono celeste",     // nascosto 2
+                    "Lo sguardo vigilante di Geova"      // indizio
+                }
             },
             new Story
             {
@@ -226,12 +271,23 @@ namespace Jw_Quiz_Development
                 Keyword = "Preghiera",
                 Hint = "Una donna in lacrime al tempio prega con tale fervore da sembrare ubriaca.",
                 Solution = "Anna prego' Geova con tutto il cuore promettendo di consacrare il figlio. Geova la ascolto': nacque Samuele. 1 Samuele 1:27.",
+                ScriptureQuote = "«Per questo ragazzo ho pregato, e Geova ha concesso la mia richiesta che gli ho fatto.» — 1 Samuele 1:27 (TNM)",
                 EngagementNote = "La preghiera sincera viene sempre ascoltata da Geova.",
                 ImageResourceName = "Samuel",
                 IsDynamic = true,
                 VisibleEmojis = new[] { "1F932-1F3FC", "1F629", "1F3DB", "1F3B6", "1F5FA" },
                 HiddenEmojis = new[] { "039-baby", "1F4D6" },
-                HintEmoji = "203C"
+                HintEmoji = "203C",
+                ImageCaptions = new[] {
+                    "Una preghiera fervente al Signore",
+                    "Lacrime e tormento interiore",
+                    "Il santuario di Silo",
+                    "Un canto di lode a Geova",
+                    "Un percorso di fede",
+                    "Il dono tanto atteso",                // nascosto 1
+                    "Una vita consacrata alla Parola",     // nascosto 2
+                    "Geova ha ascoltato!"                  // indizio
+                }
             },
             new Story
             {
@@ -241,12 +297,23 @@ namespace Jw_Quiz_Development
                 Keyword = "Amore per il Prossimo",
                 Hint = "Sacerdote e levita passarono oltre. Solo uno straniero si fermo'.",
                 Solution = "Gesu' racconta come un Samaritano soccorse un uomo abbandonato. Luca 10:36-37 — chi mostro' misericordia fu il vero prossimo.",
+                ScriptureQuote = "«Gesù gli disse: 'Va' e fa' anche tu la stessa cosa.'» — Luca 10:37 (TNM)",
                 EngagementNote = "L'amore per il prossimo non ha confini etnici o religiosi.",
                 ImageResourceName = "Samaritan",
                 IsDynamic = true,
                 VisibleEmojis = new[] { "1F6B6-1F3FF-200D-2642-FE0F", "1F4AA-1F3FD", "Hackney-100", "1F4B0", "2753" },
                 HiddenEmojis = new[] { "26D4", "1F498" },
-                HintEmoji = "1F440"
+                HintEmoji = "1F440",
+                ImageCaptions = new[] {
+                    "Un uomo derubato e abbandonato",
+                    "La violenza dei briganti",
+                    "L'asino del Samaritano",
+                    "Denari lasciati per le cure",
+                    "Chi si fermerà ad aiutare?",
+                    "Chi passò oltre senza fermarsi",  // nascosto 1
+                    "L'amore per il prossimo",         // nascosto 2
+                    "Geova vede chi mostra misericordia" // indizio
+                }
             }
             };
             return list;

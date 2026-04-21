@@ -13,8 +13,11 @@ namespace Jw_Quiz_Development
 
     public partial class Screen_size
     {
+        public static bool IsFullscreen { get; private set; }
+
         public static bool SetState(bool state)
         {
+            IsFullscreen = state;
             if (state)
             {
                 GoFullscreen(true);
@@ -48,163 +51,46 @@ namespace Jw_Quiz_Development
 
     public partial class Forms_list : Form
     {
+        // Restore fullscreen when a new form opens, if the session is in fullscreen mode
+        private static void ShowForm(Form f)
+        {
+            if (Screen_size.IsFullscreen)
+                f.Shown += (s, e) => Screen_size.GoFullscreen(true);
+            f.ShowDialog();
+            f.PerformAutoScale();
+        }
 
         public void Home()
         {
-            Form1 f1 = new Form1();
-            f1.ShowDialog();
-            f1.PerformAutoScale();
+            ShowForm(new Form1());
         }
 
-        public void Storia1()
-        {
-            Form2 f2 = new Form2();
-            f2.ShowDialog();
-            f2.PerformAutoScale();
-        }
+        public void Storia1()  { ShowForm(new Form2());  }
+        public void Storia2()  { ShowForm(new Form3());  }
+        public void Storia3()  { ShowForm(new Form4());  }
+        public void Storia4()  { ShowForm(new Form5());  }
+        public void Storia5()  { ShowForm(new Form6());  }
+        public void Storia6()  { ShowForm(new Form7());  }
+        public void Storia7()  { ShowForm(new Form8());  }
+        public void Storia8()  { ShowForm(new Form9());  }
+        public void Storia9()  { ShowForm(new Form10()); }
+        public void Storia10() { ShowForm(new Form11()); }
+        public void Storia11() { ShowForm(new Form12()); }
+        public void Storia12() { ShowForm(new Form13()); }
 
-        public void Storia2()
+        private void ShowDynamicStory(int id)
         {
-            Form3 f3 = new Form3();
-            f3.ShowDialog();
-            f3.PerformAutoScale();
-        }
-
-        public void Storia3()
-        {
-            Form4 f4 = new Form4();
-            f4.ShowDialog();
-            f4.PerformAutoScale();
-        }
-
-        public void Storia4()
-        {
-            Form5 f5 = new Form5();
-            f5.ShowDialog();
-            f5.PerformAutoScale();
-        }
-
-        public void Storia5()
-        {
-            Form6 f6 = new Form6();
-            f6.ShowDialog();
-            f6.PerformAutoScale();
-        }
-
-        public void Storia6()
-        {
-            Form7 f7 = new Form7();
-            f7.ShowDialog();
-            f7.PerformAutoScale();
-        }
-
-        public void Storia7()
-        {
-            Form8 f8 = new Form8();
-            f8.ShowDialog();
-            f8.PerformAutoScale();
-        }
-
-        public void Storia8()
-        {
-            Form9 f9 = new Form9();
-            f9.ShowDialog();
-            f9.PerformAutoScale();
-        }
-
-        public void Storia9()
-        {
-            Form10 f10 = new Form10();
-            f10.ShowDialog();
-            f10.PerformAutoScale();
-        }
-
-        public void Storia10()
-        {
-            Form11 f11 = new Form11();
-            f11.ShowDialog();
-            f11.PerformAutoScale();
-        }
-
-        public void Storia11()
-        {
-            Form12 f12 = new Form12();
-            f12.ShowDialog();
-            f12.PerformAutoScale();
-        }
-
-        public void Storia12()
-        {
-            Form13 f13 = new Form13();
-            f13.ShowDialog();
-            f13.PerformAutoScale();
-        }
-
-        public void Storia13()
-        {
-            Story story = StoryEngine.GetStory(13);
+            Story story = StoryEngine.GetStory(id);
             if (story != null)
-            {
-                DynamicStoryForm f = new DynamicStoryForm(story);
-                f.ShowDialog();
-                f.PerformAutoScale();
-            }
+                ShowForm(new DynamicStoryForm(story));
         }
 
-        public void Storia14()
-        {
-            Story story = StoryEngine.GetStory(14);
-            if (story != null)
-            {
-                DynamicStoryForm f = new DynamicStoryForm(story);
-                f.ShowDialog();
-                f.PerformAutoScale();
-            }
-        }
-
-        public void Storia15()
-        {
-            Story story = StoryEngine.GetStory(15);
-            if (story != null)
-            {
-                DynamicStoryForm f = new DynamicStoryForm(story);
-                f.ShowDialog();
-                f.PerformAutoScale();
-            }
-        }
-
-        public void Storia16()
-        {
-            Story story = StoryEngine.GetStory(16);
-            if (story != null)
-            {
-                DynamicStoryForm f = new DynamicStoryForm(story);
-                f.ShowDialog();
-                f.PerformAutoScale();
-            }
-        }
-
-        public void Storia17()
-        {
-            Story story = StoryEngine.GetStory(17);
-            if (story != null)
-            {
-                DynamicStoryForm f = new DynamicStoryForm(story);
-                f.ShowDialog();
-                f.PerformAutoScale();
-            }
-        }
-
-        public void Storia18()
-        {
-            Story story = StoryEngine.GetStory(18);
-            if (story != null)
-            {
-                DynamicStoryForm f = new DynamicStoryForm(story);
-                f.ShowDialog();
-                f.PerformAutoScale();
-            }
-        }
+        public void Storia13() { ShowDynamicStory(13); }
+        public void Storia14() { ShowDynamicStory(14); }
+        public void Storia15() { ShowDynamicStory(15); }
+        public void Storia16() { ShowDynamicStory(16); }
+        public void Storia17() { ShowDynamicStory(17); }
+        public void Storia18() { ShowDynamicStory(18); }
 
         public void ApriStoria(int id)
         {
@@ -231,23 +117,14 @@ namespace Jw_Quiz_Development
                 default:
                     var userStory = StoryEngine.GetStory(id);
                     if (userStory != null && userStory.IsDynamic)
-                    {
-                        new DynamicStoryForm(userStory).ShowDialog();
-                    }
+                        ShowForm(new DynamicStoryForm(userStory));
                     else
-                    {
                         Fine();
-                    }
                     break;
             }
         }
 
-        public void Fine()
-        {
-            FINE fine = new FINE();
-            fine.ShowDialog();
-            fine.PerformAutoScale();
-        }
+        public void Fine() { ShowForm(new FINE()); }
 
         public void Conclusione()
         {
