@@ -26,14 +26,12 @@
 |------|-------|
 | `Program.cs` | Entry point ÔÇö avvia `Form1` |
 | `Form1.cs/Designer.cs` | Menu principale + navigazione |
-| `Form2.cs`ÔÇô`Form13.cs` | Storie statiche (ID 1ÔÇô12): rebus con PictureBox PNG, 7 immagini, reveal progressivo |
 | `Forms_list.cs` | Router di navigazione tra form |
 | `FINE.cs` | Schermata finale |
 | `Story.cs` | Modello dati storia (VisibleEmojis, HiddenEmojis, HintEmoji come chiavi risorsa PNG) |
-| `StoryLibrary.cs` | Catalogo storie (ID 1ÔÇô18): 1ÔÇô12 statiche, 13ÔÇô18 dinamiche |
+| `StoryLibrary.cs` | Catalogo storie (ID 1ÔÇô18): tutte renderizzate dal runtime dinamico |
 | `StoryEngine.cs` | Logica progressione/navigazione tra storie |
-| `DynamicStoryForm.cs` | Form generico per storie dinamiche (ID 13ÔÇô18 e user-created) |
-| `LegacyHintAnimator.cs` | Helper condiviso per hint legacy statici: placeholder `1F525`, pulsazione e toggle reveal/hide su `pictureBox8` |
+| `DynamicStoryForm.cs` | Form generico runtime per tutte le storie built-in (ID 1ÔÇô18) e user-created |
 | `StoryEditorForm.cs` | Editor in-app per creare nuove storie con galleria immagini |
 | `UserStoryLibrary.cs` | Persistenza storie utente su `UserStories.dat` |
 | `LanguageManager.cs` | Stato lingua corrente app + persistenza preferenza lingua |
@@ -60,16 +58,7 @@
 
 ## 3. Gameplay ÔÇö Meccanica Rebus
 
-**Storie Statiche (Form2ÔÇôForm13)**
-- 7 `PictureBox` con PNG colorate dal namespace `Properties.Resources`
-- `pictureBox3` e `pictureBox5`: nascosti di default (`Visible=false`), rivelati da "Rivela 2 immagini"
-- `pictureBox8` (Form2ÔÇôForm12): indizio con placeholder `1F525` sempre visibile e pulsante; click su "Rivela indizio" mostra l'immagine hint reale, click successivo torna al placeholder
-- `label1`: soluzione testo, nascosta, rivelata da "Rivela soluzione"
-- Completamento storia registrato via `ProgressTracker.Instance.CompleteStory(storyId)` alla chiusura
-- Runtime principale unificato: `Forms_list` apre le storie 1ÔÇô12 tramite `DynamicStoryForm` (i form statici restano legacy/reference, fuori dal path principale)
-- Fase migrazione F2 completata: le storie 1-12 in `StoryLibrary` ora hanno anche campi dinamici (`VisibleEmojis/HiddenEmojis/HintEmoji/ImageCaptions/ScriptureQuote`) pronti al renderer unificato
-
-**Storie Dinamiche (DynamicStoryForm)**
+**Runtime Unificato (DynamicStoryForm)**
 - 8 `PictureBox` (slot 0ÔÇô4 visibili, 5ÔÇô6 nascosti, 7 indizio)
 - Slot 5ÔÇô6 mostrano `2753.png` (ÔØô) finch├® non rivelati
 - Slot 7 mostra `1F525.png` (­ƒöÑ) con animazione pulsante ambra (Timer 300ms) finch├® indizio non cliccato
@@ -80,6 +69,7 @@
 - XP base 100, -20 per ogni aiuto usato (minimo 20)
 - Header: titolo e riferimento biblico **NASCOSTI** fino a "Rivela soluzione"
 - Header mostra solo: `"Episodio X ÔÇö Indovina la storia!"` + categoria/keyword
+- Completamento storia registrato via `ProgressTracker.Instance.CompleteStory(storyId)` alla chiusura
 
 ---
 
@@ -87,18 +77,18 @@
 
 | ID | Titolo | Tema | Tipo |
 |----|--------|------|------|
-| 1 | Il Giardino di Eden | Obbedienza | Statica (Form2) |
-| 2 | Sansone e Dalila | Fedelta' | Statica (Form3) |
-| 3 | Giona e il Pesce | Misericordia | Statica (Form4) |
-| 4 | Le Pecore e le Capre | Giudizio | Statica (Form5) |
-| 5 | Le 10 Piaghe d'Egitto | Potere di Dio | Statica (Form6) |
-| 6 | Elia e la Siccita' | Preghiera | Statica (Form7) |
-| 7 | Ester Salva il Popolo | Coraggio | Statica (Form8) |
-| 8 | Abramo e Isacco | Fede | Statica (Form9) |
-| 9 | Il Figlio Prodigo | Perdono | Statica (Form10) |
-| 10 | La Profezia di Isaia | Profezia | Statica (Form11) |
-| 11 | Noe' e il Diluvio | Salvezza | Statica (Form12) |
-| 12 | Filippo e l'Eunuco | Buona Novella | Statica (Form13) |
+| 1 | Il Giardino di Eden | Obbedienza | Dinamica |
+| 2 | Sansone e Dalila | Fedelta' | Dinamica |
+| 3 | Giona e il Pesce | Misericordia | Dinamica |
+| 4 | Le Pecore e le Capre | Giudizio | Dinamica |
+| 5 | Le 10 Piaghe d'Egitto | Potere di Dio | Dinamica |
+| 6 | Elia e la Siccita' | Preghiera | Dinamica |
+| 7 | Ester Salva il Popolo | Coraggio | Dinamica |
+| 8 | Abramo e Isacco | Fede | Dinamica |
+| 9 | Il Figlio Prodigo | Perdono | Dinamica |
+| 10 | La Profezia di Isaia | Profezia | Dinamica |
+| 11 | Noe' e il Diluvio | Salvezza | Dinamica |
+| 12 | Filippo e l'Eunuco | Buona Novella | Dinamica |
 | 13 | Davide e Golia | Coraggio | Dinamica |
 | 14 | Giuseppe Perdona i Fratelli | Perdono | Dinamica |
 | 15 | Rut e Boaz | Devozione | Dinamica |
@@ -208,13 +198,12 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 - Caricamento risorse centralizzato in `StoryResources.cs` (evitare accesso diretto duplicato al ResourceManager)
 - **BinaryFormatter** deprecato in .NET 5+ ma funziona in net472
 - **DockStyle.Fill** deve essere aggiunto per primo (`Controls.Add`) per corretta precedenza z-order
-- **Designer.cs** dei form statici: NON modificare via codice ÔÇö modifiche vanno fatte via VS Designer o con grande cautela
 - **Emoji come testo** nei Label: evitare ÔÇö usare PictureBox con PNG da Resources per coerenza visiva
 - **Cloudflare shared mode** richiede 2 binding configurati in Pages: KV `JWQUIZ_DATA` e R2 `JWQUIZ_UPLOADS`
 - In locale (`python -m http.server`) le Pages Functions non esistono: la webapp va automaticamente in fallback locale
 - Webapp multilanguage: il motore JS shared (`webapp/story-i18n.js`) e' la fonte unica per testi UI, auto-traduzione e normalizzazione JSON delle storie condivise
-- Motore multilanguage corrente applicato ai flussi data-driven desktop (`Form1`, `StoryEditorForm`, `DynamicStoryForm`, storie utente); i form statici legacy 1ÔÇô12 restano candidati a migrazione runtime separata per evitare regressioni nei Designer
-- QA migrazione legacy: verificare sempre che le chiavi PNG in `StoryLibrary` esistano davvero in `Resources/*.png` per evitare fallback silenzioso su `2753` durante il rollout dinamico
+- Motore multilanguage corrente applicato ai flussi data-driven desktop (`Form1`, `StoryEditorForm`, `DynamicStoryForm`, storie utente)
+- QA contenuti dinamici: verificare sempre che le chiavi PNG in `StoryLibrary` esistano davvero in `Resources/*.png` per evitare fallback silenzioso su `2753`
 
 ---
 
@@ -282,6 +271,7 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-04-22 | **Pilot UX episodi 1ÔÇô12 (checklist regressioni reveal/hint/soluzione)**: audit tecnico completato su Form2ÔÇôForm13 (no regressioni su reveal immagini, toggle soluzione e tracking `CompleteStory`; hint animato verificato su Form2ÔÇôForm12). Nota: Form13 non possiede `pictureBox8`/slot hint legacy nel Designer, quindi escluso dal controllo di pulsazione | ✅ Validato |
 | 2026-04-22 | **Unificazione architettura runtime legacy completata**: `Forms_list` ora instrada le storie 1ÔÇô12 direttamente su `DynamicStoryForm`, rimosso fallback statico dal path principale e dismesso `AppFeatureFlags` di rollout | ✅ Implementato e validato (build 0 regressioni) |
 | 2026-04-22 | **Fix webapp pannello admin**: risolto overlay visibile all'avvio (`[hidden]` ora rispettato), corretto flusso apertura solo su click del pulsante "Login" in alto a destra, chiusura robusta con bottone/overlay/Escape | ✅ Implementato |
+| 2026-04-22 | **Deep cleanup legacy completato**: rimossi definitivamente i file `Form2`ÔÇô`Form13` (code-behind, Designer, resx) e `LegacyHintAnimator`; validato che il runtime resta interamente su `DynamicStoryForm` | ✅ Implementato e validato (build 0 regressioni) |
 ---
 
 ## 11. Next Best Decisions (Proposte Attive)
@@ -292,9 +282,8 @@ Aggiornare questa sezione ad ogni sessione di lavoro.
 |---------|------|---------|
 | Alta | Web | ~~Migrare anche storie statiche 1-12 nel renderer web unificato~~ Ô£à **COMPLETATO** |
 | Alta | Gamification | ~~**Sistema a Stelle** (1-3 per storia): 3=nessun aiuto, 2=1 aiuto, 1=tutti aiuti — visual memorabile per proiezione~~ ✅ **COMPLETATO** |
-| Alta | Gameplay | ~~Form statici (2ÔÇô13): indizio animato come DynamicStoryForm (pulsazione su pictureBox8)~~ ✅ **COMPLETATO su Form2ÔÇôForm12**. Residuo tecnico: Form13 non espone `pictureBox8` nel Designer legacy |
 | Alta | Content | ~~Aggiungere ImageCaptions[] anche alle storie statiche id 1-12 (attualmente solo ID 13-18)~~ Ô£à **COMPLETATO** |
-| Alta | Multilanguage | Migrare anche i form statici legacy 1-12 al runtime multilanguage senza toccare i `Designer.cs` |
+| Alta | Multilanguage | Rifinire QA linguistico delle storie 1-12 ora renderizzate nel runtime dinamico |
 | Alta | Architettura | ~~Piano 3 fasi unificazione legacy: ✅ F1, F2, F3 completate. Rifinitura residua: cleanup tecnico graduale dei code-behind legacy non piu' in path runtime principale~~ ✅ **COMPLETATO** (runtime 1-12 unificato su `DynamicStoryForm`) |
 | Alta | Webapp | Configurare `ADMIN_SECRET` nelle env var di Cloudflare Pages → Settings → Environment Variables per attivare il pannello admin statistiche |
 | Media | Multilanguage | Rifinire il glossario rule-based it/en del motore shared web/desktop con review manuale delle traduzioni bibliche piu' lunghe |

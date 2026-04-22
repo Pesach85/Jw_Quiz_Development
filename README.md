@@ -1,7 +1,7 @@
 # JW Quiz Development
 
 ## Project Overview
-This is a Windows Forms application developed in C# using .NET Framework 4.7.2. The application appears to be a quiz or educational tool related to Jehovah's Witnesses (JW), consisting of 12 interactive "stories" or sections with revealable elements.
+This is a Windows Forms quiz application developed in C# on .NET Framework 4.7.2. The app presents Bible-themed rebus episodes with progressive reveal, hint mechanics, XP progression, and a unified data-driven renderer.
 
 ## Architecture
 - **Framework**: .NET Framework 4.7.2
@@ -11,19 +11,22 @@ This is a Windows Forms application developed in C# using .NET Framework 4.7.2. 
 
 ## Application Structure
 - **Form1**: Main menu form with navigation to different stories and screen controls
-- **Form2-Form13**: Individual quiz/story forms (12 stories + FINE form)
+- **DynamicStoryForm**: Unified runtime renderer for all built-in stories (ID 1-18) and user-created stories
 - **FINE**: End/conclusion form
 - **Forms_list**: Utility class managing form navigation and screen size controls
+- **StoryLibrary / StoryEngine / StoryResources**: Data catalog, progression flow, and centralized image loading
 
 ## Key Features
 - Fullscreen toggle functionality
-- Interactive quiz elements with revealable symbols, hints, and solutions
-- Navigation between 12 story sections
+- Interactive rebus elements with revealable symbols, hints, and solutions
+- Navigation between 18 built-in story sections
 - Menu-based navigation system
+- XP, badges, and stars (3/2/1) based on help usage
+- In-app story editor with user story persistence
 
 ## Forms Description
 - **Form1**: Entry point, menu with story selection
-- **Form2-Form13**: Quiz sections with interactive buttons for revealing content
+- **DynamicStoryForm**: Data-driven quiz screen with hidden slots, animated hint slot, and progressive reveal
 - **FINE**: Final form with navigation back to sections
 
 ## Gameplay Enrichment Plan
@@ -52,12 +55,8 @@ Run `build.bat` in the project directory.
 msbuild Jw_Quiz_Development.csproj /p:Configuration=Release
 ```
 
-### Validazione build
-La validazione del progetto è stata eseguita utilizzando MSBuild in:
-- `D:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin\amd64\MSBuild.exe`
-
-L'esecuzione ha restituito un errore perché mancano gli assembly di riferimento per il framework `.NETFramework,Version=v4.7.2`.
-Per completare la compilazione, è necessario installare il Targeting Pack per .NET Framework 4.7.2 oppure un ambiente di sviluppo che lo includa.
+### Build validation
+Recent validation is executed with Visual Studio 2022 MSBuild and the project compiles successfully in Debug.
 
 ### Distribution
 - Copy the entire `bin\Release\` folder to target Windows machine
@@ -78,10 +77,9 @@ Per completare la compilazione, è necessario installare il Targeting Pack per .
 - .gitignore configured for build artifacts
 
 ## Next Steps
-- Set up GitHub remote repository
-- Push code to GitHub
-- Consider migration to .NET Core/.NET 5+ for modern Windows deployment
-- Begin UI integration for the new data-driven story engine with progress tracking and scripture engagement notes
+- Configure production environment variables for Cloudflare admin analytics (`ADMIN_SECRET`)
+- Review multilingual glossary quality for long Bible references and captions
+- Evaluate migration from BinaryFormatter persistence to JSON format
 
 ## KB Update 2026-04-22 (Decisioni e Valutazioni)
 
@@ -103,6 +101,6 @@ Per completare la compilazione, è necessario installare il Targeting Pack per .
 - Il suggerimento nelle storie a rebus dinamiche e' ora animato con effetto pulsante (colore + dimensione emoji), fino alla rivelazione dell'indizio.
 
 ### Valutazione tecnica
-- Build locale validata con MSBuild (Debug AnyCPU) dopo conversione SDK-style.
+- Build locale validata con MSBuild (Debug AnyCPU).
 - Compatibilita' mantenuta con WinForms .NET Framework 4.7.2.
-- Nessuna modifica distruttiva ai form statici esistenti; estensioni fatte in modo incrementale.
+- Runtime desktop unificato su renderer dinamico; legacy statico dismesso.
