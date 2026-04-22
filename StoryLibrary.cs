@@ -186,7 +186,7 @@ namespace Jw_Quiz_Development
                 EngagementNote = "Mostra come il coraggio ispirato da Dio permette alle persone di agire a favore del prossimo.",
                 ImageResourceName = "Esther",
                 IsDynamic = false,
-                VisibleEmojis = new[] { "1F932-1F3FD", "1F6BC", "1F4E31", "1F442-1F3FE", "japanese_dolls_facebook" },
+                VisibleEmojis = new[] { "1F932-1F3FD", "1F6BC", "1F4E3", "1F442-1F3FE", "093-users" },
                 HiddenEmojis = new[] { "1F634", "1F632" },
                 HintEmoji = "2694",
                 ImageCaptions = new[]
@@ -240,9 +240,9 @@ namespace Jw_Quiz_Development
                 EngagementNote = "Illustra che Dio accoglie sempre i cuori sinceramente pentiti.",
                 ImageResourceName = "ProdigalSon",
                 IsDynamic = false,
-                VisibleEmojis = new[] { "038-boy-1", "75-750986_download_svg_download_png_old_woman_emoji_transparent", "1F37A", "1F416", "1F416" },
+                VisibleEmojis = new[] { "038-boy-1", "036-man-1", "1F37A", "1F416", "1F416" },
                 HiddenEmojis = new[] { "1F4B0", "1F629" },
-                HintEmoji = "412-4121149_twins_clipart_emoji_dancing_girls_emoji_png_transparent",
+                HintEmoji = "1F3B6",
                 ImageCaptions = new[]
                 {
                     "Il figlio minore",
@@ -322,7 +322,7 @@ namespace Jw_Quiz_Development
                 ImageResourceName = "Philip",
                 IsDynamic = false,
                 VisibleEmojis = new[] { "1F47C", "2753", "1F30A", "1F4D6", "Hackney-100" },
-                HiddenEmojis = new[] { "1F4AC", "1F4E3" },
+                HiddenEmojis = new[] { "203C", "1F4E3" },
                 HintEmoji = "203C",
                 ImageCaptions = new[]
                 {

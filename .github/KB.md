@@ -212,6 +212,7 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 - In locale (`python -m http.server`) le Pages Functions non esistono: la webapp va automaticamente in fallback locale
 - Webapp multilanguage: il motore JS shared (`webapp/story-i18n.js`) e' la fonte unica per testi UI, auto-traduzione e normalizzazione JSON delle storie condivise
 - Motore multilanguage corrente applicato ai flussi data-driven desktop (`Form1`, `StoryEditorForm`, `DynamicStoryForm`, storie utente); i form statici legacy 1–12 restano candidati a migrazione runtime separata per evitare regressioni nei Designer
+- QA migrazione legacy: verificare sempre che le chiavi PNG in `StoryLibrary` esistano davvero in `Resources/*.png` per evitare fallback silenzioso su `2753` durante il rollout dinamico
 
 ---
 
@@ -268,6 +269,7 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-04-22 | **Unificazione legacy Step 1**: introdotto feature flag `AppFeatureFlags.UseDynamicRendererForLegacyStories` + routing sicuro in `Forms_list` con fallback automatico ai form statici se dati 1-12 non completi | ✅ Implementato e validato (build 0 regressioni) |
 | 2026-04-22 | **Unificazione legacy Step 2**: popolati in `StoryLibrary` i campi dinamici per le storie 1-12 (slot immagini, indizio, didascalie, scripture quote) mantenendo `IsDynamic=false` e flag routing OFF | ✅ Implementato e validato (build 0 regressioni) |
 | 2026-04-22 | **Unificazione legacy Step 3 (rollout)**: attivato `UseDynamicRendererForLegacyStories=true`; le storie 1-12 ora passano dal renderer dinamico quando i controlli dati sono soddisfatti, con rollback immediato possibile via flag | ✅ Implementato e validato (build 0 regressioni) |
+| 2026-04-22 | **QA post-rollout storie 1-12**: corretti 4 riferimenti PNG mancanti in `StoryLibrary` (`japanese_dolls_facebook`, `75-...old_woman...`, `412-...dancing...`, `1F4AC`) con chiavi reali presenti in `Resources` | ✅ Implementato e validato (build 0 regressioni) |
 
 ---
 
