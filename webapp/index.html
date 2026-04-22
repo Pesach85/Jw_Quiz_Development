@@ -49,7 +49,7 @@
           <div class="editor-head">
             <div>
               <h3>Crea nuovo episodio</h3>
-              <p>Compila i dati come nell'editor desktop e salva in locale nel browser.</p>
+              <p>Compila i dati come nell'editor desktop. Su Cloudflare gli episodi saranno condivisi tra tutti gli utenti.</p>
             </div>
             <button id="btnCloseEditor" class="btn btn-ghost" type="button">Chiudi</button>
           </div>
@@ -113,6 +113,18 @@
             <h3>Scegli un'immagine</h3>
             <button id="btnClosePicker" class="btn btn-ghost" type="button">Chiudi</button>
           </div>
+          <div class="picker-upload">
+            <label class="field field-grow">
+              <span>Nome PNG custom</span>
+              <input id="assetUploadName" type="text" placeholder="Es. corona-personalizzata" />
+            </label>
+            <label class="field field-grow">
+              <span>File PNG custom</span>
+              <input id="assetUploadFile" type="file" accept="image/png" />
+            </label>
+            <button id="btnUploadAsset" class="btn btn-create" type="button">Carica PNG</button>
+          </div>
+          <div id="assetUploadStatus" class="upload-status">I PNG custom saranno condivisi online dopo il deploy Cloudflare con storage configurato.</div>
           <label class="field">
             <span>Cerca per chiave PNG</span>
             <input id="assetSearch" type="text" placeholder="Es. 1F411, boy, crown" />

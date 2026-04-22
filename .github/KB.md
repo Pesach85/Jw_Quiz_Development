@@ -40,11 +40,14 @@
 | `Resources/` | PNG colorati (~100 file) usati come simboli nel rebus |
 | `Properties/Resources.Designer.cs` | Accesso fortemente tipizzato alle risorse |
 | `webapp/index.html` | Shell UI web con gameplay + editor locale episodi |
-| `webapp/app.js` | Logica gameplay web, persistenza locale, merge episodi built-in/user-created |
+| `webapp/app.js` | Logica gameplay web, fallback locale, integrazione API Cloudflare per storie condivise e PNG custom |
 | `webapp/assets.js` | Manifest JS delle chiavi PNG disponibili nel picker immagini web |
 | `webapp/stories.js` | Dataset storie dinamiche per la versione web |
 | `webapp/styles.css` | Tema visuale web responsive |
 | `webapp/assets/*.png` | Asset PNG deployati per gioco e editor web |
+| `functions/api/stories.js` | API Cloudflare Pages Functions per leggere/salvare episodi condivisi |
+| `functions/api/assets.js` | API Cloudflare Pages Functions per listare/caricare PNG custom condivisi |
+| `functions/api/assets/[key].js` | Stream dei PNG custom salvati su bucket R2 |
 
 ---
 
@@ -177,6 +180,9 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 - Webapp: editor locale in-browser con `localStorage` (`jwquiz_web_user_stories_v1`)
 - Webapp: galleria immagini alimentata da `assets.js`, con ricerca per chiave PNG e anteprima per ogni slot
 - Webapp: episodi creati lato browser vengono uniti ai 18 built-in nel selettore senza mostrare il titolo
+- Cloudflare: dopo il deploy, gli episodi utente vengono salvati via Pages Functions in KV `JWQUIZ_DATA`
+- Cloudflare: i PNG custom vengono caricati su bucket R2 `JWQUIZ_UPLOADS` e riutilizzati nel picker come chiavi `custom:<file>.png`
+- Fallback locale: se le API Cloudflare non rispondono, la webapp continua a funzionare con persistenza solo browser-side
 
 ---
 
@@ -189,6 +195,8 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 - **DockStyle.Fill** deve essere aggiunto per primo (`Controls.Add`) per corretta precedenza z-order
 - **Designer.cs** dei form statici: NON modificare via codice — modifiche vanno fatte via VS Designer o con grande cautela
 - **Emoji come testo** nei Label: evitare — usare PictureBox con PNG da Resources per coerenza visiva
+- **Cloudflare shared mode** richiede 2 binding configurati in Pages: KV `JWQUIZ_DATA` e R2 `JWQUIZ_UPLOADS`
+- In locale (`python -m http.server`) le Pages Functions non esistono: la webapp va automaticamente in fallback locale
 
 ---
 
@@ -233,6 +241,8 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-04-22 | **Assets webapp**: copiati 49 PNG aggiuntivi per episodi 1-12 → 80 PNG totali self-contained | ✅ Implementato |
 | 2026-04-22 | **Editor web episodi**: aggiunta creazione locale nuovi episodi con picker PNG, merge selettore e persistenza `localStorage` | ✅ Implementato |
 | 2026-04-22 | **Asset parity web**: sincronizzati tutti i PNG da `Resources/` a `webapp/assets/` per avere galleria completa come desktop | ✅ Implementato |
+| 2026-04-22 | **Cloudflare shared persistence**: aggiunte Pages Functions per episodi condivisi su KV e asset PNG custom su R2 | ✅ Implementato |
+| 2026-04-22 | **Picker web avanzato**: aggiunto upload PNG custom dal browser con riuso immediato nei nuovi episodi | ✅ Implementato |
 
 ---
 

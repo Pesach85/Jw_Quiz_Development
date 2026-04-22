@@ -1,14 +1,17 @@
 (function () {
   var KEY_UNKNOWN = "2753";
   var KEY_HINT_PLACEHOLDER = "1F525";
-  var USER_STORIES_KEY = "jwquiz_web_user_stories_v1";
+  var LOCAL_STORIES_KEY = "jwquiz_web_user_stories_v1";
 
   var state = {
     storyIndex: 0,
     revealCount: 0,
     hintRevealed: false,
     solutionVisible: false,
-    totalXp: Number(localStorage.getItem("jwquiz_web_xp") || "0")
+    totalXp: Number(localStorage.getItem("jwquiz_web_xp") || "0"),
+    sharedStories: [],
+    customAssets: [],
+    apiAvailable: false
   };
 
   var slotsEl = document.getElementById("slots");
@@ -32,17 +35,19 @@
   var closeEditorBtn = document.getElementById("btnCloseEditor");
   var saveStoryBtn = document.getElementById("btnSaveStory");
   var editorStatusEl = document.getElementById("editorStatus");
+
   var pickerPanel = document.getElementById("pickerPanel");
   var closePickerBtn = document.getElementById("btnClosePicker");
   var assetGridEl = document.getElementById("assetGrid");
   var assetSearchEl = document.getElementById("assetSearch");
+  var assetUploadNameEl = document.getElementById("assetUploadName");
+  var assetUploadFileEl = document.getElementById("assetUploadFile");
+  var assetUploadStatusEl = document.getElementById("assetUploadStatus");
+  var uploadAssetBtn = document.getElementById("btnUploadAsset");
 
   var builtInStories = sanitizeStories(window.JW_STORIES || []);
-  var slotInputs = {
-    visible: [],
-    hidden: [],
-    hint: []
-  };
+  var builtInAssetKeys = (window.JW_ASSET_KEYS || []).slice();
+  var slotInputs = { visible: [], hidden: [], hint: [] };
   var pickerTarget = null;
 
   var editorFields = {
@@ -55,10 +60,18 @@
     note: document.getElementById("editorNote")
   };
 
-  var assetLookup = buildAssetLookup(window.JW_ASSET_KEYS || []);
+  var builtInAssetLookup = buildAssetLookup(builtInAssetKeys);
 
   function normalizeAssetToken(value) {
     return String(value || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  }
+
+  function isCustomAssetKey(key) {
+    return typeof key === "string" && key.indexOf("custom:") === 0;
+  }
+
+  function customAssetName(key) {
+    return String(key || "").slice(7);
   }
 
   function buildAssetLookup(keys) {
@@ -69,18 +82,28 @@
     return lookup;
   }
 
-  function resolveAssetKey(key) {
+  function resolveBuiltInAssetKey(key) {
     var normalized = normalizeAssetToken(key);
-    return assetLookup[normalized] || key || KEY_UNKNOWN;
+    return builtInAssetLookup[normalized] || key || KEY_UNKNOWN;
+  }
+
+  function resolveStoryAssetKey(key) {
+    if (isCustomAssetKey(key)) {
+      return key;
+    }
+    return resolveBuiltInAssetKey(key);
   }
 
   function imageUrl(key) {
-    return "assets/" + resolveAssetKey(key) + ".png";
+    if (isCustomAssetKey(key)) {
+      return "/api/assets/" + encodeURIComponent(customAssetName(key));
+    }
+    return "assets/" + resolveBuiltInAssetKey(key) + ".png";
   }
 
   function sanitizeStory(raw) {
-    var visibleKeys = (raw.visibleKeys || []).slice(0, 5);
-    var hiddenKeys = (raw.hiddenKeys || []).slice(0, 2);
+    var visibleKeys = (raw.visibleKeys || []).slice(0, 5).map(resolveStoryAssetKey);
+    var hiddenKeys = (raw.hiddenKeys || []).slice(0, 2).map(resolveStoryAssetKey);
     var captions = (raw.imageCaptions || []).slice(0, 8);
 
     while (visibleKeys.length < 5) {
@@ -104,7 +127,7 @@
       engagementNote: raw.engagementNote || "",
       visibleKeys: visibleKeys,
       hiddenKeys: hiddenKeys,
-      hintKey: raw.hintKey || KEY_HINT_PLACEHOLDER,
+      hintKey: resolveStoryAssetKey(raw.hintKey || KEY_HINT_PLACEHOLDER),
       imageCaptions: captions,
       isUserCreated: Boolean(raw.isUserCreated)
     };
@@ -114,20 +137,27 @@
     return list.map(sanitizeStory);
   }
 
-  function getUserStories() {
+  function getLocalStories() {
     try {
-      return sanitizeStories(JSON.parse(localStorage.getItem(USER_STORIES_KEY) || "[]"));
+      return sanitizeStories(JSON.parse(localStorage.getItem(LOCAL_STORIES_KEY) || "[]"));
     } catch (error) {
       return [];
     }
   }
 
-  function saveUserStories(stories) {
-    localStorage.setItem(USER_STORIES_KEY, JSON.stringify(stories));
+  function saveLocalStories(stories) {
+    localStorage.setItem(LOCAL_STORIES_KEY, JSON.stringify(stories));
   }
 
   function getAllStories() {
-    return builtInStories.concat(getUserStories());
+    return builtInStories.concat(state.sharedStories);
+  }
+
+  function getAllAssets() {
+    var builtIn = builtInAssetKeys.map(function (key) {
+      return { key: key, label: key, builtIn: true };
+    });
+    return builtIn.concat(state.customAssets);
   }
 
   function story() {
@@ -135,14 +165,11 @@
     return stories[state.storyIndex] || stories[0];
   }
 
-  function nextStoryId() {
-    var maxId = 18;
-    getAllStories().forEach(function (item) {
-      if (item.id > maxId) {
-        maxId = item.id;
-      }
-    });
-    return maxId + 1;
+  function isKnownAsset(key) {
+    if (isCustomAssetKey(key)) {
+      return state.customAssets.some(function (item) { return item.key === key; });
+    }
+    return Boolean(builtInAssetLookup[normalizeAssetToken(key)]);
   }
 
   function calcExpectedXp() {
@@ -158,14 +185,12 @@
   function buildSelector() {
     var stories = getAllStories();
     selectorEl.innerHTML = "";
-
-    stories.forEach(function (s, i) {
+    stories.forEach(function (item, index) {
       var option = document.createElement("option");
-      option.value = String(i);
-      option.textContent = "Episodio " + s.id;
+      option.value = String(index);
+      option.textContent = "Episodio " + item.id;
       selectorEl.appendChild(option);
     });
-
     if (state.storyIndex >= stories.length) {
       state.storyIndex = 0;
     }
@@ -200,16 +225,16 @@
     slot.addEventListener("click", function () {
       onSlotClick(index);
     });
-
     return slot;
   }
 
   function renderSlots() {
     slotsEl.innerHTML = "";
-
     var currentStory = story();
     var keys = [];
-    for (var i = 0; i < 5; i++) {
+    var i;
+
+    for (i = 0; i < 5; i++) {
       keys.push(currentStory.visibleKeys[i] || KEY_UNKNOWN);
     }
 
@@ -237,7 +262,6 @@
     var currentStory = story();
     solutionEl.hidden = !state.solutionVisible;
     solutionBtn.textContent = state.solutionVisible ? "Nascondi soluzione" : "Rivela soluzione";
-
     document.getElementById("solutionText").textContent = currentStory.solution;
     scriptureEl.textContent = currentStory.scriptureQuote || "";
     noteEl.textContent = currentStory.engagementNote || "";
@@ -277,6 +301,11 @@
     editorStatusEl.style.color = isError ? "#a11d1d" : "#684700";
   }
 
+  function setUploadStatus(text, isError) {
+    assetUploadStatusEl.textContent = text;
+    assetUploadStatusEl.style.color = isError ? "#a11d1d" : "#6f4a00";
+  }
+
   function createSlotEditorRow(container, label, groupName, index) {
     var row = document.createElement("div");
     row.className = "slot-editor-row slot-editor-row-extended";
@@ -287,7 +316,7 @@
 
     var keyInput = document.createElement("input");
     keyInput.type = "text";
-    keyInput.placeholder = "Chiave PNG";
+    keyInput.placeholder = "Chiave PNG o custom:...";
 
     var captionInput = document.createElement("input");
     captionInput.type = "text";
@@ -366,7 +395,12 @@
       });
     });
 
-    setEditorStatus("I nuovi episodi vengono salvati solo nel browser corrente.", false);
+    setEditorStatus(
+      state.apiAvailable
+        ? "I nuovi episodi saranno condivisi tra tutti gli utenti tramite Cloudflare."
+        : "API Cloudflare non disponibile: salvataggio temporaneo solo locale.",
+      false
+    );
   }
 
   function openEditor() {
@@ -393,8 +427,9 @@
     var query = String(filterText || "").toLowerCase();
     assetGridEl.innerHTML = "";
 
-    (window.JW_ASSET_KEYS || []).forEach(function (key) {
-      if (query && key.toLowerCase().indexOf(query) === -1) {
+    getAllAssets().forEach(function (asset) {
+      var searchHaystack = (asset.key + " " + (asset.label || "")).toLowerCase();
+      if (query && searchHaystack.indexOf(query) === -1) {
         return;
       }
 
@@ -403,20 +438,20 @@
       card.className = "asset-card";
 
       var img = document.createElement("img");
-      img.alt = key;
-      img.src = imageUrl(key);
+      img.alt = asset.label || asset.key;
+      img.src = imageUrl(asset.key);
       img.onerror = function () {
         img.src = imageUrl(KEY_UNKNOWN);
       };
 
       var name = document.createElement("span");
-      name.textContent = key;
+      name.textContent = asset.builtIn ? asset.key : (asset.label || asset.key);
 
       card.appendChild(img);
       card.appendChild(name);
       card.addEventListener("click", function () {
         if (pickerTarget) {
-          pickerTarget.value = key;
+          pickerTarget.value = asset.key;
           if (typeof pickerTarget.dispatchEvent === "function") {
             pickerTarget.dispatchEvent(new Event("input"));
           }
@@ -430,25 +465,27 @@
   function collectGroup(group) {
     return group.map(function (item) {
       return {
-        key: resolveAssetKey(item.key.value.trim()),
+        key: resolveStoryAssetKey(item.key.value.trim()),
         caption: item.caption.value.trim()
       };
     });
   }
 
   function defaultCaptionFromKey(key, index) {
-    return "Immagine " + (index + 1) + ": " + resolveAssetKey(key);
+    return "Immagine " + (index + 1) + ": " + (isCustomAssetKey(key) ? customAssetName(key) : resolveBuiltInAssetKey(key));
   }
 
   function validateNewStory(payload) {
+    var allKeys;
     if (!payload.title || !payload.scriptureReference || !payload.keyword || !payload.hint || !payload.solution) {
       return "Compila titolo, riferimento biblico, parola chiave, indizio e soluzione.";
     }
     if (payload.visibleKeys.length !== 5 || payload.hiddenKeys.length !== 2 || !payload.hintKey) {
       return "Servono 5 immagini visibili, 2 immagini nascoste e 1 immagine indizio.";
     }
-    if (payload.visibleKeys.concat(payload.hiddenKeys).concat([payload.hintKey]).some(function (key) { return !assetLookup[normalizeAssetToken(key)]; })) {
-      return "Una o più chiavi immagine non esistono negli asset web. Usa il pulsante Scegli....";
+    allKeys = payload.visibleKeys.concat(payload.hiddenKeys).concat([payload.hintKey]);
+    if (allKeys.some(function (key) { return !isKnownAsset(key); })) {
+      return "Una o più chiavi immagine non esistono nel picker. Usa il pulsante Scegli....";
     }
     return "";
   }
@@ -460,9 +497,8 @@
     var allCaptions = visible.concat(hidden).concat([hint]).map(function (item, index) {
       return item.caption || defaultCaptionFromKey(item.key, index);
     });
-
     var payload = sanitizeStory({
-      id: nextStoryId(),
+      id: 0,
       title: editorFields.title.value.trim(),
       scriptureReference: editorFields.reference.value.trim(),
       keyword: editorFields.keyword.value.trim(),
@@ -476,27 +512,110 @@
       imageCaptions: allCaptions,
       isUserCreated: true
     });
-
     var error = validateNewStory(payload);
     if (error) {
       throw new Error(error);
     }
-
     return payload;
   }
 
-  function saveEditorStory() {
+  async function requestJson(url, options) {
+    var response = await fetch(url, options || {});
+    if (!response.ok) {
+      throw new Error("HTTP " + response.status);
+    }
+    return response.json();
+  }
+
+  async function refreshSharedData() {
     try {
-      var userStories = getUserStories();
+      var results = await Promise.all([
+        requestJson("/api/stories"),
+        requestJson("/api/assets")
+      ]);
+      state.sharedStories = sanitizeStories(results[0].stories || []);
+      state.customAssets = results[1].assets || [];
+      state.apiAvailable = true;
+      setUploadStatus("Storage Cloudflare attivo: episodi e PNG custom saranno condivisi.", false);
+      setEditorStatus("Cloudflare attivo: i nuovi episodi saranno condivisi tra tutti gli utenti.", false);
+    } catch (error) {
+      state.sharedStories = getLocalStories();
+      state.customAssets = [];
+      state.apiAvailable = false;
+      setUploadStatus("API Cloudflare non trovata in locale. I PNG custom condivisi saranno attivi dopo il deploy con KV/R2 configurati.", true);
+      setEditorStatus("Modalità locale: gli episodi creati ora restano solo nel browser corrente.", true);
+    }
+  }
+
+  async function saveEditorStory() {
+    try {
       var newStory = createStoryFromEditor();
-      userStories.push(newStory);
-      saveUserStories(userStories);
-      setEditorStatus("Episodio " + newStory.id + " salvato in locale. Lo carico subito nella lista.", false);
+      if (state.apiAvailable) {
+        var payload = await requestJson("/api/stories", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newStory)
+        });
+        state.sharedStories.push(sanitizeStory(payload.story));
+        setEditorStatus("Episodio " + payload.story.id + " salvato e condiviso online.", false);
+      } else {
+        state.sharedStories.push(sanitizeStory(newStory));
+        state.sharedStories[state.sharedStories.length - 1].id = getAllStories().reduce(function (maxId, item) {
+          return Math.max(maxId, Number(item.id || 0));
+        }, 18) + 1;
+        saveLocalStories(state.sharedStories);
+        setEditorStatus("API non disponibile: episodio salvato solo in locale.", true);
+      }
       closeEditor();
       buildSelector();
       loadStory(getAllStories().length - 1);
     } catch (error) {
       setEditorStatus(error.message, true);
+    }
+  }
+
+  async function uploadCustomAsset() {
+    var file = assetUploadFileEl.files && assetUploadFileEl.files[0];
+    var name = assetUploadNameEl.value.trim();
+    var formData;
+
+    if (!file) {
+      setUploadStatus("Seleziona un file PNG prima di caricare.", true);
+      return;
+    }
+    if (file.type !== "image/png") {
+      setUploadStatus("Sono accettati solo file PNG.", true);
+      return;
+    }
+    if (!state.apiAvailable) {
+      setUploadStatus("Upload condiviso disponibile solo dopo il deploy Cloudflare con storage attivo.", true);
+      return;
+    }
+
+    formData = new FormData();
+    formData.append("file", file);
+    formData.append("name", name);
+
+    try {
+      uploadAssetBtn.disabled = true;
+      setUploadStatus("Caricamento PNG in corso...", false);
+      var payload = await requestJson("/api/assets", {
+        method: "POST",
+        body: formData
+      });
+      state.customAssets.unshift(payload.asset);
+      renderAssetGrid(assetSearchEl.value);
+      setUploadStatus("PNG caricato: " + (payload.asset.label || payload.asset.key), false);
+      if (pickerTarget) {
+        pickerTarget.value = payload.asset.key;
+        pickerTarget.dispatchEvent(new Event("input"));
+      }
+      assetUploadFileEl.value = "";
+      assetUploadNameEl.value = "";
+    } catch (error) {
+      setUploadStatus("Errore upload PNG: " + error.message, true);
+    } finally {
+      uploadAssetBtn.disabled = false;
     }
   }
 
@@ -527,8 +646,7 @@
     var gained = calcExpectedXp();
     state.totalXp += gained;
     localStorage.setItem("jwquiz_web_xp", String(state.totalXp));
-    var next = (state.storyIndex + 1) % getAllStories().length;
-    loadStory(next);
+    loadStory((state.storyIndex + 1) % getAllStories().length);
   });
 
   createBtn.addEventListener("click", openEditor);
@@ -538,9 +656,15 @@
   assetSearchEl.addEventListener("input", function () {
     renderAssetGrid(assetSearchEl.value);
   });
+  uploadAssetBtn.addEventListener("click", uploadCustomAsset);
 
-  buildEditorRows();
-  renderAssetGrid("");
-  buildSelector();
-  loadStory(0);
+  async function initialize() {
+    buildEditorRows();
+    await refreshSharedData();
+    renderAssetGrid("");
+    buildSelector();
+    loadStory(0);
+  }
+
+  initialize();
 })();

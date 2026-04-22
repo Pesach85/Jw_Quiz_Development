@@ -281,6 +281,10 @@ body {
   grid-column: 1 / -1;
 }
 
+.field-grow {
+  flex: 1 1 240px;
+}
+
 .editor-section {
   margin-top: 18px;
   padding-top: 14px;
@@ -352,6 +356,21 @@ body {
   color: #684700;
 }
 
+.picker-upload {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.upload-status {
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #6f4a00;
+}
+
 .asset-grid {
   margin-top: 14px;
   display: grid;
@@ -412,4 +431,5 @@ body {
   .slot-editor-row-extended { grid-template-columns: 1fr; }
   .editor,
   .picker { padding: 12px; }
+  .picker-upload { align-items: stretch; }
 }
