@@ -272,6 +272,9 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-04-22 | **QA post-rollout storie 1-12**: corretti 4 riferimenti PNG mancanti in `StoryLibrary` (`japanese_dolls_facebook`, `75-...old_woman...`, `412-...dancing...`, `1F4AC`) con chiavi reali presenti in `Resources` | Ô£à Implementato e validato (build 0 regressioni) |
 | 2026-04-22 | **Refactor runtime Form1**: consolidata la navigazione episodi in metodo unico `OpenStory(id)` per ridurre duplicazioni e mantenere invariato il comportamento utente | Ô£à Implementato e validato (build 0 regressioni) |
 | 2026-04-22 | **KB recovery post-troncamento**: ripristinato `.github/KB.md` da snapshot stabile precedente e riallineato il log decisionale all'ultimo stato reale della codebase | Ô£à Implementato || 2026-04-22 | **Sistema a Stelle (1-3 per storia)**: stelle live nell'header di `DynamicStoryForm` (★★★→★★☆→★☆☆ man mano che si usano aiuti), persistenza in `ProgressTracker.StoryStars`, contatore perfetti in `ProgressPanel`, stelle nel dialog statistiche | ✅ Implementato e validato (build 0 regressioni) |
+| 2026-04-22 | **Webapp UX — transizioni e animazioni**: aggiunti `transition` su btn/caption/select/inputs, animazioni `shellIn`/`cardIn`/`riseIn` per shell/editor/picker/solution panel, hover+active feedback su button e slot, focus ring sui form fields | ✅ Implementato |
+| 2026-04-22 | **Webapp — stelle live**: aggiunto `starsBox` nel header della webapp con calcolo ★★★ in tempo reale identico al desktop; aggiornato da `updateStarsUi()` ad ogni reveal/hint | ✅ Implementato |
+| 2026-04-22 | **Webapp — utenti online + pannello admin stats**: aggiunto badge "online" pulsante nel topbar; `functions/api/analytics.js` (Cloudflare Pages Function) per heartbeat presenza (TTL 120s), conteggio sessioni 24h, eventi story_view/story_complete; pannello admin con login via `ADMIN_SECRET` env var e 4 metriche aggregate (online ora, visioni, completamenti, sessioni) | ✅ Implementato |
 ---
 
 ## 11. Next Best Decisions (Proposte Attive)
@@ -285,7 +288,8 @@ Aggiornare questa sezione ad ogni sessione di lavoro.
 | Alta | Gameplay | Form statici (2ÔÇô13): indizio animato come DynamicStoryForm (pulsazione su pictureBox8) |
 | Alta | Content | ~~Aggiungere ImageCaptions[] anche alle storie statiche id 1-12 (attualmente solo ID 13-18)~~ Ô£à **COMPLETATO** |
 | Alta | Multilanguage | Migrare anche i form statici legacy 1-12 al runtime multilanguage senza toccare i `Designer.cs` |
-| Alta | Architettura | Piano 3 fasi unificazione legacy: Ô£à F1 completata (`Forms_list` + feature flag + fallback), Ô£à F2 completata (`StoryLibrary` 1-12 pronta al renderer dinamico), Ô£à F3 rollout completato (flag ON + fallback). Rifinitura residua: cleanup tecnico graduale dei code-behind legacy non piu' in path runtime principale | 
+| Alta | Architettura | Piano 3 fasi unificazione legacy: ✅ F1, F2, F3 completate. Rifinitura residua: cleanup tecnico graduale dei code-behind legacy non piu' in path runtime principale |
+| Alta | Webapp | Configurare `ADMIN_SECRET` nelle env var di Cloudflare Pages → Settings → Environment Variables per attivare il pannello admin statistiche |
 | Media | Multilanguage | Rifinire il glossario rule-based it/en del motore shared web/desktop con review manuale delle traduzioni bibliche piu' lunghe |
 | Media | Gamification | **Streak + Badge**: N storie consecutive senza hint = badge "Saggio/Profeta/Apostolo" |
 | Media | Gamification | **Classifica sessione locale**: 2-8 partecipanti inseriscono nome, XP aggregati, classifica finale |

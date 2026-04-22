@@ -17,6 +17,8 @@
           <select id="languageSelect" class="select" title="Lingua"></select>
           <select id="storySelect" class="select" data-i18n-title="StorySelectTitle" title="Seleziona episodio"></select>
           <button id="btnCreateStory" class="btn btn-create" type="button" data-i18n="CreateEpisodeButton">Crea episodio</button>
+          <div id="onlineBadge" class="online-badge" hidden><span class="online-dot"></span><span id="onlineCount">1</span>&nbsp;online</div>
+          <button id="btnAdmin" class="btn btn-ghost" type="button" title="Pannello Admin" aria-label="Pannello Admin">🔒</button>
           <div class="xp-box"><span data-i18n="TotalXpLabel">XP Totali</span>: <span id="xpValue">0</span></div>
         </div>
       </section>
@@ -24,7 +26,10 @@
       <section class="header">
         <h2 id="storyTitle" class="story-title"></h2>
         <div id="storyRef" class="story-ref"></div>
-        <div><span data-i18n="ExpectedXpLabel">XP Previsti</span>: <strong id="xpExpected">100</strong></div>
+        <div class="header-meta">
+          <span><span data-i18n="ExpectedXpLabel">XP Previsti</span>: <strong id="xpExpected">100</strong></span>
+          <span id="starsBox" class="stars-box" title="Stelle ottenute">★★★</span>
+        </div>
       </section>
 
       <section id="caption" class="caption"></section>
@@ -138,6 +143,51 @@
         </div>
       </section>
     </main>
+
+      <section id="adminPanel" class="admin-panel" hidden>
+        <div class="admin-card">
+          <div class="admin-head">
+            <h3>📊 Pannello Admin</h3>
+            <button id="btnCloseAdmin" class="btn btn-ghost" type="button">Chiudi</button>
+          </div>
+          <div id="adminLoginArea">
+            <label class="field" style="max-width:380px">
+              <span>Password admin (<code>ADMIN_SECRET</code>)</span>
+              <input id="adminSecret" type="password" autocomplete="current-password" />
+            </label>
+            <div style="display:flex;gap:10px;margin-top:10px;align-items:center">
+              <button id="btnAdminLogin" class="btn btn-reveal" type="button">Accedi</button>
+              <span id="adminError" style="color:#a11d1d;font-weight:700;display:none">Password errata o non configurata</span>
+            </div>
+            <p style="margin-top:14px;font-size:13px;color:#6f4a00">Configura <code>ADMIN_SECRET</code> nelle variabili d’ambiente di Cloudflare Pages per abilitare le statistiche.</p>
+          </div>
+          <div id="adminStats" hidden>
+            <div class="admin-stat-grid">
+              <div class="admin-stat">
+                <div class="admin-stat-val" id="statOnline">-</div>
+                <div class="admin-stat-lbl">🟢 Online ora</div>
+              </div>
+              <div class="admin-stat">
+                <div class="admin-stat-val" id="statViews">-</div>
+                <div class="admin-stat-lbl">👁 Visioni totali</div>
+              </div>
+              <div class="admin-stat">
+                <div class="admin-stat-val" id="statCompletions">-</div>
+                <div class="admin-stat-lbl">✅ Completamenti</div>
+              </div>
+              <div class="admin-stat">
+                <div class="admin-stat-val" id="statSessions">-</div>
+                <div class="admin-stat-lbl">👤 Sessioni totali</div>
+              </div>
+            </div>
+            <div style="margin-top:14px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+              <button id="btnAdminRefresh" class="btn btn-reveal" type="button">🔄 Aggiorna</button>
+              <span id="adminStatusMsg" style="font-size:13px;color:#6f4a00"></span>
+            </div>
+            <div id="adminOfflineNote" style="font-size:13px;color:#a11d1d;margin-top:10px;display:none">⚠️ Analytics non disponibili in locale. Configura <code>ADMIN_SECRET</code> e distribuisci su Cloudflare Pages.</div>
+          </div>
+        </div>
+      </section>
 
     <script src="assets.js"></script>
     <script src="stories.js"></script>

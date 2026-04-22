@@ -31,6 +31,7 @@ body {
   border: 1px solid var(--line);
   border-radius: 22px;
   box-shadow: 0 16px 45px rgba(31, 41, 55, 0.12);
+  animation: shellIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .topbar {
@@ -67,6 +68,7 @@ body {
   padding: 8px 10px;
   background: #fff;
   font-size: 15px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .xp-box {
@@ -106,6 +108,7 @@ body {
   min-height: 52px;
   display: flex;
   align-items: center;
+  transition: background-color 0.28s ease, border-color 0.28s ease, color 0.28s ease;
 }
 
 .caption-highlight {
@@ -162,6 +165,7 @@ body {
   font-size: 15px;
   font-weight: 800;
   cursor: pointer;
+  transition: transform 0.15s ease, filter 0.15s ease, opacity 0.15s ease;
 }
 
 .btn:disabled {
@@ -219,6 +223,7 @@ body {
   border-radius: 18px;
   box-shadow: 0 22px 60px rgba(15, 23, 42, 0.24);
   padding: 20px;
+  animation: cardIn 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .picker-card {
@@ -276,6 +281,7 @@ body {
   padding: 10px 12px;
   font: inherit;
   color: var(--ink);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .field-wide {
@@ -433,4 +439,170 @@ body {
   .editor,
   .picker { padding: 12px; }
   .picker-upload { align-items: stretch; }
+  .admin-stat-grid { grid-template-columns: 1fr; }
+}
+
+/* ========================================================
+   TRANSITIONS & ANIMATIONS — UX Enhancement
+   ======================================================== */
+
+/* Button micro-interactions */
+.btn:not(:disabled):hover {
+  transform: translateY(-2px) scale(1.035);
+  filter: brightness(1.12);
+}
+.btn:not(:disabled):active {
+  transform: scale(0.95);
+  filter: brightness(0.92);
+}
+
+/* Slot click feedback */
+.slot:active {
+  transform: scale(0.91) !important;
+  box-shadow: inset 0 2px 8px rgba(15, 76, 129, 0.14) !important;
+}
+
+/* Asset card active */
+.asset-card:active {
+  transform: scale(0.92);
+  box-shadow: none;
+}
+
+/* Form field focus ring */
+.field input:focus,
+.field textarea:focus,
+.field select:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(15, 76, 129, 0.18);
+}
+.select:hover { border-color: var(--brand); }
+.select:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(15, 76, 129, 0.15);
+}
+
+/* Shell page entrance */
+@keyframes shellIn {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Card entrance (editor, picker, admin modal) */
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(18px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);    }
+}
+
+/* Solution panel entrance */
+#solutionPanel:not([hidden]) {
+  animation: riseIn 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Header meta row (XP + Stars) */
+.header-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* Stars display */
+.stars-box {
+  font-size: 24px;
+  letter-spacing: 2px;
+  transition: color 0.3s ease;
+  font-family: "Segoe UI", "Nunito Sans", sans-serif;
+  user-select: none;
+}
+
+/* Online badge */
+.online-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--next);
+  padding: 5px 12px;
+  background: rgba(46, 125, 50, 0.1);
+  border-radius: 20px;
+  border: 1px solid rgba(46, 125, 50, 0.25);
+}
+.online-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--next);
+  animation: blink 1.8s ease-in-out infinite;
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+
+/* Admin panel overlay + card */
+.admin-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  background: rgba(16, 24, 39, 0.72);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  overflow: auto;
+}
+.admin-card {
+  max-width: 620px;
+  width: 100%;
+  background: linear-gradient(165deg, #fffdf7, #fff4de);
+  border: 1px solid #d7bc92;
+  border-radius: 18px;
+  box-shadow: 0 22px 60px rgba(15, 23, 42, 0.3);
+  padding: 24px;
+  animation: cardIn 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.admin-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.admin-head h3 {
+  margin: 0;
+  font-family: "Bree Serif", Georgia, serif;
+  font-size: 26px;
+  color: var(--brand);
+}
+.admin-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-top: 10px;
+}
+.admin-stat {
+  background: #fff;
+  border: 1px solid #e2cda8;
+  border-radius: 14px;
+  padding: 16px 12px;
+  text-align: center;
+  transition: box-shadow 0.2s ease;
+}
+.admin-stat:hover {
+  box-shadow: 0 4px 14px rgba(15, 76, 129, 0.1);
+}
+.admin-stat-val {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--brand);
+  font-family: "Bree Serif", Georgia, serif;
+}
+.admin-stat-lbl {
+  font-size: 14px;
+  font-weight: 700;
+  color: #6f4200;
+  margin-top: 4px;
 }

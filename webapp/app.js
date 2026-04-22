@@ -14,6 +14,14 @@ import {
   var LOCAL_STORIES_KEY = "jwquiz_web_user_stories_v1";
   var LANGUAGE_STORAGE_KEY = "jwquiz_web_language";
 
+  function generateClientId() {
+    var stored = sessionStorage.getItem("jwquiz_cid");
+    if (stored && stored.length >= 8 && stored.length <= 60 && /^[a-z0-9_]+$/.test(stored)) return stored;
+    var id = "u" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 9);
+    sessionStorage.setItem("jwquiz_cid", id);
+    return id;
+  }
+
   var state = {
     storyIndex: 0,
     revealCount: 0,
@@ -23,7 +31,10 @@ import {
     sharedStories: [],
     customAssets: [],
     apiAvailable: false,
-    currentLanguage: normalizeLanguage(localStorage.getItem(LANGUAGE_STORAGE_KEY) || AppLanguages.Italian)
+    currentLanguage: normalizeLanguage(localStorage.getItem(LANGUAGE_STORAGE_KEY) || AppLanguages.Italian),
+    clientId: generateClientId(),
+    heartbeatInterval: null,
+    adminAuthenticated: false
   };
 
   var languageSelectEl = document.getElementById("languageSelect");
@@ -58,6 +69,23 @@ import {
   var assetUploadFileEl = document.getElementById("assetUploadFile");
   var assetUploadStatusEl = document.getElementById("assetUploadStatus");
   var uploadAssetBtn = document.getElementById("btnUploadAsset");
+
+  var onlineBadgeEl = document.getElementById("onlineBadge");
+  var onlineCountEl = document.getElementById("onlineCount");
+  var starsBoxEl = document.getElementById("starsBox");
+  var adminPanelEl = document.getElementById("adminPanel");
+  var adminLoginAreaEl = document.getElementById("adminLoginArea");
+  var adminStatsEl = document.getElementById("adminStats");
+  var adminSecretInputEl = document.getElementById("adminSecret");
+  var btnAdminLoginEl = document.getElementById("btnAdminLogin");
+  var adminErrorEl = document.getElementById("adminError");
+  var statOnlineEl = document.getElementById("statOnline");
+  var statViewsEl = document.getElementById("statViews");
+  var statCompletionsEl = document.getElementById("statCompletions");
+  var statSessionsEl = document.getElementById("statSessions");
+  var btnAdminRefreshEl = document.getElementById("btnAdminRefresh");
+  var adminStatusMsgEl = document.getElementById("adminStatusMsg");
+  var adminOfflineNoteEl = document.getElementById("adminOfflineNote");
 
   var builtInAssetKeys = (window.JW_ASSET_KEYS || []).slice();
   var builtInAssetLookup = buildAssetLookup(builtInAssetKeys);
@@ -367,6 +395,7 @@ import {
   function updateXpUi() {
     expectedXpEl.textContent = calcExpectedXp();
     xpEl.textContent = state.totalXp;
+    updateStarsUi();
   }
 
   function buildSelector() {
@@ -524,6 +553,7 @@ import {
     state.solutionVisible = false;
     resetCaption();
     render();
+    sendAnalyticsEvent("story_view", { storyId: story().id });
   }
 
   function setEditorStatus(text, isError) {
@@ -881,6 +911,124 @@ import {
     setLanguage(languageSelectEl.value);
   });
 
+  // ── Stars UI ─────────────────────────────────────────────────────────────
+  function calcStars() {
+    var used = state.revealCount + (state.hintRevealed ? 1 : 0);
+    return Math.max(1, 3 - used);
+  }
+  function updateStarsUi() {
+    if (!starsBoxEl) return;
+    var s = calcStars();
+    starsBoxEl.textContent = "\u2605".repeat(s) + "\u2606".repeat(3 - s);
+    starsBoxEl.style.color = s === 3 ? "#d4a000" : s === 2 ? "#888" : "#a05820";
+  }
+
+  // ── Analytics / Presence ─────────────────────────────────────────────────
+  function updateOnlineBadge(count) {
+    if (!onlineBadgeEl) return;
+    if (count > 0) {
+      onlineBadgeEl.hidden = false;
+      if (onlineCountEl) onlineCountEl.textContent = String(count);
+    } else {
+      onlineBadgeEl.hidden = true;
+    }
+  }
+  function sendAnalyticsEvent(type, extra) {
+    if (!state.apiAvailable) return;
+    var body = Object.assign(
+      { type: type, clientId: state.clientId, language: state.currentLanguage },
+      extra || {}
+    );
+    fetch("/api/analytics", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body)
+    })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (data) {
+        if (data && typeof data.online === "number") updateOnlineBadge(data.online);
+      })
+      .catch(function () {});
+  }
+  function startHeartbeat() {
+    if (!state.apiAvailable) return;
+    var send = function () {
+      sendAnalyticsEvent("heartbeat", { storyId: story().id });
+    };
+    send();
+    if (state.heartbeatInterval) clearInterval(state.heartbeatInterval);
+    state.heartbeatInterval = setInterval(send, 30000);
+  }
+
+  // ── Admin panel ──────────────────────────────────────────────────────────
+  function displayAdminStats(data) {
+    if (statOnlineEl)      statOnlineEl.textContent      = String(data.online      !== undefined ? data.online      : "-");
+    if (statViewsEl)       statViewsEl.textContent       = String(data.views       !== undefined ? data.views       : "-");
+    if (statCompletionsEl) statCompletionsEl.textContent = String(data.completions !== undefined ? data.completions : "-");
+    if (statSessionsEl)    statSessionsEl.textContent    = String(data.sessions    !== undefined ? data.sessions    : "-");
+  }
+  async function loadAdminStats(secret) {
+    if (!state.apiAvailable) {
+      if (adminOfflineNoteEl) adminOfflineNoteEl.style.display = "block";
+      return;
+    }
+    try {
+      var data = await requestJson("/api/analytics", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "admin_stats", secret: secret })
+      });
+      displayAdminStats(data);
+      if (adminStatusMsgEl) adminStatusMsgEl.textContent = "Aggiornato: " + new Date().toLocaleTimeString("it-IT");
+      if (adminOfflineNoteEl) adminOfflineNoteEl.style.display = "none";
+    } catch (_err) {
+      if (adminOfflineNoteEl) adminOfflineNoteEl.style.display = "block";
+    }
+  }
+  function openAdmin() {
+    if (!adminPanelEl) return;
+    var saved = sessionStorage.getItem("jwquiz_admin_session");
+    if (saved) {
+      state.adminAuthenticated = true;
+      if (adminLoginAreaEl) adminLoginAreaEl.hidden = true;
+      if (adminStatsEl)     adminStatsEl.hidden     = false;
+      if (adminOfflineNoteEl) adminOfflineNoteEl.style.display = state.apiAvailable ? "none" : "block";
+      loadAdminStats(saved);
+    } else {
+      state.adminAuthenticated = false;
+      if (adminLoginAreaEl) adminLoginAreaEl.hidden = false;
+      if (adminStatsEl)     adminStatsEl.hidden     = true;
+      if (adminErrorEl)     adminErrorEl.style.display = "none";
+    }
+    adminPanelEl.hidden = false;
+  }
+  function closeAdmin() {
+    if (adminPanelEl) adminPanelEl.hidden = true;
+  }
+  async function doAdminLogin() {
+    if (!adminSecretInputEl) return;
+    var secret = adminSecretInputEl.value.trim();
+    if (!secret) return;
+    try {
+      var data = await requestJson("/api/analytics", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "admin_stats", secret: secret })
+      });
+      sessionStorage.setItem("jwquiz_admin_session", secret);
+      state.adminAuthenticated = true;
+      if (adminErrorEl)     adminErrorEl.style.display = "none";
+      if (adminLoginAreaEl) adminLoginAreaEl.hidden = true;
+      if (adminStatsEl)     adminStatsEl.hidden = false;
+      if (adminOfflineNoteEl) adminOfflineNoteEl.style.display = "none";
+      displayAdminStats(data);
+      if (adminStatusMsgEl) adminStatusMsgEl.textContent = "\u2705 Autenticato \u2014 " + new Date().toLocaleTimeString("it-IT");
+    } catch (_err) {
+      if (adminErrorEl) adminErrorEl.style.display = "block";
+      adminSecretInputEl.value = "";
+    }
+  }
+
   selectorEl.addEventListener("change", function () {
     loadStory(Number(selectorEl.value));
   });
@@ -901,6 +1049,9 @@ import {
 
   solutionBtn.addEventListener("click", function () {
     state.solutionVisible = !state.solutionVisible;
+    if (state.solutionVisible) {
+      sendAnalyticsEvent("story_complete", { storyId: story().id, xp: calcExpectedXp() });
+    }
     render();
   });
 
@@ -920,6 +1071,24 @@ import {
   });
   uploadAssetBtn.addEventListener("click", uploadCustomAsset);
 
+  // Admin panel event listeners
+  var _btnAdmin      = document.getElementById("btnAdmin");
+  var _btnCloseAdmin = document.getElementById("btnCloseAdmin");
+  if (_btnAdmin)        _btnAdmin.addEventListener("click", openAdmin);
+  if (_btnCloseAdmin)   _btnCloseAdmin.addEventListener("click", closeAdmin);
+  if (btnAdminLoginEl)  btnAdminLoginEl.addEventListener("click", doAdminLogin);
+  if (adminSecretInputEl) {
+    adminSecretInputEl.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") { e.preventDefault(); doAdminLogin(); }
+    });
+  }
+  if (btnAdminRefreshEl) {
+    btnAdminRefreshEl.addEventListener("click", function () {
+      var s = sessionStorage.getItem("jwquiz_admin_session");
+      if (s) loadAdminStats(s);
+    });
+  }
+
   async function initialize() {
     buildEditorRows();
     applyUiText();
@@ -927,6 +1096,7 @@ import {
     renderAssetGrid("");
     buildSelector();
     loadStory(0);
+    startHeartbeat();
   }
 
   initialize();
