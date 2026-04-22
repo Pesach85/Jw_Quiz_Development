@@ -263,6 +263,7 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-04-22 | **Content anti-spoiler**: introdotta policy centrale per neutralizzare didascalie immagini troppo esplicite e ripulite le caption piu' scoperte degli episodi dinamici | ✅ Implementata |
 | 2026-04-22 | **Motore multilanguage desktop**: introdotti `LanguageManager`, `AppText`, `StoryLocalizationService` e auto-traduzione it/en per storie dinamiche e storie utente | ✅ Implementato |
 | 2026-04-22 | **Motore multilanguage web shared**: aggiunti selettore lingua web, modulo shared `story-i18n.js` e persistenza `sourceLanguage/translations` nelle Pages Functions | ✅ Implementato |
+| 2026-04-22 | **Valutazione unificazione legacy 1-12**: analisi impatti completata; proposta migrazione in 3 fasi (router -> data -> dismissione form statici) per convergere su `DynamicStoryForm` | 🟨 Proposta pronta (in attesa approvazione) |
 
 ---
 
@@ -277,6 +278,7 @@ Aggiornare questa sezione ad ogni sessione di lavoro.
 | Alta | Gameplay | Form statici (2–13): indizio animato come DynamicStoryForm (pulsazione su pictureBox8) |
 | Alta | Content | Aggiungere ImageCaptions[] anche alle storie statiche id 1-12 (attualmente solo ID 13-18) |
 | Alta | Multilanguage | Migrare anche i form statici legacy 1-12 al runtime multilanguage senza toccare i `Designer.cs` |
+| Alta | Architettura | Piano 3 fasi unificazione legacy: (F1) `Forms_list` instrada 1-12 a `DynamicStoryForm` dietro feature flag; (F2) popolare `StoryLibrary` id 1-12 con `VisibleEmojis/HiddenEmojis/HintEmoji/ImageCaptions/ScriptureQuote`; (F3) dismettere menu/eventi ridondanti nei form statici mantenendo fallback rollback | 
 | Media | Multilanguage | Rifinire il glossario rule-based it/en del motore shared web/desktop con review manuale delle traduzioni bibliche piu' lunghe |
 | Media | Gamification | **Streak + Badge**: N storie consecutive senza hint = badge "Saggio/Profeta/Apostolo" |
 | Media | Gamification | **Classifica sessione locale**: 2-8 partecipanti inseriscono nome, XP aggregati, classifica finale |
