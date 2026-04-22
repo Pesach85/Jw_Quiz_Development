@@ -267,6 +267,7 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-04-22 | **Valutazione unificazione legacy 1-12**: analisi impatti completata; proposta migrazione in 3 fasi (router -> data -> dismissione form statici) per convergere su `DynamicStoryForm` | 🟨 Proposta pronta (in attesa approvazione) |
 | 2026-04-22 | **Unificazione legacy Step 1**: introdotto feature flag `AppFeatureFlags.UseDynamicRendererForLegacyStories` + routing sicuro in `Forms_list` con fallback automatico ai form statici se dati 1-12 non completi | ✅ Implementato e validato (build 0 regressioni) |
 | 2026-04-22 | **Unificazione legacy Step 2**: popolati in `StoryLibrary` i campi dinamici per le storie 1-12 (slot immagini, indizio, didascalie, scripture quote) mantenendo `IsDynamic=false` e flag routing OFF | ✅ Implementato e validato (build 0 regressioni) |
+| 2026-04-22 | **Unificazione legacy Step 3 (rollout)**: attivato `UseDynamicRendererForLegacyStories=true`; le storie 1-12 ora passano dal renderer dinamico quando i controlli dati sono soddisfatti, con rollback immediato possibile via flag | ✅ Implementato e validato (build 0 regressioni) |
 
 ---
 
@@ -281,7 +282,7 @@ Aggiornare questa sezione ad ogni sessione di lavoro.
 | Alta | Gameplay | Form statici (2–13): indizio animato come DynamicStoryForm (pulsazione su pictureBox8) |
 | Alta | Content | Aggiungere ImageCaptions[] anche alle storie statiche id 1-12 (attualmente solo ID 13-18) |
 | Alta | Multilanguage | Migrare anche i form statici legacy 1-12 al runtime multilanguage senza toccare i `Designer.cs` |
-| Alta | Architettura | Piano 3 fasi unificazione legacy: ✅ F1 completata (`Forms_list` + feature flag + fallback), ✅ F2 completata (`StoryLibrary` 1-12 pronta al renderer dinamico), prossimo passo: (F3) ridurre dipendenze runtime dai form statici e consolidare routing/menu mantenendo rollback | 
+| Alta | Architettura | Piano 3 fasi unificazione legacy: ✅ F1 completata (`Forms_list` + feature flag + fallback), ✅ F2 completata (`StoryLibrary` 1-12 pronta al renderer dinamico), ✅ F3 rollout completato (flag ON + fallback). Rifinitura residua: cleanup tecnico graduale dei code-behind legacy non piu' in path runtime principale | 
 | Media | Multilanguage | Rifinire il glossario rule-based it/en del motore shared web/desktop con review manuale delle traduzioni bibliche piu' lunghe |
 | Media | Gamification | **Streak + Badge**: N storie consecutive senza hint = badge "Saggio/Profeta/Apostolo" |
 | Media | Gamification | **Classifica sessione locale**: 2-8 partecipanti inseriscono nome, XP aggregati, classifica finale |
