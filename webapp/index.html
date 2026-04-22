@@ -14,16 +14,17 @@
       <section class="topbar">
         <h1 class="brand">JW Quiz Web</h1>
         <div class="controls">
-          <select id="storySelect" class="select"></select>
-          <button id="btnCreateStory" class="btn btn-create" type="button">Crea episodio</button>
-          <div class="xp-box">XP Totali: <span id="xpValue">0</span></div>
+          <select id="languageSelect" class="select" title="Lingua"></select>
+          <select id="storySelect" class="select" data-i18n-title="StorySelectTitle" title="Seleziona episodio"></select>
+          <button id="btnCreateStory" class="btn btn-create" type="button" data-i18n="CreateEpisodeButton">Crea episodio</button>
+          <div class="xp-box"><span data-i18n="TotalXpLabel">XP Totali</span>: <span id="xpValue">0</span></div>
         </div>
       </section>
 
       <section class="header">
         <h2 id="storyTitle" class="story-title"></h2>
         <div id="storyRef" class="story-ref"></div>
-        <div>XP Previsti: <strong id="xpExpected">100</strong></div>
+        <div><span data-i18n="ExpectedXpLabel">XP Previsti</span>: <strong id="xpExpected">100</strong></div>
       </section>
 
       <section id="caption" class="caption"></section>
@@ -31,78 +32,82 @@
       <section id="slots" class="slots"></section>
 
       <section class="actions">
-        <button id="btnReveal" class="btn btn-reveal" type="button">Rivela 2 immagini</button>
-        <button id="btnHint" class="btn btn-hint" type="button">Mostra indizio</button>
-        <button id="btnSolution" class="btn btn-solution" type="button">Rivela soluzione</button>
-        <button id="btnNext" class="btn btn-next" type="button">Prossima storia</button>
+        <button id="btnReveal" class="btn btn-reveal" type="button" data-i18n="RevealTwoImagesButton">Rivela 2 immagini</button>
+        <button id="btnHint" class="btn btn-hint" type="button" data-i18n="ShowHintButton">Mostra indizio</button>
+        <button id="btnSolution" class="btn btn-solution" type="button" data-i18n="RevealSolutionButton">Rivela soluzione</button>
+        <button id="btnNext" class="btn btn-next" type="button" data-i18n="NextStoryButton">Prossima storia</button>
       </section>
 
       <section id="solutionPanel" class="solution" hidden>
-        <h3>Soluzione</h3>
+        <h3 data-i18n="SolutionHeading">Soluzione</h3>
         <p id="solutionText"></p>
         <p id="scriptureQuote"></p>
-        <p><strong>Nota:</strong> <span id="engagementNote"></span></p>
+        <p><strong data-i18n="NoteLabel">Nota:</strong> <span id="engagementNote"></span></p>
       </section>
 
       <section id="editorPanel" class="editor" hidden>
         <div class="editor-card">
           <div class="editor-head">
             <div>
-              <h3>Crea nuovo episodio</h3>
-              <p>Compila i dati come nell'editor desktop. Su Cloudflare gli episodi saranno condivisi tra tutti gli utenti.</p>
+              <h3 data-i18n="CreateNewEpisodeHeading">Crea nuovo episodio</h3>
+              <p data-i18n="CreateNewEpisodeHelp">Compila i dati come nell'editor desktop. Su Cloudflare gli episodi saranno condivisi tra tutti gli utenti.</p>
             </div>
-            <button id="btnCloseEditor" class="btn btn-ghost" type="button">Chiudi</button>
+            <button id="btnCloseEditor" class="btn btn-ghost" type="button" data-i18n="CloseButton">Chiudi</button>
           </div>
 
           <div class="editor-grid">
             <label class="field">
-              <span>Titolo</span>
+              <span data-i18n="TitleLabel">Titolo</span>
               <input id="editorTitle" type="text" maxlength="120" />
             </label>
             <label class="field">
-              <span>Riferimento biblico</span>
+              <span data-i18n="ScriptureReferenceLabel">Riferimento biblico</span>
               <input id="editorReference" type="text" maxlength="120" />
             </label>
             <label class="field">
-              <span>Parola chiave</span>
+              <span data-i18n="KeywordLabel">Parola chiave</span>
               <input id="editorKeyword" type="text" maxlength="80" />
             </label>
+            <label class="field">
+              <span data-i18n="InputLanguageLabel">Lingua di inserimento</span>
+              <select id="editorSourceLanguage"></select>
+            </label>
             <label class="field field-wide">
-              <span>Indizio testo</span>
+              <span data-i18n="HintTextLabel">Indizio testo</span>
               <textarea id="editorHint" rows="2"></textarea>
             </label>
             <label class="field field-wide">
-              <span>Soluzione</span>
+              <span data-i18n="SolutionLabel">Soluzione</span>
               <textarea id="editorSolution" rows="4"></textarea>
             </label>
             <label class="field field-wide">
-              <span>Citazione scritturale</span>
+              <span data-i18n="ScriptureQuoteLabel">Citazione scritturale</span>
               <textarea id="editorQuote" rows="3"></textarea>
             </label>
             <label class="field field-wide">
-              <span>Nota engagement</span>
+              <span data-i18n="EngagementNoteLabel">Nota engagement</span>
               <textarea id="editorNote" rows="3"></textarea>
             </label>
           </div>
 
           <section class="editor-section">
-            <h4>5 immagini visibili</h4>
+            <h4 data-i18n="VisibleImagesHeading">5 immagini visibili</h4>
             <div id="editorVisibleImages" class="slot-editor-list"></div>
           </section>
 
           <section class="editor-section">
-            <h4>2 immagini nascoste</h4>
+            <h4 data-i18n="HiddenImagesHeading">2 immagini nascoste</h4>
             <div id="editorHiddenImages" class="slot-editor-list"></div>
           </section>
 
           <section class="editor-section">
-            <h4>Immagine indizio</h4>
+            <h4 data-i18n="HintImageHeading">Immagine indizio</h4>
             <div id="editorHintImage" class="slot-editor-list"></div>
           </section>
 
           <div class="editor-actions">
             <div id="editorStatus" class="editor-status">I nuovi episodi vengono salvati solo nel browser corrente.</div>
-            <button id="btnSaveStory" class="btn btn-next" type="button">Salva episodio</button>
+            <button id="btnSaveStory" class="btn btn-next" type="button" data-i18n="SaveEpisodeButton">Salva episodio</button>
           </div>
         </div>
       </section>
@@ -110,24 +115,24 @@
       <section id="pickerPanel" class="picker" hidden>
         <div class="picker-card">
           <div class="picker-head">
-            <h3>Scegli un'immagine</h3>
-            <button id="btnClosePicker" class="btn btn-ghost" type="button">Chiudi</button>
+            <h3 data-i18n="PickImageHeading">Scegli un'immagine</h3>
+            <button id="btnClosePicker" class="btn btn-ghost" type="button" data-i18n="CloseButton">Chiudi</button>
           </div>
           <div class="picker-upload">
             <label class="field field-grow">
-              <span>Nome PNG custom</span>
-              <input id="assetUploadName" type="text" placeholder="Es. corona-personalizzata" />
+              <span data-i18n="CustomPngNameLabel">Nome PNG custom</span>
+              <input id="assetUploadName" type="text" data-i18n-placeholder="CustomPngNamePlaceholder" placeholder="Es. corona-personalizzata" />
             </label>
             <label class="field field-grow">
-              <span>File PNG custom</span>
+              <span data-i18n="CustomPngFileLabel">File PNG custom</span>
               <input id="assetUploadFile" type="file" accept="image/png" />
             </label>
-            <button id="btnUploadAsset" class="btn btn-create" type="button">Carica PNG</button>
+            <button id="btnUploadAsset" class="btn btn-create" type="button" data-i18n="UploadPngButton">Carica PNG</button>
           </div>
-          <div id="assetUploadStatus" class="upload-status">I PNG custom saranno condivisi online dopo il deploy Cloudflare con storage configurato.</div>
+          <div id="assetUploadStatus" class="upload-status" data-i18n="UploadStatusDefault">I PNG custom saranno condivisi online dopo il deploy Cloudflare con storage configurato.</div>
           <label class="field">
-            <span>Cerca per chiave PNG</span>
-            <input id="assetSearch" type="text" placeholder="Es. 1F411, boy, crown" />
+            <span data-i18n="SearchAssetLabel">Cerca per chiave PNG</span>
+            <input id="assetSearch" type="text" data-i18n-placeholder="SearchAssetPlaceholder" placeholder="Es. 1F411, boy, crown" />
           </label>
           <div id="assetGrid" class="asset-grid"></div>
         </div>
@@ -136,6 +141,6 @@
 
     <script src="assets.js"></script>
     <script src="stories.js"></script>
-    <script src="app.js"></script>
+    <script type="module" src="app.js"></script>
   </body>
 </html>

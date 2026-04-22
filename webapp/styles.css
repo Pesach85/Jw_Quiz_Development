@@ -267,7 +267,8 @@ body {
 }
 
 .field input,
-.field textarea {
+.field textarea,
+.field select {
   width: 100%;
   border-radius: 10px;
   border: 1px solid #cdb186;

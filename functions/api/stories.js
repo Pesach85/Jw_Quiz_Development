@@ -1,3 +1,5 @@
+import { ensureStoryTranslations, normalizeLanguage } from "../../webapp/story-i18n.js";
+
 const STORIES_KEY = "user_stories";
 const STORY_COUNTER_KEY = "story_counter";
 const MIN_STORY_ID = 18;
@@ -30,6 +32,7 @@ function normalizeStoryInput(raw) {
   const visibleKeys = Array.isArray(raw.visibleKeys) ? raw.visibleKeys.slice(0, 5) : [];
   const hiddenKeys = Array.isArray(raw.hiddenKeys) ? raw.hiddenKeys.slice(0, 2) : [];
   const imageCaptions = Array.isArray(raw.imageCaptions) ? raw.imageCaptions.slice(0, 8) : [];
+  const sourceLanguage = normalizeLanguage(raw.sourceLanguage);
 
   if (!raw.title || !raw.scriptureReference || !raw.keyword || !raw.hint || !raw.solution) {
     throw new Error("Campi testuali obbligatori mancanti.");
@@ -48,7 +51,7 @@ function normalizeStoryInput(raw) {
     imageCaptions.push("");
   }
 
-  return {
+  return ensureStoryTranslations({
     title: String(raw.title).trim(),
     scriptureReference: String(raw.scriptureReference).trim(),
     keyword: String(raw.keyword).trim(),
@@ -60,8 +63,10 @@ function normalizeStoryInput(raw) {
     hiddenKeys,
     hintKey: String(raw.hintKey).trim(),
     imageCaptions,
+    sourceLanguage,
+    translations: raw.translations || null,
     isUserCreated: true
-  };
+  });
 }
 
 export async function onRequestGet(context) {

@@ -1,7 +1,18 @@
+import {
+  AppLanguages,
+  ensureStoryTranslations,
+  getLanguageLabel,
+  getLocalizedStory,
+  getWebText,
+  normalizeLanguage,
+  translateText
+} from "./story-i18n.js";
+
 (function () {
   var KEY_UNKNOWN = "2753";
   var KEY_HINT_PLACEHOLDER = "1F525";
   var LOCAL_STORIES_KEY = "jwquiz_web_user_stories_v1";
+  var LANGUAGE_STORAGE_KEY = "jwquiz_web_language";
 
   var state = {
     storyIndex: 0,
@@ -11,9 +22,11 @@
     totalXp: Number(localStorage.getItem("jwquiz_web_xp") || "0"),
     sharedStories: [],
     customAssets: [],
-    apiAvailable: false
+    apiAvailable: false,
+    currentLanguage: normalizeLanguage(localStorage.getItem(LANGUAGE_STORAGE_KEY) || AppLanguages.Italian)
   };
 
+  var languageSelectEl = document.getElementById("languageSelect");
   var slotsEl = document.getElementById("slots");
   var captionEl = document.getElementById("caption");
   var titleEl = document.getElementById("storyTitle");
@@ -35,6 +48,7 @@
   var closeEditorBtn = document.getElementById("btnCloseEditor");
   var saveStoryBtn = document.getElementById("btnSaveStory");
   var editorStatusEl = document.getElementById("editorStatus");
+  var editorSourceLanguageEl = document.getElementById("editorSourceLanguage");
 
   var pickerPanel = document.getElementById("pickerPanel");
   var closePickerBtn = document.getElementById("btnClosePicker");
@@ -115,7 +129,7 @@
       captions.push("");
     }
 
-    return {
+    return ensureStoryTranslations({
       id: Number(raw.id || 0),
       title: raw.title || "",
       scriptureReference: raw.scriptureReference || "",
@@ -128,8 +142,10 @@
       hiddenKeys: hiddenKeys,
       hintKey: resolveStoryAssetKey(raw.hintKey || KEY_HINT_PLACEHOLDER),
       imageCaptions: captions,
+      sourceLanguage: normalizeLanguage(raw.sourceLanguage || AppLanguages.Italian),
+      translations: raw.translations || null,
       isUserCreated: Boolean(raw.isUserCreated)
-    };
+    });
   }
 
   function sanitizeStories(list) {
@@ -164,6 +180,10 @@
     return stories[state.storyIndex] || stories[0];
   }
 
+  function storyView() {
+    return getLocalizedStory(story(), state.currentLanguage);
+  }
+
   function normalizeCaptionToken(value) {
     if (!value) {
       return "";
@@ -186,7 +206,12 @@
       nelle: true, nello: true, no: true, non: true, o: true, per: true, piu: true, questa: true,
       queste: true, questi: true, questo: true, quella: true, quelle: true, quelli: true,
       quello: true, racconto: true, solo: true, storia: true, su: true, sua: true, sue: true,
-      suo: true, suoi: true, tnm: true, tra: true, un: true, una: true, uno: true, va: true
+      suo: true, suoi: true, tnm: true, tra: true, un: true, una: true, uno: true, va: true,
+      about: true, all: true, an: true, and: true, along: true, another: true, around: true,
+      be: true, by: true, clue: true, does: true, from: true, help: true, important: true,
+      into: true, more: true, note: true, one: true, road: true, scene: true, some: true,
+      story: true, that: true, the: true, their: true, there: true, these: true, this: true,
+      two: true, was: true, what: true, who: true, with: true
     };
   }
 
@@ -252,7 +277,7 @@
     return currentStory.hintKey || KEY_HINT_PLACEHOLDER;
   }
 
-  function neutralCaptionByImageKey(key) {
+  function neutralCaptionByImageKey(language, key) {
     var neutral = {
       "038-boy-1": "Un giovane coinvolto nel racconto",
       "039-baby": "Un bambino al centro della scena",
@@ -283,21 +308,22 @@
       "26D4": "Un rifiuto o un ostacolo",
       "2753": "Un dettaglio ancora nascosto"
     };
-    return neutral[key] || "";
+    var value = neutral[key] || "";
+    return language === AppLanguages.English ? translateText(value, AppLanguages.Italian, AppLanguages.English) : value;
   }
 
-  function fallbackCaption(currentStory, index) {
-    var neutral = neutralCaptionByImageKey(imageKeyForIndex(currentStory, index));
+  function fallbackCaption(currentStory, index, language) {
+    var neutral = neutralCaptionByImageKey(language, imageKeyForIndex(currentStory, index));
     if (neutral) {
       return neutral;
     }
     if (index === 7) {
-      return "Un indizio visivo da interpretare";
+      return language === AppLanguages.English ? "A visual hint to interpret" : "Un indizio visivo da interpretare";
     }
     if (index >= 5) {
-      return "Un dettaglio che si rivelera' piu' avanti";
+      return language === AppLanguages.English ? "A detail that will be revealed later" : "Un dettaglio che si rivelera' piu' avanti";
     }
-    return "Un elemento importante del racconto";
+    return language === AppLanguages.English ? "An important element of the story" : "Un elemento importante del racconto";
   }
 
   function isCaptionTooExplicit(currentStory, caption) {
@@ -318,11 +344,12 @@
   }
 
   function getDisplayCaption(currentStory, index) {
+    var language = state.currentLanguage;
     var raw = (currentStory.imageCaptions && currentStory.imageCaptions[index]) || "";
     if (!raw) {
-      return fallbackCaption(currentStory, index);
+      return fallbackCaption(currentStory, index, language);
     }
-    return isCaptionTooExplicit(currentStory, raw) ? fallbackCaption(currentStory, index) : raw;
+    return isCaptionTooExplicit(currentStory, raw) ? fallbackCaption(currentStory, index, language) : raw;
   }
 
   function isKnownAsset(key) {
@@ -348,7 +375,7 @@
     stories.forEach(function (item, index) {
       var option = document.createElement("option");
       option.value = String(index);
-      option.textContent = "Episodio " + item.id;
+      option.textContent = getWebText(state.currentLanguage, "EpisodePrefix") + " " + item.id;
       selectorEl.appendChild(option);
     });
     if (state.storyIndex >= stories.length) {
@@ -358,12 +385,12 @@
   }
 
   function onSlotClick(index) {
-    var text = getDisplayCaption(story(), index);
+    var text = getDisplayCaption(storyView(), index);
     if (!text) {
       return;
     }
     captionEl.classList.add("caption-highlight");
-    captionEl.textContent = "Indicazione: " + text;
+    captionEl.textContent = getWebText(state.currentLanguage, "CaptionPrefix") + ": " + text;
   }
 
   function createSlot(index, key, isHintSlot) {
@@ -375,7 +402,7 @@
     }
 
     var img = document.createElement("img");
-    img.alt = "immagine storia " + (index + 1);
+    img.alt = getWebText(state.currentLanguage, "StoryImageAlt") + " " + (index + 1);
     img.src = imageUrl(key);
     img.onerror = function () {
       img.src = imageUrl(KEY_UNKNOWN);
@@ -390,7 +417,7 @@
 
   function renderSlots() {
     slotsEl.innerHTML = "";
-    var currentStory = story();
+    var currentStory = storyView();
     var keys = [];
     var i;
 
@@ -408,20 +435,20 @@
   }
 
   function renderHeader() {
-    var currentStory = story();
+    var currentStory = storyView();
     if (state.solutionVisible) {
-      titleEl.textContent = "Episodio " + currentStory.id + " - " + currentStory.title;
-      refEl.textContent = currentStory.scriptureReference + " | Categoria: " + currentStory.keyword;
+      titleEl.textContent = getWebText(state.currentLanguage, "EpisodePrefix") + " " + currentStory.id + " - " + currentStory.title;
+      refEl.textContent = currentStory.scriptureReference + " | " + getWebText(state.currentLanguage, "CategoryLabel") + ": " + currentStory.keyword;
     } else {
-      titleEl.textContent = "Episodio " + currentStory.id + " - Indovina la storia!";
-      refEl.textContent = "Categoria: " + currentStory.keyword;
+      titleEl.textContent = getWebText(state.currentLanguage, "EpisodePrefix") + " " + currentStory.id + " - " + getWebText(state.currentLanguage, "GuessStoryTitle");
+      refEl.textContent = getWebText(state.currentLanguage, "CategoryLabel") + ": " + currentStory.keyword;
     }
   }
 
   function renderSolution() {
-    var currentStory = story();
+    var currentStory = storyView();
     solutionEl.hidden = !state.solutionVisible;
-    solutionBtn.textContent = state.solutionVisible ? "Nascondi soluzione" : "Rivela soluzione";
+    solutionBtn.textContent = state.solutionVisible ? getWebText(state.currentLanguage, "HideSolutionButton") : getWebText(state.currentLanguage, "RevealSolutionButton");
     document.getElementById("solutionText").textContent = currentStory.solution;
     scriptureEl.textContent = currentStory.scriptureQuote || "";
     noteEl.textContent = currentStory.engagementNote || "";
@@ -443,7 +470,50 @@
 
   function resetCaption() {
     captionEl.classList.remove("caption-highlight");
-    captionEl.textContent = "Clicca su una immagine per leggere un indizio breve";
+    captionEl.textContent = getWebText(state.currentLanguage, "CaptionDefault");
+  }
+
+  function updateLanguageSelectors() {
+    [languageSelectEl, editorSourceLanguageEl].forEach(function (selectEl) {
+      if (!selectEl) {
+        return;
+      }
+
+      var currentValue = selectEl === editorSourceLanguageEl ? normalizeLanguage(selectEl.value || state.currentLanguage) : state.currentLanguage;
+      selectEl.innerHTML = "";
+
+      [AppLanguages.Italian, AppLanguages.English].forEach(function (language) {
+        var option = document.createElement("option");
+        option.value = language;
+        option.textContent = getLanguageLabel(state.currentLanguage, language);
+        selectEl.appendChild(option);
+      });
+
+      selectEl.value = currentValue;
+    });
+  }
+
+  function applyUiText() {
+    document.documentElement.lang = state.currentLanguage === AppLanguages.English ? "en" : "it";
+    document.querySelectorAll("[data-i18n]").forEach(function (element) {
+      element.textContent = getWebText(state.currentLanguage, element.getAttribute("data-i18n"));
+    });
+    document.querySelectorAll("[data-i18n-placeholder]").forEach(function (element) {
+      element.placeholder = getWebText(state.currentLanguage, element.getAttribute("data-i18n-placeholder"));
+    });
+    document.querySelectorAll("[data-i18n-title]").forEach(function (element) {
+      element.title = getWebText(state.currentLanguage, element.getAttribute("data-i18n-title"));
+    });
+    updateLanguageSelectors();
+    updateEditorRowCopy();
+  }
+
+  function setLanguage(language) {
+    state.currentLanguage = normalizeLanguage(language);
+    localStorage.setItem(LANGUAGE_STORAGE_KEY, state.currentLanguage);
+    applyUiText();
+    resetCaption();
+    render();
   }
 
   function loadStory(index) {
@@ -476,16 +546,16 @@
 
     var keyInput = document.createElement("input");
     keyInput.type = "text";
-    keyInput.placeholder = "Chiave PNG o custom:...";
+    keyInput.placeholder = "PNG key or custom:...";
 
     var captionInput = document.createElement("input");
     captionInput.type = "text";
-    captionInput.placeholder = "Didascalia immagine";
+    captionInput.placeholder = state.currentLanguage === AppLanguages.English ? "Image caption" : "Didascalia immagine";
 
     var pickButton = document.createElement("button");
     pickButton.type = "button";
     pickButton.className = "btn btn-reveal";
-    pickButton.textContent = "Scegli...";
+    pickButton.textContent = getWebText(state.currentLanguage, "ChooseButton");
 
     var preview = document.createElement("div");
     preview.className = "slot-editor-preview";
@@ -525,21 +595,46 @@
 
     container.appendChild(row);
     slotInputs[groupName][index] = {
+      title: title,
       key: keyInput,
       caption: captionInput,
+      pickButton: pickButton,
+      groupName: groupName,
+      index: index,
       refresh: syncPreview
     };
   }
 
+  function updateEditorRowCopy() {
+    [slotInputs.visible, slotInputs.hidden, slotInputs.hint].forEach(function (group) {
+      group.forEach(function (item) {
+        if (!item) {
+          return;
+        }
+
+        if (item.groupName === "visible") {
+          item.title.textContent = getWebText(state.currentLanguage, "VisibleLabel") + " " + (item.index + 1);
+        } else if (item.groupName === "hidden") {
+          item.title.textContent = getWebText(state.currentLanguage, "HiddenLabel") + " " + (item.index + 1);
+        } else {
+          item.title.textContent = getWebText(state.currentLanguage, "HintLabel");
+        }
+
+        item.pickButton.textContent = getWebText(state.currentLanguage, "ChooseButton");
+        item.caption.placeholder = state.currentLanguage === AppLanguages.English ? "Image caption" : "Didascalia immagine";
+      });
+    });
+  }
+
   function buildEditorRows() {
-    createSlotEditorRow(document.getElementById("editorVisibleImages"), "Visibile 1", "visible", 0);
-    createSlotEditorRow(document.getElementById("editorVisibleImages"), "Visibile 2", "visible", 1);
-    createSlotEditorRow(document.getElementById("editorVisibleImages"), "Visibile 3", "visible", 2);
-    createSlotEditorRow(document.getElementById("editorVisibleImages"), "Visibile 4", "visible", 3);
-    createSlotEditorRow(document.getElementById("editorVisibleImages"), "Visibile 5", "visible", 4);
-    createSlotEditorRow(document.getElementById("editorHiddenImages"), "Nascosta 1", "hidden", 0);
-    createSlotEditorRow(document.getElementById("editorHiddenImages"), "Nascosta 2", "hidden", 1);
-    createSlotEditorRow(document.getElementById("editorHintImage"), "Indizio", "hint", 0);
+    createSlotEditorRow(document.getElementById("editorVisibleImages"), getWebText(state.currentLanguage, "VisibleLabel") + " 1", "visible", 0);
+    createSlotEditorRow(document.getElementById("editorVisibleImages"), getWebText(state.currentLanguage, "VisibleLabel") + " 2", "visible", 1);
+    createSlotEditorRow(document.getElementById("editorVisibleImages"), getWebText(state.currentLanguage, "VisibleLabel") + " 3", "visible", 2);
+    createSlotEditorRow(document.getElementById("editorVisibleImages"), getWebText(state.currentLanguage, "VisibleLabel") + " 4", "visible", 3);
+    createSlotEditorRow(document.getElementById("editorVisibleImages"), getWebText(state.currentLanguage, "VisibleLabel") + " 5", "visible", 4);
+    createSlotEditorRow(document.getElementById("editorHiddenImages"), getWebText(state.currentLanguage, "HiddenLabel") + " 1", "hidden", 0);
+    createSlotEditorRow(document.getElementById("editorHiddenImages"), getWebText(state.currentLanguage, "HiddenLabel") + " 2", "hidden", 1);
+    createSlotEditorRow(document.getElementById("editorHintImage"), getWebText(state.currentLanguage, "HintLabel"), "hint", 0);
   }
 
   function resetEditor() {
@@ -557,10 +652,11 @@
 
     setEditorStatus(
       state.apiAvailable
-        ? "I nuovi episodi saranno condivisi tra tutti gli utenti tramite Cloudflare."
-        : "API Cloudflare non disponibile: salvataggio temporaneo solo locale.",
+        ? getWebText(state.currentLanguage, "EditorSaveCloudStatus")
+        : getWebText(state.currentLanguage, "EditorLocalOnlyStatus"),
       false
     );
+    editorSourceLanguageEl.value = state.currentLanguage;
   }
 
   function openEditor() {
@@ -632,25 +728,26 @@
   }
 
   function defaultCaptionFromKey(key, index) {
-    return "Immagine " + (index + 1) + ": " + (isCustomAssetKey(key) ? customAssetName(key) : resolveBuiltInAssetKey(key));
+    return getWebText(normalizeLanguage(editorSourceLanguageEl.value || state.currentLanguage), "ImagePrefix") + " " + (index + 1) + ": " + (isCustomAssetKey(key) ? customAssetName(key) : resolveBuiltInAssetKey(key));
   }
 
   function validateNewStory(payload) {
     var allKeys;
     if (!payload.title || !payload.scriptureReference || !payload.keyword || !payload.hint || !payload.solution) {
-      return "Compila titolo, riferimento biblico, parola chiave, indizio e soluzione.";
+      return getWebText(state.currentLanguage, "FillRequiredFields");
     }
     if (payload.visibleKeys.length !== 5 || payload.hiddenKeys.length !== 2 || !payload.hintKey) {
-      return "Servono 5 immagini visibili, 2 immagini nascoste e 1 immagine indizio.";
+      return getWebText(state.currentLanguage, "FillImageSlots");
     }
     allKeys = payload.visibleKeys.concat(payload.hiddenKeys).concat([payload.hintKey]);
     if (allKeys.some(function (key) { return !isKnownAsset(key); })) {
-      return "Una o più chiavi immagine non esistono nel picker. Usa il pulsante Scegli....";
+      return getWebText(state.currentLanguage, "InvalidImageKey");
     }
     return "";
   }
 
   function createStoryFromEditor() {
+    var sourceLanguage = normalizeLanguage(editorSourceLanguageEl.value || state.currentLanguage);
     var visible = collectGroup(slotInputs.visible);
     var hidden = collectGroup(slotInputs.hidden);
     var hint = collectGroup(slotInputs.hint)[0];
@@ -670,6 +767,7 @@
       hiddenKeys: hidden.map(function (item) { return item.key; }),
       hintKey: hint.key,
       imageCaptions: allCaptions,
+      sourceLanguage: sourceLanguage,
       isUserCreated: true
     });
     var error = validateNewStory(payload);
@@ -696,14 +794,14 @@
       state.sharedStories = sanitizeStories(results[0].stories || []);
       state.customAssets = results[1].assets || [];
       state.apiAvailable = true;
-      setUploadStatus("Storage Cloudflare attivo: episodi e PNG custom saranno condivisi.", false);
-      setEditorStatus("Cloudflare attivo: i nuovi episodi saranno condivisi tra tutti gli utenti.", false);
+      setUploadStatus(getWebText(state.currentLanguage, "StorageActiveStatus"), false);
+      setEditorStatus(getWebText(state.currentLanguage, "CloudflareActiveStatus"), false);
     } catch (error) {
       state.sharedStories = getLocalStories();
       state.customAssets = [];
       state.apiAvailable = false;
-      setUploadStatus("API Cloudflare non trovata in locale. I PNG custom condivisi saranno attivi dopo il deploy con KV/R2 configurati.", true);
-      setEditorStatus("Modalità locale: gli episodi creati ora restano solo nel browser corrente.", true);
+      setUploadStatus(getWebText(state.currentLanguage, "UploadDeferredStatus"), true);
+      setEditorStatus(getWebText(state.currentLanguage, "LocalModeStatus"), true);
     }
   }
 
@@ -717,14 +815,14 @@
           body: JSON.stringify(newStory)
         });
         state.sharedStories.push(sanitizeStory(payload.story));
-        setEditorStatus("Episodio " + payload.story.id + " salvato e condiviso online.", false);
+        setEditorStatus(getWebText(state.currentLanguage, "StorySavedShared", { id: String(payload.story.id) }), false);
       } else {
         state.sharedStories.push(sanitizeStory(newStory));
         state.sharedStories[state.sharedStories.length - 1].id = getAllStories().reduce(function (maxId, item) {
           return Math.max(maxId, Number(item.id || 0));
         }, 18) + 1;
         saveLocalStories(state.sharedStories);
-        setEditorStatus("API non disponibile: episodio salvato solo in locale.", true);
+        setEditorStatus(getWebText(state.currentLanguage, "StorySavedLocal"), true);
       }
       closeEditor();
       buildSelector();
@@ -740,15 +838,15 @@
     var formData;
 
     if (!file) {
-      setUploadStatus("Seleziona un file PNG prima di caricare.", true);
+      setUploadStatus(getWebText(state.currentLanguage, "SelectPngFirst"), true);
       return;
     }
     if (file.type !== "image/png") {
-      setUploadStatus("Sono accettati solo file PNG.", true);
+      setUploadStatus(getWebText(state.currentLanguage, "PngOnly"), true);
       return;
     }
     if (!state.apiAvailable) {
-      setUploadStatus("Upload condiviso disponibile solo dopo il deploy Cloudflare con storage attivo.", true);
+      setUploadStatus(getWebText(state.currentLanguage, "SharedUploadOnly"), true);
       return;
     }
 
@@ -758,14 +856,14 @@
 
     try {
       uploadAssetBtn.disabled = true;
-      setUploadStatus("Caricamento PNG in corso...", false);
+      setUploadStatus(getWebText(state.currentLanguage, "UploadInProgress"), false);
       var payload = await requestJson("/api/assets", {
         method: "POST",
         body: formData
       });
       state.customAssets.unshift(payload.asset);
       renderAssetGrid(assetSearchEl.value);
-      setUploadStatus("PNG caricato: " + (payload.asset.label || payload.asset.key), false);
+      setUploadStatus(getWebText(state.currentLanguage, "UploadSuccess", { name: payload.asset.label || payload.asset.key }), false);
       if (pickerTarget) {
         pickerTarget.value = payload.asset.key;
         pickerTarget.dispatchEvent(new Event("input"));
@@ -773,11 +871,15 @@
       assetUploadFileEl.value = "";
       assetUploadNameEl.value = "";
     } catch (error) {
-      setUploadStatus("Errore upload PNG: " + error.message, true);
+      setUploadStatus(getWebText(state.currentLanguage, "UploadErrorPrefix") + error.message, true);
     } finally {
       uploadAssetBtn.disabled = false;
     }
   }
+
+  languageSelectEl.addEventListener("change", function () {
+    setLanguage(languageSelectEl.value);
+  });
 
   selectorEl.addEventListener("change", function () {
     loadStory(Number(selectorEl.value));
@@ -820,6 +922,7 @@
 
   async function initialize() {
     buildEditorRows();
+    applyUiText();
     await refreshSharedData();
     renderAssetGrid("");
     buildSelector();

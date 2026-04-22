@@ -16,7 +16,7 @@
 | Build command | `.\build.bat` oppure `MSBuild Jw_Quiz_Development.csproj /p:Configuration=Debug` |
 | Output | `bin\Debug\Jw_Quiz_Development.exe` |
 | Controllo versione | Git — branch `main` |
-| Lingua UI | Italiano + English (motore multilanguage desktop) |
+| Lingua UI | Italiano + English (motore multilanguage desktop + web shared) |
 
 ---
 
@@ -45,6 +45,7 @@
 | `Properties/Resources.Designer.cs` | Accesso fortemente tipizzato alle risorse |
 | `webapp/index.html` | Shell UI web con gameplay + editor locale episodi |
 | `webapp/app.js` | Logica gameplay web, fallback locale, integrazione API Cloudflare per storie condivise e PNG custom |
+| `webapp/story-i18n.js` | Motore shared i18n web/API: UI text, lingua corrente, auto-traduzione it/en e normalizzazione `sourceLanguage/translations` |
 | `webapp/assets.js` | Manifest JS delle chiavi PNG disponibili nel picker immagini web |
 | `webapp/stories.js` | Dataset storie dinamiche per la versione web |
 | `webapp/styles.css` | Tema visuale web responsive |
@@ -189,6 +190,8 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 - Webapp: editor locale in-browser con `localStorage` (`jwquiz_web_user_stories_v1`)
 - Webapp: galleria immagini alimentata da `assets.js`, con ricerca per chiave PNG e anteprima per ogni slot
 - Webapp: episodi creati lato browser vengono uniti ai 18 built-in nel selettore senza mostrare il titolo
+- Webapp: lingua runtime it/en con selettore dedicato; testi gameplay/editor e contenuti storia risolti da `story-i18n.js`
+- Webapp/API: ogni storia condivisa salva `sourceLanguage` + `translations.Italian/English`; la lingua mancante viene generata automaticamente lato browser e lato Pages Function
 - Cloudflare: dopo il deploy, gli episodi utente vengono salvati via Pages Functions in KV `JWQUIZ_DATA`
 - Cloudflare: i PNG custom vengono caricati su bucket R2 `JWQUIZ_UPLOADS` e riutilizzati nel picker come chiavi `custom:<file>.png`
 - Fallback locale: se le API Cloudflare non rispondono, la webapp continua a funzionare con persistenza solo browser-side
@@ -206,6 +209,7 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 - **Emoji come testo** nei Label: evitare — usare PictureBox con PNG da Resources per coerenza visiva
 - **Cloudflare shared mode** richiede 2 binding configurati in Pages: KV `JWQUIZ_DATA` e R2 `JWQUIZ_UPLOADS`
 - In locale (`python -m http.server`) le Pages Functions non esistono: la webapp va automaticamente in fallback locale
+- Webapp multilanguage: il motore JS shared (`webapp/story-i18n.js`) e' la fonte unica per testi UI, auto-traduzione e normalizzazione JSON delle storie condivise
 - Motore multilanguage corrente applicato ai flussi data-driven desktop (`Form1`, `StoryEditorForm`, `DynamicStoryForm`, storie utente); i form statici legacy 1–12 restano candidati a migrazione runtime separata per evitare regressioni nei Designer
 
 ---
@@ -258,6 +262,7 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-04-22 | **Hotfix runtime webapp**: corretto ordine inizializzazione `builtInAssetLookup` in `webapp/app.js` (risolto errore console e lista episodi vuota) | ✅ Implementato |
 | 2026-04-22 | **Content anti-spoiler**: introdotta policy centrale per neutralizzare didascalie immagini troppo esplicite e ripulite le caption piu' scoperte degli episodi dinamici | ✅ Implementata |
 | 2026-04-22 | **Motore multilanguage desktop**: introdotti `LanguageManager`, `AppText`, `StoryLocalizationService` e auto-traduzione it/en per storie dinamiche e storie utente | ✅ Implementato |
+| 2026-04-22 | **Motore multilanguage web shared**: aggiunti selettore lingua web, modulo shared `story-i18n.js` e persistenza `sourceLanguage/translations` nelle Pages Functions | ✅ Implementato |
 
 ---
 
@@ -272,6 +277,7 @@ Aggiornare questa sezione ad ogni sessione di lavoro.
 | Alta | Gameplay | Form statici (2–13): indizio animato come DynamicStoryForm (pulsazione su pictureBox8) |
 | Alta | Content | Aggiungere ImageCaptions[] anche alle storie statiche id 1-12 (attualmente solo ID 13-18) |
 | Alta | Multilanguage | Migrare anche i form statici legacy 1-12 al runtime multilanguage senza toccare i `Designer.cs` |
+| Media | Multilanguage | Rifinire il glossario rule-based it/en del motore shared web/desktop con review manuale delle traduzioni bibliche piu' lunghe |
 | Media | Gamification | **Streak + Badge**: N storie consecutive senza hint = badge "Saggio/Profeta/Apostolo" |
 | Media | Gamification | **Classifica sessione locale**: 2-8 partecipanti inseriscono nome, XP aggregati, classifica finale |
 | Media | Gamification | **Percorsi Tematici**: raccolte storie per tema (Fede/Amore/Coraggio) con barra progresso sbloccabile |
