@@ -279,7 +279,9 @@ namespace Jw_Quiz_Development
                 if (story != null)
                 {
                     int attempts = tracker.StoryAttempts.ContainsKey(id) ? tracker.StoryAttempts[id] : 0;
-                    stats += "  " + id + ". " + StoryLocalizationService.GetText(story).Title + " (" + attempts + " " + AppText.Get("Times") + ")\n";
+                    int sr = tracker.GetStarRating(id);
+                    string starStr = sr > 0 ? "  " + new string('\u2605', sr) + new string('\u2606', 3 - sr) : "";
+                    stats += "  " + id + ". " + StoryLocalizationService.GetText(story).Title + " (" + attempts + " " + AppText.Get("Times") + ")" + starStr + "\n";
                 }
             }
 

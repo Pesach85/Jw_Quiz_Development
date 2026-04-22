@@ -271,8 +271,7 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-04-22 | **Unificazione legacy Step 3 (rollout)**: attivato `UseDynamicRendererForLegacyStories=true`; le storie 1-12 ora passano dal renderer dinamico quando i controlli dati sono soddisfatti, con rollback immediato possibile via flag | Ô£à Implementato e validato (build 0 regressioni) |
 | 2026-04-22 | **QA post-rollout storie 1-12**: corretti 4 riferimenti PNG mancanti in `StoryLibrary` (`japanese_dolls_facebook`, `75-...old_woman...`, `412-...dancing...`, `1F4AC`) con chiavi reali presenti in `Resources` | Ô£à Implementato e validato (build 0 regressioni) |
 | 2026-04-22 | **Refactor runtime Form1**: consolidata la navigazione episodi in metodo unico `OpenStory(id)` per ridurre duplicazioni e mantenere invariato il comportamento utente | Ô£à Implementato e validato (build 0 regressioni) |
-| 2026-04-22 | **KB recovery post-troncamento**: ripristinato `.github/KB.md` da snapshot stabile precedente e riallineato il log decisionale all'ultimo stato reale della codebase | Ô£à Implementato |
-
+| 2026-04-22 | **KB recovery post-troncamento**: ripristinato `.github/KB.md` da snapshot stabile precedente e riallineato il log decisionale all'ultimo stato reale della codebase | Ô£à Implementato || 2026-04-22 | **Sistema a Stelle (1-3 per storia)**: stelle live nell'header di `DynamicStoryForm` (★★★→★★☆→★☆☆ man mano che si usano aiuti), persistenza in `ProgressTracker.StoryStars`, contatore perfetti in `ProgressPanel`, stelle nel dialog statistiche | ✅ Implementato e validato (build 0 regressioni) |
 ---
 
 ## 11. Next Best Decisions (Proposte Attive)
@@ -282,7 +281,7 @@ Aggiornare questa sezione ad ogni sessione di lavoro.
 | Priorit├á | Area | Proposta |
 |---------|------|---------|
 | Alta | Web | ~~Migrare anche storie statiche 1-12 nel renderer web unificato~~ Ô£à **COMPLETATO** |
-| Alta | Gamification | **Sistema a Stelle** (1-3 per storia): 3=nessun aiuto, 2=1 aiuto, 1=tutti aiuti ÔÇö visual memorabile per proiezione |
+| Alta | Gamification | ~~**Sistema a Stelle** (1-3 per storia): 3=nessun aiuto, 2=1 aiuto, 1=tutti aiuti — visual memorabile per proiezione~~ ✅ **COMPLETATO** |
 | Alta | Gameplay | Form statici (2ÔÇô13): indizio animato come DynamicStoryForm (pulsazione su pictureBox8) |
 | Alta | Content | ~~Aggiungere ImageCaptions[] anche alle storie statiche id 1-12 (attualmente solo ID 13-18)~~ Ô£à **COMPLETATO** |
 | Alta | Multilanguage | Migrare anche i form statici legacy 1-12 al runtime multilanguage senza toccare i `Designer.cs` |

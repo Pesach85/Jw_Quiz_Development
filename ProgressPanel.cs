@@ -112,7 +112,8 @@ namespace Jw_Quiz_Development
             
             progressBar.Maximum = totalStories;
             progressBar.Value = tracker.CompletedStories.Count;
-            labelProgress.Text = $"Storie {tracker.CompletedStories.Count}/{totalStories}";
+            int threeStars = tracker.GetThreeStarCount();
+            labelProgress.Text = $"Storie {tracker.CompletedStories.Count}/{totalStories}  \u00b7  \u2605\u00d7{threeStars}";
             
             buttonBadges.Text = $"Badge 🏆 ({tracker.UnlockedBadges.Count})";
             buttonBadges.BackColor = tracker.UnlockedBadges.Count > 0 

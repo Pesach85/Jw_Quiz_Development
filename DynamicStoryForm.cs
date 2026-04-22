@@ -17,6 +17,7 @@ namespace Jw_Quiz_Development
         private Label captionLabel;      // shows image description on click
         private Label solutionLabel;
         private Label xpLabel;
+        private Label starsLabel;        // live star rating (★★★ degrades as hints used)
         private Button revealButton;
         private Button hintButton;
         private Button solutionButton;
@@ -84,12 +85,23 @@ namespace Jw_Quiz_Development
             {
                 AutoSize = false,
                 TextAlign = ContentAlignment.MiddleRight,
-                Font = new Font("Segoe UI", 14, FontStyle.Bold),
+                Font = new Font("Segoe UI", 13, FontStyle.Bold),
                 ForeColor = Color.FromArgb(255, 214, 92),
-                Location = new Point(780, 25),
-                Size = new Size(240, 40)
+                Location = new Point(780, 14),
+                Size = new Size(240, 30)
             };
             header.Controls.Add(xpLabel);
+
+            starsLabel = new Label
+            {
+                AutoSize = false,
+                TextAlign = ContentAlignment.MiddleRight,
+                Font = new Font("Segoe UI", 17, FontStyle.Bold),
+                ForeColor = Color.FromArgb(255, 215, 0),
+                Location = new Point(780, 50),
+                Size = new Size(240, 34)
+            };
+            header.Controls.Add(starsLabel);
 
             var imagePanel = new Panel
             {
@@ -305,9 +317,20 @@ namespace Jw_Quiz_Development
             return Math.Max(20, xp);
         }
 
+        private int CalculateStars()
+        {
+            int used = revealed.Count(x => x);
+            return Math.Max(1, 3 - used);
+        }
+
         private void UpdateXpLabel()
         {
             xpLabel.Text = AppText.Get("ExpectedXp") + ": " + CalculateXp();
+            int s = CalculateStars();
+            starsLabel.Text = new string('\u2605', s) + new string('\u2606', 3 - s);
+            starsLabel.ForeColor = s == 3 ? Color.FromArgb(255, 215, 0)
+                                 : s == 2 ? Color.FromArgb(200, 200, 200)
+                                 :          Color.FromArgb(205, 127, 50);
         }
 
         private void RevealButton_Click(object sender, EventArgs e)
@@ -405,7 +428,7 @@ namespace Jw_Quiz_Development
             }
 
             storyCompleted = true;
-            ProgressTracker.Instance.CompleteStory(story.Id, CalculateXp());
+            ProgressTracker.Instance.CompleteStory(story.Id, CalculateXp(), CalculateStars());
         }
     }
 }

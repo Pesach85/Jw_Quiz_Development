@@ -19,11 +19,15 @@ namespace Jw_Quiz_Development
         // Badge system
         public List<Badge> UnlockedBadges { get; set; }
 
+        // Star ratings per story (1=bronze, 2=silver, 3=gold). Stores best rating.
+        public Dictionary<int, int> StoryStars { get; set; }
+
         private ProgressTracker()
         {
             CompletedStories = new HashSet<int>();
             StoryAttempts = new Dictionary<int, int>();
             UnlockedBadges = new List<Badge>();
+            StoryStars = new Dictionary<int, int>();
             StartDate = DateTime.Now;
             CurrentXP = 0;
             TotalCompletions = 0;
@@ -44,7 +48,7 @@ namespace Jw_Quiz_Development
         /// <summary>
         /// Segna una storia come completata e assegna punti esperienza.
         /// </summary>
-        public void CompleteStory(int storyId, int xpToAward = 100)
+        public void CompleteStory(int storyId, int xpToAward = 100, int stars = 3)
         {
             if (!CompletedStories.Contains(storyId))
             {
@@ -60,6 +64,11 @@ namespace Jw_Quiz_Development
             if (!StoryAttempts.ContainsKey(storyId))
                 StoryAttempts[storyId] = 0;
             StoryAttempts[storyId]++;
+
+            // Track best star rating for this story (higher is better)
+            int currentStars;
+            if (!StoryStars.TryGetValue(storyId, out currentStars) || stars > currentStars)
+                StoryStars[storyId] = stars;
 
             CheckBadges();
             Save();
@@ -151,6 +160,22 @@ namespace Jw_Quiz_Development
             return UnlockedBadges.Any(b => b.Id == badgeId);
         }
 
+        /// <summary>Restituisce il miglior punteggio a stelle (1-3) per una storia, o 0 se mai completata.</summary>
+        public int GetStarRating(int storyId)
+        {
+            int s;
+            return StoryStars.TryGetValue(storyId, out s) ? s : 0;
+        }
+
+        /// <summary>Quante storie sono state completate con 3 stelle (nessun aiuto).</summary>
+        public int GetThreeStarCount()
+        {
+            int count = 0;
+            foreach (var s in StoryStars.Values)
+                if (s >= 3) count++;
+            return count;
+        }
+
         public void Save()
         {
             try
@@ -166,7 +191,12 @@ namespace Jw_Quiz_Development
                 var attemptsStr = string.Join(",", StoryAttempts
                     .OrderBy(kv => kv.Key)
                     .Select(kv => kv.Key + ":" + kv.Value));
-                sb.Append(attemptsStr);
+                sb.AppendLine(attemptsStr);
+                // Line 5: StoryStars  format  "id:stars,id:stars,..."
+                var starsStr = string.Join(",", StoryStars
+                    .OrderBy(kv => kv.Key)
+                    .Select(kv => kv.Key + ":" + kv.Value));
+                sb.Append(starsStr);
                 
                 File.WriteAllText(PROGRESS_FILE, sb.ToString());
             }
@@ -213,6 +243,20 @@ namespace Jw_Quiz_Development
                                     && int.TryParse(parts[0].Trim(), out int sid)
                                     && int.TryParse(parts[1].Trim(), out int cnt))
                                     tracker.StoryAttempts[sid] = cnt;
+                            }
+                        }
+
+                        // Line 6 (optional): StoryStars  "id:stars,id:stars,..."
+                        if (lines.Length >= 6 && !string.IsNullOrWhiteSpace(lines[5]))
+                        {
+                            foreach (var pair in lines[5].Split(','))
+                            {
+                                var parts = pair.Split(':');
+                                if (parts.Length == 2
+                                    && int.TryParse(parts[0].Trim(), out int storyId2)
+                                    && int.TryParse(parts[1].Trim(), out int starsVal)
+                                    && starsVal >= 1 && starsVal <= 3)
+                                    tracker.StoryStars[storyId2] = starsVal;
                             }
                         }
                     }
