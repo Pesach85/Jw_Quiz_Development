@@ -197,93 +197,67 @@ namespace Jw_Quiz_Development
 
         private void storia1ToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
-            this.Hide();
-            new Forms_list().Storia1();
-            this.Close();
+            OpenStory(1);
         }
 
         private void storia2ToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
-            this.Hide();
-            new Forms_list().Storia2();
-            this.Close();
+            OpenStory(2);
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
-            this.Hide();          
-            new Forms_list().Storia1();
-            this.Close();
+            OpenStory(1);
         }
 
         private void storia2ToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            this.Hide();
-            new Forms_list().Storia3();
-            this.Close();
+            OpenStory(3);
         }
 
         private void storia2ToolStripMenuItem2_Click(object sender, EventArgs e)
         {
-            this.Hide();
-            new Forms_list().Storia4();
-            this.Close();
+            OpenStory(4);
         }
 
         private void storia2ToolStripMenuItem3_Click(object sender, EventArgs e)
         {
-            this.Hide();
-            new Forms_list().Storia5();
-            this.Close();
+            OpenStory(5);
         }
 
         private void storia2ToolStripMenuItem4_Click(object sender, EventArgs e)
         {
-            this.Hide();
-            new Forms_list().Storia6();
-            this.Close();
+            OpenStory(6);
         }
 
         private void storia2ToolStripMenuItem5_Click(object sender, EventArgs e)
         {
-            this.Hide();
-            new Forms_list().Storia7();
-            this.Close();
+            OpenStory(7);
         }
 
         private void storia2ToolStripMenuItem6_Click(object sender, EventArgs e)
         {
-            this.Hide();
-            new Forms_list().Storia8();
-            this.Close();
+            OpenStory(8);
         }
 
         private void storia9ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.Hide();
-            new Forms_list().Storia9();
-            this.Close();
+            OpenStory(9);
         }
 
         private void storia10ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.Hide();
-            new Forms_list().Storia12();
-            this.Close();
+            OpenStory(12);
         }
 
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
-            this.Hide();
-            new Forms_list().Storia11();
-            this.Close();
+            OpenStory(11);
         }
 
         private void toolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            this.Hide();
-            new Forms_list().Storia10();
-            this.Close();
+            OpenStory(10);
         }
 
         private void statisticheToolStripMenuItem_Click(object sender, EventArgs e)
