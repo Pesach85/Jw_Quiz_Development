@@ -66,6 +66,7 @@
 - `pictureBox8` (Form2ÔÇôForm12): indizio con placeholder `1F525` sempre visibile e pulsante; click su "Rivela indizio" mostra l'immagine hint reale, click successivo torna al placeholder
 - `label1`: soluzione testo, nascosta, rivelata da "Rivela soluzione"
 - Completamento storia registrato via `ProgressTracker.Instance.CompleteStory(storyId)` alla chiusura
+- Runtime principale unificato: `Forms_list` apre le storie 1ÔÇô12 tramite `DynamicStoryForm` (i form statici restano legacy/reference, fuori dal path principale)
 - Fase migrazione F2 completata: le storie 1-12 in `StoryLibrary` ora hanno anche campi dinamici (`VisibleEmojis/HiddenEmojis/HintEmoji/ImageCaptions/ScriptureQuote`) pronti al renderer unificato
 
 **Storie Dinamiche (DynamicStoryForm)**
@@ -279,6 +280,8 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-04-22 | **Webapp — utenti online + pannello admin stats**: aggiunto badge "online" pulsante nel topbar; `functions/api/analytics.js` (Cloudflare Pages Function) per heartbeat presenza (TTL 120s), conteggio sessioni 24h, eventi story_view/story_complete; pannello admin con login via `ADMIN_SECRET` env var e 4 metriche aggregate (online ora, visioni, completamenti, sessioni) | ✅ Implementato |
 | 2026-04-22 | **Cleanup tecnico legacy (step graduale)**: estratta logica hint condivisa in `LegacyHintAnimator` e integrata nei code-behind statici Form2ÔÇôForm12; ridotta duplicazione handler in Form2/Form3 mantenendo intatto il wiring Designer | ✅ Implementato |
 | 2026-04-22 | **Pilot UX episodi 1ÔÇô12 (checklist regressioni reveal/hint/soluzione)**: audit tecnico completato su Form2ÔÇôForm13 (no regressioni su reveal immagini, toggle soluzione e tracking `CompleteStory`; hint animato verificato su Form2ÔÇôForm12). Nota: Form13 non possiede `pictureBox8`/slot hint legacy nel Designer, quindi escluso dal controllo di pulsazione | ✅ Validato |
+| 2026-04-22 | **Unificazione architettura runtime legacy completata**: `Forms_list` ora instrada le storie 1ÔÇô12 direttamente su `DynamicStoryForm`, rimosso fallback statico dal path principale e dismesso `AppFeatureFlags` di rollout | ✅ Implementato e validato (build 0 regressioni) |
+| 2026-04-22 | **Fix webapp pannello admin**: risolto overlay visibile all'avvio (`[hidden]` ora rispettato), corretto flusso apertura solo su click del pulsante "Login" in alto a destra, chiusura robusta con bottone/overlay/Escape | ✅ Implementato |
 ---
 
 ## 11. Next Best Decisions (Proposte Attive)
@@ -292,7 +295,7 @@ Aggiornare questa sezione ad ogni sessione di lavoro.
 | Alta | Gameplay | ~~Form statici (2ÔÇô13): indizio animato come DynamicStoryForm (pulsazione su pictureBox8)~~ ✅ **COMPLETATO su Form2ÔÇôForm12**. Residuo tecnico: Form13 non espone `pictureBox8` nel Designer legacy |
 | Alta | Content | ~~Aggiungere ImageCaptions[] anche alle storie statiche id 1-12 (attualmente solo ID 13-18)~~ Ô£à **COMPLETATO** |
 | Alta | Multilanguage | Migrare anche i form statici legacy 1-12 al runtime multilanguage senza toccare i `Designer.cs` |
-| Alta | Architettura | Piano 3 fasi unificazione legacy: ✅ F1, F2, F3 completate. Rifinitura residua: cleanup tecnico graduale dei code-behind legacy non piu' in path runtime principale |
+| Alta | Architettura | ~~Piano 3 fasi unificazione legacy: ✅ F1, F2, F3 completate. Rifinitura residua: cleanup tecnico graduale dei code-behind legacy non piu' in path runtime principale~~ ✅ **COMPLETATO** (runtime 1-12 unificato su `DynamicStoryForm`) |
 | Alta | Webapp | Configurare `ADMIN_SECRET` nelle env var di Cloudflare Pages → Settings → Environment Variables per attivare il pannello admin statistiche |
 | Media | Multilanguage | Rifinire il glossario rule-based it/en del motore shared web/desktop con review manuale delle traduzioni bibliche piu' lunghe |
 | Media | Gamification | **Streak + Badge**: N storie consecutive senza hint = badge "Saggio/Profeta/Apostolo" |

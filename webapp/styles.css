@@ -515,6 +515,7 @@ body {
   letter-spacing: 2px;
   transition: color 0.3s ease;
   font-family: "Segoe UI", "Nunito Sans", sans-serif;
+  -webkit-user-select: none;
   user-select: none;
 }
 
@@ -605,4 +606,54 @@ body {
   font-weight: 700;
   color: #6f4200;
   margin-top: 4px;
+}
+
+.admin-login-field {
+  max-width: 380px;
+}
+
+.admin-login-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  align-items: center;
+}
+
+.admin-error {
+  color: #a11d1d;
+  font-weight: 700;
+  display: none;
+}
+
+.admin-help {
+  margin-top: 14px;
+  font-size: 13px;
+  color: #6f4a00;
+}
+
+.admin-toolbar {
+  margin-top: 14px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.admin-status-msg {
+  font-size: 13px;
+  color: #6f4a00;
+}
+
+.admin-offline-note {
+  font-size: 13px;
+  color: #a11d1d;
+  margin-top: 10px;
+  display: none;
+}
+
+/* Ensure overlays really stay closed until explicitly opened by JS. */
+.editor[hidden],
+.picker[hidden],
+.admin-panel[hidden] {
+  display: none !important;
 }

@@ -1001,6 +1001,7 @@ import {
       if (adminErrorEl)     adminErrorEl.style.display = "none";
     }
     adminPanelEl.hidden = false;
+    adminPanelEl.focus();
   }
   function closeAdmin() {
     if (adminPanelEl) adminPanelEl.hidden = true;
@@ -1088,8 +1089,24 @@ import {
       if (s) loadAdminStats(s);
     });
   }
+  if (adminPanelEl) {
+    adminPanelEl.addEventListener("click", function (e) {
+      if (e.target === adminPanelEl) {
+        closeAdmin();
+      }
+    });
+  }
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && adminPanelEl && !adminPanelEl.hidden) {
+      closeAdmin();
+    }
+  });
 
   async function initialize() {
+    // Admin panel must never auto-open on site load.
+    if (adminPanelEl) {
+      adminPanelEl.hidden = true;
+    }
     buildEditorRows();
     applyUiText();
     await refreshSharedData();

@@ -54,57 +54,26 @@ namespace Jw_Quiz_Development
 
         public void Home() { ShowForm(new Form1()); }
 
-        public void Storia1()  { if (!TryShowLegacyDynamicStory(1))  ShowForm(new Form2());  }
-        public void Storia2()  { if (!TryShowLegacyDynamicStory(2))  ShowForm(new Form3());  }
-        public void Storia3()  { if (!TryShowLegacyDynamicStory(3))  ShowForm(new Form4());  }
-        public void Storia4()  { if (!TryShowLegacyDynamicStory(4))  ShowForm(new Form5());  }
-        public void Storia5()  { if (!TryShowLegacyDynamicStory(5))  ShowForm(new Form6());  }
-        public void Storia6()  { if (!TryShowLegacyDynamicStory(6))  ShowForm(new Form7());  }
-        public void Storia7()  { if (!TryShowLegacyDynamicStory(7))  ShowForm(new Form8());  }
-        public void Storia8()  { if (!TryShowLegacyDynamicStory(8))  ShowForm(new Form9());  }
-        public void Storia9()  { if (!TryShowLegacyDynamicStory(9))  ShowForm(new Form10()); }
-        public void Storia10() { if (!TryShowLegacyDynamicStory(10)) ShowForm(new Form11()); }
-        public void Storia11() { if (!TryShowLegacyDynamicStory(11)) ShowForm(new Form12()); }
-        public void Storia12() { if (!TryShowLegacyDynamicStory(12)) ShowForm(new Form13()); }
-
-        private bool TryShowLegacyDynamicStory(int id)
-        {
-            if (!AppFeatureFlags.UseDynamicRendererForLegacyStories)
-                return false;
-
-            Story story = StoryEngine.GetStory(id);
-            if (!CanRenderLegacyStoryDynamically(story))
-                return false;
-
-            ShowForm(new DynamicStoryForm(story));
-            return true;
-        }
-
-        private static bool CanRenderLegacyStoryDynamically(Story story)
-        {
-            if (story == null || story.Id < 1 || story.Id > 12)
-                return false;
-
-            if (story.VisibleEmojis == null || story.VisibleEmojis.Length < 5)
-                return false;
-
-            if (story.HiddenEmojis == null || story.HiddenEmojis.Length < 2)
-                return false;
-
-            if (string.IsNullOrWhiteSpace(story.HintEmoji))
-                return false;
-
-            if (story.ImageCaptions == null || story.ImageCaptions.Length < 8)
-                return false;
-
-            return true;
-        }
+        public void Storia1()  { ShowDynamicStory(1);  }
+        public void Storia2()  { ShowDynamicStory(2);  }
+        public void Storia3()  { ShowDynamicStory(3);  }
+        public void Storia4()  { ShowDynamicStory(4);  }
+        public void Storia5()  { ShowDynamicStory(5);  }
+        public void Storia6()  { ShowDynamicStory(6);  }
+        public void Storia7()  { ShowDynamicStory(7);  }
+        public void Storia8()  { ShowDynamicStory(8);  }
+        public void Storia9()  { ShowDynamicStory(9);  }
+        public void Storia10() { ShowDynamicStory(10); }
+        public void Storia11() { ShowDynamicStory(11); }
+        public void Storia12() { ShowDynamicStory(12); }
 
         private void ShowDynamicStory(int id)
         {
             Story story = StoryEngine.GetStory(id);
             if (story != null)
                 ShowForm(new DynamicStoryForm(story));
+            else
+                Fine();
         }
 
         public void Storia13() { ShowDynamicStory(13); }
