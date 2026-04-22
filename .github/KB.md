@@ -48,7 +48,7 @@
 | `functions/api/stories.js` | API Cloudflare Pages Functions per leggere/salvare episodi condivisi |
 | `functions/api/assets.js` | API Cloudflare Pages Functions per listare/caricare PNG custom condivisi |
 | `functions/api/assets/[key].js` | Stream dei PNG custom salvati su bucket R2 |
-| `wrangler.toml` | Config deploy Cloudflare (output webapp, binding KV/R2, compat date) |
+| `wrangler.toml` | Config deploy Cloudflare (output webapp, compat date, vars) |
 
 ---
 
@@ -244,7 +244,8 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-04-22 | **Asset parity web**: sincronizzati tutti i PNG da `Resources/` a `webapp/assets/` per avere galleria completa come desktop | ✅ Implementato |
 | 2026-04-22 | **Cloudflare shared persistence**: aggiunte Pages Functions per episodi condivisi su KV e asset PNG custom su R2 | ✅ Implementato |
 | 2026-04-22 | **Picker web avanzato**: aggiunto upload PNG custom dal browser con riuso immediato nei nuovi episodi | ✅ Implementato |
-| 2026-04-22 | **Deploy readiness**: aggiunto `wrangler.toml` con naming `jwquiz` e binding standard KV/R2 per primo deploy | ✅ Implementato |
+| 2026-04-22 | **Deploy readiness**: aggiunto `wrangler.toml` con naming `jwquiz` per primo deploy | ✅ Implementato |
+| 2026-04-22 | **Hotfix deploy**: rimossi binding KV/R2 da `wrangler.toml` (placeholder ID invalido) per usare i binding reali configurati nel pannello Pages | ✅ Implementato |
 
 ---
 
