@@ -14,14 +14,21 @@ namespace Jw_Quiz_Development
     {
         private int StoryId = 4;
         private bool storyCompleted = false;
+        private LegacyHintAnimator hintAnimator;
 
         public Form5()
         {
             InitializeComponent();
+            hintAnimator = new LegacyHintAnimator(pictureBox8, button3);
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
+            if (hintAnimator != null)
+            {
+                hintAnimator.Dispose();
+                hintAnimator = null;
+            }
             base.OnFormClosing(e);
             if (!storyCompleted)
             {
@@ -139,16 +146,8 @@ namespace Jw_Quiz_Development
 
         private void button3_Click(object sender, EventArgs e)
         {
-            if (!pictureBox8.Visible)
-            {
-                button3.Text = "Nascondi indizio";
-                pictureBox8.Visible = true;
-            }
-            else
-            {
-                button3.Text = "Rivela indizio";
-                pictureBox8.Visible = false;
-            }
+            if (hintAnimator != null)
+                hintAnimator.Toggle();
         }
 
         private void button4_Click(object sender, EventArgs e)

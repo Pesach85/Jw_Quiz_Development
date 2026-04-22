@@ -33,6 +33,7 @@
 | `StoryLibrary.cs` | Catalogo storie (ID 1ÔÇô18): 1ÔÇô12 statiche, 13ÔÇô18 dinamiche |
 | `StoryEngine.cs` | Logica progressione/navigazione tra storie |
 | `DynamicStoryForm.cs` | Form generico per storie dinamiche (ID 13ÔÇô18 e user-created) |
+| `LegacyHintAnimator.cs` | Helper condiviso per hint legacy statici: placeholder `1F525`, pulsazione e toggle reveal/hide su `pictureBox8` |
 | `StoryEditorForm.cs` | Editor in-app per creare nuove storie con galleria immagini |
 | `UserStoryLibrary.cs` | Persistenza storie utente su `UserStories.dat` |
 | `LanguageManager.cs` | Stato lingua corrente app + persistenza preferenza lingua |
@@ -62,7 +63,7 @@
 **Storie Statiche (Form2ÔÇôForm13)**
 - 7 `PictureBox` con PNG colorate dal namespace `Properties.Resources`
 - `pictureBox3` e `pictureBox5`: nascosti di default (`Visible=false`), rivelati da "Rivela 2 immagini"
-- `pictureBox8`: indizio, nascosto, rivelato da "Rivela indizio"
+- `pictureBox8` (Form2ÔÇôForm12): indizio con placeholder `1F525` sempre visibile e pulsante; click su "Rivela indizio" mostra l'immagine hint reale, click successivo torna al placeholder
 - `label1`: soluzione testo, nascosta, rivelata da "Rivela soluzione"
 - Completamento storia registrato via `ProgressTracker.Instance.CompleteStory(storyId)` alla chiusura
 - Fase migrazione F2 completata: le storie 1-12 in `StoryLibrary` ora hanno anche campi dinamici (`VisibleEmojis/HiddenEmojis/HintEmoji/ImageCaptions/ScriptureQuote`) pronti al renderer unificato
@@ -271,10 +272,13 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-04-22 | **Unificazione legacy Step 3 (rollout)**: attivato `UseDynamicRendererForLegacyStories=true`; le storie 1-12 ora passano dal renderer dinamico quando i controlli dati sono soddisfatti, con rollback immediato possibile via flag | Ô£à Implementato e validato (build 0 regressioni) |
 | 2026-04-22 | **QA post-rollout storie 1-12**: corretti 4 riferimenti PNG mancanti in `StoryLibrary` (`japanese_dolls_facebook`, `75-...old_woman...`, `412-...dancing...`, `1F4AC`) con chiavi reali presenti in `Resources` | Ô£à Implementato e validato (build 0 regressioni) |
 | 2026-04-22 | **Refactor runtime Form1**: consolidata la navigazione episodi in metodo unico `OpenStory(id)` per ridurre duplicazioni e mantenere invariato il comportamento utente | Ô£à Implementato e validato (build 0 regressioni) |
-| 2026-04-22 | **KB recovery post-troncamento**: ripristinato `.github/KB.md` da snapshot stabile precedente e riallineato il log decisionale all'ultimo stato reale della codebase | Ô£à Implementato || 2026-04-22 | **Sistema a Stelle (1-3 per storia)**: stelle live nell'header di `DynamicStoryForm` (★★★→★★☆→★☆☆ man mano che si usano aiuti), persistenza in `ProgressTracker.StoryStars`, contatore perfetti in `ProgressPanel`, stelle nel dialog statistiche | ✅ Implementato e validato (build 0 regressioni) |
+| 2026-04-22 | **KB recovery post-troncamento**: ripristinato `.github/KB.md` da snapshot stabile precedente e riallineato il log decisionale all'ultimo stato reale della codebase | Ô£à Implementato |
+| 2026-04-22 | **Sistema a Stelle (1-3 per storia)**: stelle live nell'header di `DynamicStoryForm` (★★★→★★☆→★☆☆ man mano che si usano aiuti), persistenza in `ProgressTracker.StoryStars`, contatore perfetti in `ProgressPanel`, stelle nel dialog statistiche | ✅ Implementato e validato (build 0 regressioni) |
 | 2026-04-22 | **Webapp UX — transizioni e animazioni**: aggiunti `transition` su btn/caption/select/inputs, animazioni `shellIn`/`cardIn`/`riseIn` per shell/editor/picker/solution panel, hover+active feedback su button e slot, focus ring sui form fields | ✅ Implementato |
 | 2026-04-22 | **Webapp — stelle live**: aggiunto `starsBox` nel header della webapp con calcolo ★★★ in tempo reale identico al desktop; aggiornato da `updateStarsUi()` ad ogni reveal/hint | ✅ Implementato |
 | 2026-04-22 | **Webapp — utenti online + pannello admin stats**: aggiunto badge "online" pulsante nel topbar; `functions/api/analytics.js` (Cloudflare Pages Function) per heartbeat presenza (TTL 120s), conteggio sessioni 24h, eventi story_view/story_complete; pannello admin con login via `ADMIN_SECRET` env var e 4 metriche aggregate (online ora, visioni, completamenti, sessioni) | ✅ Implementato |
+| 2026-04-22 | **Cleanup tecnico legacy (step graduale)**: estratta logica hint condivisa in `LegacyHintAnimator` e integrata nei code-behind statici Form2ÔÇôForm12; ridotta duplicazione handler in Form2/Form3 mantenendo intatto il wiring Designer | ✅ Implementato |
+| 2026-04-22 | **Pilot UX episodi 1ÔÇô12 (checklist regressioni reveal/hint/soluzione)**: audit tecnico completato su Form2ÔÇôForm13 (no regressioni su reveal immagini, toggle soluzione e tracking `CompleteStory`; hint animato verificato su Form2ÔÇôForm12). Nota: Form13 non possiede `pictureBox8`/slot hint legacy nel Designer, quindi escluso dal controllo di pulsazione | ✅ Validato |
 ---
 
 ## 11. Next Best Decisions (Proposte Attive)
@@ -285,7 +289,7 @@ Aggiornare questa sezione ad ogni sessione di lavoro.
 |---------|------|---------|
 | Alta | Web | ~~Migrare anche storie statiche 1-12 nel renderer web unificato~~ Ô£à **COMPLETATO** |
 | Alta | Gamification | ~~**Sistema a Stelle** (1-3 per storia): 3=nessun aiuto, 2=1 aiuto, 1=tutti aiuti — visual memorabile per proiezione~~ ✅ **COMPLETATO** |
-| Alta | Gameplay | Form statici (2ÔÇô13): indizio animato come DynamicStoryForm (pulsazione su pictureBox8) |
+| Alta | Gameplay | ~~Form statici (2ÔÇô13): indizio animato come DynamicStoryForm (pulsazione su pictureBox8)~~ ✅ **COMPLETATO su Form2ÔÇôForm12**. Residuo tecnico: Form13 non espone `pictureBox8` nel Designer legacy |
 | Alta | Content | ~~Aggiungere ImageCaptions[] anche alle storie statiche id 1-12 (attualmente solo ID 13-18)~~ Ô£à **COMPLETATO** |
 | Alta | Multilanguage | Migrare anche i form statici legacy 1-12 al runtime multilanguage senza toccare i `Designer.cs` |
 | Alta | Architettura | Piano 3 fasi unificazione legacy: ✅ F1, F2, F3 completate. Rifinitura residua: cleanup tecnico graduale dei code-behind legacy non piu' in path runtime principale |

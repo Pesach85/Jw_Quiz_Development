@@ -14,14 +14,21 @@ namespace Jw_Quiz_Development
     {
         private int StoryId = 1; // Form2 = Storia 1
         private bool storyCompleted = false;
+        private LegacyHintAnimator hintAnimator;
 
         public Form2()
         {
             InitializeComponent();
+            hintAnimator = new LegacyHintAnimator(pictureBox8, button3);
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
+            if (hintAnimator != null)
+            {
+                hintAnimator.Dispose();
+                hintAnimator = null;
+            }
             base.OnFormClosing(e);
             // Salva il progresso quando chiudi il form
             if (!storyCompleted)
@@ -75,16 +82,8 @@ namespace Jw_Quiz_Development
 
         private void Button3_Click(object sender, EventArgs e)
         {
-            if (!pictureBox8.Visible)
-            {
-                button3.Text = "Nascondi indizio";
-                pictureBox8.Visible = true;
-            }
-            else
-            {
-                button3.Text = "Rivela indizio";
-                pictureBox8.Visible = false;
-            }
+            if (hintAnimator != null)
+                hintAnimator.Toggle();
         }
 
         private void Button4_Click(object sender, EventArgs e)
@@ -103,46 +102,17 @@ namespace Jw_Quiz_Development
 
         private void Button1_Click_1(object sender, EventArgs e)
         {
-            if (!pictureBox3.Visible)
-            {
-                button1.Text = "Nascondi 2 simboli";
-                pictureBox3.Visible = true;
-                pictureBox5.Visible = true;
-            }
-            else
-            {
-                button1.Text = "Rivela 2 simboli";
-                pictureBox3.Visible = false;
-                pictureBox5.Visible = false;
-            }
+            Button1_Click(sender, e);
         }
 
         private void Button3_Click_1(object sender, EventArgs e)
         {
-            if (!pictureBox8.Visible)
-            {
-                button3.Text = "Nascondi indizio";
-                pictureBox8.Visible = true;
-            }
-            else
-            {
-                button3.Text = "Rivela indizio";
-                pictureBox8.Visible = false;
-            }
+            Button3_Click(sender, e);
         }
 
         private void Button4_Click_1(object sender, EventArgs e)
         {
-            if (!label1.Visible)
-            {
-                button4.Text = "Nascondi soluzione";
-                label1.Visible = true;
-            }
-            else
-            {
-                button4.Text = "Rivela soluzione";
-                label1.Visible = false;
-            }
+            Button4_Click(sender, e);
         }
 
         private void Button2_Click_1(object sender, EventArgs e)
