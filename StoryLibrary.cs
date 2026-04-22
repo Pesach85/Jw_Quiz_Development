@@ -10,7 +10,8 @@ namespace Jw_Quiz_Development
         {
             var list = new List<Story>
             {
-            // ── STORIE STATICHE (ID 1-12) ─────────────────────────────────────────
+            // ── STORIE LEGACY 1-12 PREPARATE AL RENDERER DINAMICO (F2) ────────────
+            // Nota: in Step 2 manteniamo IsDynamic=false. Il passaggio runtime avviene via feature flag in Forms_list.
             new Story
             {
                 Id = 1,
@@ -19,9 +20,24 @@ namespace Jw_Quiz_Development
                 Keyword = "Obbedienza",
                 Hint = "Un serpente, un albero proibito e una scelta fatale.",
                 Solution = "Adamo ed Eva disobbedirono a Geova mangiando il frutto proibito. Le conseguenze toccano l'intera umanita', ma Dio promise la salvezza: Genesi 3:15.",
+                ScriptureQuote = "Geova Dio... comando' all'uomo: '...dell'albero della conoscenza del bene e del male non devi mangiare, poiche' nel giorno in cui ne mangerai positivamente morirai.' - Genesi 2:16-17 (TNM)",
                 EngagementNote = "Sottolinea il valore dell'obbedienza e la promessa di redenzione gia' nell'Eden.",
                 ImageResourceName = "Eden",
-                IsDynamic = false
+                IsDynamic = false,
+                VisibleEmojis = new[] { "093-users", "1F333", "1F632", "1F457", "1F456" },
+                HiddenEmojis = new[] { "1F34E", "1F480" },
+                HintEmoji = "1F40D",
+                ImageCaptions = new[]
+                {
+                    "I primi due esseri umani",
+                    "L'albero al centro del giardino",
+                    "Lo shock della scoperta",
+                    "Vestiti che coprono la vergogna",
+                    "Scarpe che camminano lontano dal Creatore",
+                    "Il frutto proibito",
+                    "La morte entro' nel mondo",
+                    "Il serpente ingannatore"
+                }
             },
             new Story
             {
@@ -30,10 +46,25 @@ namespace Jw_Quiz_Development
                 ScriptureReference = "Giudici 14-16",
                 Keyword = "Fedelta'",
                 Hint = "La vera forza non sta nei capelli, ma nell'alleanza con Dio.",
-                Solution = "Sansone tradì il suo voto nazireo cedendo a Dalila. Cieco e prigioniero, si pentì e Geova gli restitui' la forza per sconfiggere i Filistei: Giudici 16:28-30.",
+                Solution = "Sansone tradi' il suo voto nazireo cedendo a Dalila. Cieco e prigioniero, si penti' e Geova gli restitui' la forza per sconfiggere i Filistei: Giudici 16:28-30.",
+                ScriptureQuote = "Sansone invoco' Geova e disse: 'Sovrano Signore Geova, ricordati ora di me... fammi vendicare dei Filistei per i miei due occhi.' - Giudici 16:28 (TNM)",
                 EngagementNote = "Mostra come cedere ai desideri mondani possa indebolirci, e come il sincero pentimento apra la via al perdono di Dio.",
                 ImageResourceName = "Samson",
-                IsDynamic = false
+                IsDynamic = false,
+                VisibleEmojis = new[] { "1F4AA-1F3FD", "1F498", "1F487-1F3FC-200D-2642-FE0F", "1F440", "1F3DB" },
+                HiddenEmojis = new[] { "159-dancer", "26D4" },
+                HintEmoji = "203C",
+                ImageCaptions = new[]
+                {
+                    "Forza sovrumana",
+                    "Un amore pericoloso",
+                    "La donna che taglia i capelli",
+                    "Gli occhi del guerriero",
+                    "Il tempio di Dagon",
+                    "La danzatrice seduttrice",
+                    "La fine della forza",
+                    "Attenzione al tradimento!"
+                }
             },
             new Story
             {
@@ -42,10 +73,25 @@ namespace Jw_Quiz_Development
                 ScriptureReference = "Giona 2-3",
                 Keyword = "Misericordia",
                 Hint = "Tre giorni nel buio insegnano cosa significa correre verso Dio, non lontano da Lui.",
-                Solution = "Giona fuggi' dalla missione di Geova, ma dal ventre del pesce grido' a Lui. Dio lo libero' e Ninive si pentì. Giona 2:2.",
+                Solution = "Giona fuggi' dalla missione di Geova, ma dal ventre del pesce grido' a Lui. Dio lo libero' e Ninive si penti'. Giona 2:2.",
+                ScriptureQuote = "Quando la mia vita si stava esaurendo, mi ricordai di Geova, e la mia preghiera entro' da te, nel tuo santo tempio. - Giona 2:7 (TNM)",
                 EngagementNote = "Evidenzia la misericordia di Dio per i peccatori pentiti e l'importanza di accettare la missione assegnataci.",
                 ImageResourceName = "Jonah",
-                IsDynamic = false
+                IsDynamic = false,
+                VisibleEmojis = new[] { "26F5", "1F3CA-1F3FB-200D-2642-FE0F", "1F932-1F3FD", "1F3F0", "1F4E3" },
+                HiddenEmojis = new[] { "1F433", "1F334" },
+                HintEmoji = "2694",
+                ImageCaptions = new[]
+                {
+                    "Una nave verso Tarsis",
+                    "Un uomo gettato in mare",
+                    "Preghiera dal profondo",
+                    "La grande citta' di Ninive",
+                    "Il messaggio proclamato",
+                    "Il grande pesce",
+                    "La pianta di ricino",
+                    "La battaglia spirituale"
+                }
             },
             new Story
             {
@@ -55,9 +101,24 @@ namespace Jw_Quiz_Development
                 Keyword = "Giudizio",
                 Hint = "Il Re separa il gregge: a destra vita eterna, a sinistra distruzione eterna.",
                 Solution = "Gesu' insegno' che al momento del giudizio finale sara' separato chi ha dimostrato amore e fedelta' (pecore) da chi non lo ha fatto (capre). Matteo 25:46.",
+                ScriptureQuote = "Quando il Figlio dell'uomo arrivera' nella sua gloria... separera' gli uni dagli altri, come il pastore separa le pecore dalle capre. - Matteo 25:31-32 (TNM)",
                 EngagementNote = "Collega il giudizio finale all'amore pratico verso Dio e il prossimo.",
                 ImageResourceName = "SheepGoats",
-                IsDynamic = false
+                IsDynamic = false,
+                VisibleEmojis = new[] { "1f411-w", "1f4112", "1F3B6", "1F1EE-1F1F1", "1F451" },
+                HiddenEmojis = new[] { "139-man", "1F3B8" },
+                HintEmoji = "1F468-1F3FD-200D-2696-FE0F",
+                ImageCaptions = new[]
+                {
+                    "Le pecore alla destra del Re",
+                    "Le capre alla sinistra",
+                    "Il canto della vittoria",
+                    "La bandiera d'Israele",
+                    "La corona del Regno",
+                    "Il Figlio dell'uomo glorificato",
+                    "L'arpa del giudizio",
+                    "Il Giudice giusto"
+                }
             },
             new Story
             {
@@ -67,9 +128,24 @@ namespace Jw_Quiz_Development
                 Keyword = "Potere di Dio",
                 Hint = "Dieci segni celesti provano che nessun dio egiziano puo' competere col Creatore.",
                 Solution = "Attraverso dieci piaghe devastanti, Geova mostro' la Sua potenza superiore alle divinita' d'Egitto. Esodo 12:12.",
+                ScriptureQuote = "E certamente gli Egiziani sapranno che io sono Geova quando stendero' la mia mano contro l'Egitto. - Esodo 7:5 (TNM)",
                 EngagementNote = "Usa le piaghe per illustrare che Geova agisce nella storia e difende il Suo nome e il Suo popolo.",
                 ImageResourceName = "Plagues",
-                IsDynamic = false
+                IsDynamic = false,
+                VisibleEmojis = new[] { "1F51F", "1F438", "1F463", "1F480", "1F193" },
+                HiddenEmojis = new[] { "1F318", "1F997" },
+                HintEmoji = "1FA78",
+                ImageCaptions = new[]
+                {
+                    "Il segno della fine",
+                    "Rane su tutta la terra",
+                    "Le orme nella polvere diventata zanzare",
+                    "La morte dei primogeniti",
+                    "GRATUITO: la liberazione di Dio",
+                    "Le tenebre su tutta la terra",
+                    "Le cavallette divorano tutto",
+                    "La goccia di sangue nel Nilo"
+                }
             },
             new Story
             {
@@ -79,9 +155,24 @@ namespace Jw_Quiz_Development
                 Keyword = "Preghiera",
                 Hint = "Un profeta solo affronta 850 sacerdoti pagani sulla cima del Monte Carmelo.",
                 Solution = "Elia prego' con fede e Geova invio' fuoco dal cielo consumando il sacrificio, poi apri' i cieli dopo tre anni e mezzo di siccita'. 1 Re 18:38.",
+                ScriptureQuote = "Se Geova e' il vero Dio, seguitelo; ma se e' Baal, seguite lui! - 1 Re 18:21 (TNM)",
                 EngagementNote = "Sottolinea la forza della preghiera sincera: anche un uomo solo, unito a Dio, puo' cambiare il corso degli eventi.",
                 ImageResourceName = "Elijah",
-                IsDynamic = false
+                IsDynamic = false,
+                VisibleEmojis = new[] { "270B-1F3FD", "2614", "1F525", "2601", "1F327" },
+                HiddenEmojis = new[] { "1F932-1F3FC", "1F404" },
+                HintEmoji = "1F6BE",
+                ImageCaptions = new[]
+                {
+                    "La mano alzata del profeta",
+                    "Nessuna pioggia per anni",
+                    "Il fuoco che consuma il sacrificio",
+                    "Le nuvole cominciano a radunarsi",
+                    "La pioggia torrenziale",
+                    "Il profeta in preghiera",
+                    "Il toro sacrificale",
+                    "L'acqua versata sull'altare"
+                }
             },
             new Story
             {
@@ -90,10 +181,25 @@ namespace Jw_Quiz_Development
                 ScriptureReference = "Ester 4-9",
                 Keyword = "Coraggio",
                 Hint = "Una regina rischia la vita presentandosi al re senza essere stata convocata.",
-                Solution = "Ester si presento' coraggiosamente al re Assuero e smascero' il malvagio piano di Aman. Ester 4:14.",
+                Solution = "Ester si presento' coraggiosamente al re Assuero e smaschero' il malvagio piano di Aman. Ester 4:14.",
+                ScriptureQuote = "E se devo perire, periro'! - Ester 4:16 (TNM)",
                 EngagementNote = "Mostra come il coraggio ispirato da Dio permette alle persone di agire a favore del prossimo.",
                 ImageResourceName = "Esther",
-                IsDynamic = false
+                IsDynamic = false,
+                VisibleEmojis = new[] { "1F932-1F3FD", "1F6BC", "1F4E31", "1F442-1F3FE", "japanese_dolls_facebook" },
+                HiddenEmojis = new[] { "1F634", "1F632" },
+                HintEmoji = "2694",
+                ImageCaptions = new[]
+                {
+                    "La regina Ester",
+                    "Il simbolo del bambino (il futuro del popolo)",
+                    "La lettera sigillata",
+                    "L'orecchio che ascolta il complotto",
+                    "Il popolo persiano",
+                    "Il sonno del re disturbato",
+                    "Lo shock di Aman smascherato",
+                    "La battaglia per la giustizia"
+                }
             },
             new Story
             {
@@ -103,9 +209,24 @@ namespace Jw_Quiz_Development
                 Keyword = "Fede",
                 Hint = "Un padre pronto a offrire il suo amato figlio dimostra la fede piu' grande.",
                 Solution = "Abramo obbedi' a Geova portando Isacco sull'altare. Un angelo lo fermo' e Dio provvide un ariete. Genesi 22:18.",
+                ScriptureQuote = "Per mezzo della tua discendenza tutte le nazioni della terra si benediranno certamente, perche' hai ascoltato la mia voce. - Genesi 22:18 (TNM)",
                 EngagementNote = "Evidenzia come questa storia prefiguri il sacrificio di Cristo.",
                 ImageResourceName = "Abraham",
-                IsDynamic = false
+                IsDynamic = false,
+                VisibleEmojis = new[] { "1F473-200D-2642-FE0F", "1F6B8", "1F52A", "1F5FB", "1f4112" },
+                HiddenEmojis = new[] { "1F42A", "094-user" },
+                HintEmoji = "270B-1F3FD",
+                ImageCaptions = new[]
+                {
+                    "Il patriarca Abramo",
+                    "Il viaggio verso il monte",
+                    "Il coltello del sacrificio",
+                    "Il monte Moria",
+                    "L'ariete provveduto",
+                    "Il cammello del viaggio",
+                    "Isacco, il figlio promesso",
+                    "La mano di Dio si rivela"
+                }
             },
             new Story
             {
@@ -115,9 +236,24 @@ namespace Jw_Quiz_Development
                 Keyword = "Perdono",
                 Hint = "Il padre vede il figlio da lontano e corre ad abbracciarlo.",
                 Solution = "Il figlio minore dilapido' tutto, torno' pentito e il padre lo accolse con gioia immensa. Luca 15:24.",
+                ScriptureQuote = "Questo mio figlio era morto ed e' tornato in vita; era perduto ed e' stato ritrovato. - Luca 15:24 (TNM)",
                 EngagementNote = "Illustra che Dio accoglie sempre i cuori sinceramente pentiti.",
                 ImageResourceName = "ProdigalSon",
-                IsDynamic = false
+                IsDynamic = false,
+                VisibleEmojis = new[] { "038-boy-1", "75-750986_download_svg_download_png_old_woman_emoji_transparent", "1F37A", "1F416", "1F416" },
+                HiddenEmojis = new[] { "1F4B0", "1F629" },
+                HintEmoji = "412-4121149_twins_clipart_emoji_dancing_girls_emoji_png_transparent",
+                ImageCaptions = new[]
+                {
+                    "Il figlio minore",
+                    "Il padre anziano",
+                    "La vita dissoluta",
+                    "I maiali che mangia il cibo dei porci",
+                    "I maiali che custodisce",
+                    "Il denaro sprecato",
+                    "Il pianto del pentimento",
+                    "La festa del ritorno"
+                }
             },
             new Story
             {
@@ -125,11 +261,26 @@ namespace Jw_Quiz_Development
                 Title = "La Profezia della Pace di Isaia",
                 ScriptureReference = "Isaia 11:7-11",
                 Keyword = "Profezia",
-                Hint = "Lupo e agnello, leone e vitello — pace tra animali che ora si combattono.",
-                Solution = "Isaia profetizo' una nuova era di pace paradisiaca sotto il governo del Messia. Isaia 11:6-9.",
+                Hint = "Lupo e agnello, leone e vitello - pace tra animali che ora si combattono.",
+                Solution = "Isaia profetizzo' una nuova era di pace paradisiaca sotto il governo del Messia. Isaia 11:6-9.",
+                ScriptureQuote = "Il lupo risiedera' temporaneamente con l'agnello... e un semplice ragazzino li condurra'. - Isaia 11:6 (TNM)",
                 EngagementNote = "Collega la profezia di Isaia al futuro paradiso terreno che Geova promette.",
                 ImageResourceName = "Isaiah",
-                IsDynamic = false
+                IsDynamic = false,
+                VisibleEmojis = new[] { "1F932-1F3FC", "1F51A", "2935", "1F199", "1F451" },
+                HiddenEmojis = new[] { "1F981", "1F5FA" },
+                HintEmoji = "1F5FA",
+                ImageCaptions = new[]
+                {
+                    "Una donna in preghiera",
+                    "La fine della violenza",
+                    "La freccia che diventa inutile",
+                    "OK - tutto va bene nel nuovo mondo",
+                    "La corona del re messianico",
+                    "Il leone che dimora con l'agnello",
+                    "La mappa del piano di Dio",
+                    "Un percorso verso la pace promessa"
+                }
             },
             new Story
             {
@@ -139,9 +290,24 @@ namespace Jw_Quiz_Development
                 Keyword = "Salvezza",
                 Hint = "Un uomo giusto costruisce una grande arca mentre il mondo lo deride.",
                 Solution = "Noe' obbedi' a Geova costruendo l'arca ed entro' con la sua famiglia. Genesi 6:22.",
+                ScriptureQuote = "Noe' fece secondo tutto cio' che Dio gli aveva comandato. Fece proprio cosi'. - Genesi 6:22 (TNM)",
                 EngagementNote = "Noe' e' simbolo di salvezza attraverso l'obbedienza.",
                 ImageResourceName = "Noah",
-                IsDynamic = false
+                IsDynamic = false,
+                VisibleEmojis = new[] { "1F6A2", "1F404", "1F413", "1F327", "1F308" },
+                HiddenEmojis = new[] { "1F404", "1F413" },
+                HintEmoji = "1F30A",
+                ImageCaptions = new[]
+                {
+                    "L'arca di salvezza",
+                    "Le mucche a coppie",
+                    "I polli a coppie",
+                    "La pioggia torrenziale per 40 giorni",
+                    "L'arcobaleno del patto",
+                    "Altre mucche (coppia per coppia)",
+                    "Altri polli (coppia per coppia)",
+                    "Le acque che coprono la terra"
+                }
             },
             new Story
             {
@@ -151,9 +317,24 @@ namespace Jw_Quiz_Development
                 Keyword = "Buona Novella",
                 Hint = "Un carro nel deserto, un rotolo di Isaia e un incontro guidato dagli angeli.",
                 Solution = "Lo spirito di Dio guido' Filippo verso il carro dell'eunuco. Filippo spiego' la buona novella e l'eunuco chiese il battesimo. Atti 8:36.",
+                ScriptureQuote = "Filippo... gli dichiaro' la buona notizia intorno a Gesu'. - Atti 8:35 (TNM)",
                 EngagementNote = "Mostra come Geova apre le porte per la predicazione e prepara cuori pronti.",
                 ImageResourceName = "Philip",
-                IsDynamic = false
+                IsDynamic = false,
+                VisibleEmojis = new[] { "1F47C", "2753", "1F30A", "1F4D6", "Hackney-100" },
+                HiddenEmojis = new[] { "1F4AC", "1F4E3" },
+                HintEmoji = "203C",
+                ImageCaptions = new[]
+                {
+                    "Un angelo guida Filippo",
+                    "Una domanda: cosa significa?",
+                    "L'acqua per il battesimo",
+                    "Il rotolo di Isaia",
+                    "Il carro etiope",
+                    "Una conversazione guidata",
+                    "Una decisione immediata",
+                    "La buona notizia condivisa"
+                }
             },
 
             // ── EPISODI DINAMICI (ID 13-18) ──────────────────────────────────────
