@@ -2,5 +2,13 @@ name = "jwquiz"
 pages_build_output_dir = "webapp"
 compatibility_date = "2026-04-22"
 
+[[kv_namespaces]]
+binding = "JWQUIZ_DATA"
+id = "bcb33104289f49dea43e65d7d9b96440"
+
+[[r2_buckets]]
+binding = "JWQUIZ_UPLOADS"
+bucket_name = "jwquiz-uploads"
+
 [vars]
 JWQUIZ_ENV = "production"
