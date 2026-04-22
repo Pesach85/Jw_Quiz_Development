@@ -9,6 +9,7 @@ namespace Jw_Quiz_Development
     {
         private readonly Story story;
         private readonly bool[] revealed = new bool[3]; // 0/1 = hidden images, 2 = hint
+        private StoryLocalizedText localizedText;
 
         private Label titleLabel;
         private Label referenceLabel;
@@ -27,13 +28,22 @@ namespace Jw_Quiz_Development
         public DynamicStoryForm(Story story)
         {
             this.story = story ?? throw new ArgumentNullException(nameof(story));
+            LanguageManager.LanguageChanged += LanguageManager_LanguageChanged;
             InitializeUi();
+            RenderStory();
+        }
+
+        private void LanguageManager_LanguageChanged(object sender, EventArgs e)
+        {
+            if (IsDisposed)
+                return;
+
             RenderStory();
         }
 
         private void InitializeUi()
         {
-            Text = "JW Quiz - Indovina la Storia";
+            Text = AppText.Get("AppTitle");
             BackColor = Color.FromArgb(18, 28, 44);
             ForeColor = Color.White;
             Width = 1050;
@@ -100,7 +110,7 @@ namespace Jw_Quiz_Development
                 ForeColor = Color.FromArgb(230, 242, 255),
                 BackColor = Color.FromArgb(19, 37, 59),
                 BorderStyle = BorderStyle.FixedSingle,
-                Text = "Clicca su un'immagine per scoprire un indizio sul racconto"
+                Text = AppText.Get("ClickImageHint")
             };
             imagePanel.Controls.Add(captionLabel);
 
@@ -161,19 +171,19 @@ namespace Jw_Quiz_Development
             };
             center.Controls.Add(buttons);
 
-            revealButton = CreateActionButton("Rivela 2 immagini", Color.FromArgb(52, 152, 219));
+            revealButton = CreateActionButton(AppText.Get("RevealImages"), Color.FromArgb(52, 152, 219));
             revealButton.Click += RevealButton_Click;
             buttons.Controls.Add(revealButton);
 
-            hintButton = CreateActionButton("Mostra indizio", Color.FromArgb(241, 196, 15));
+            hintButton = CreateActionButton(AppText.Get("ShowHint"), Color.FromArgb(241, 196, 15));
             hintButton.Click += HintButton_Click;
             buttons.Controls.Add(hintButton);
 
-            solutionButton = CreateActionButton("Rivela soluzione", Color.FromArgb(243, 156, 18));
+            solutionButton = CreateActionButton(AppText.Get("RevealSolution"), Color.FromArgb(243, 156, 18));
             solutionButton.Click += SolutionButton_Click;
             buttons.Controls.Add(solutionButton);
 
-            nextButton = CreateActionButton("Prossima storia", Color.FromArgb(39, 174, 96));
+            nextButton = CreateActionButton(AppText.Get("NextStory"), Color.FromArgb(39, 174, 96));
             nextButton.Click += NextButton_Click;
             buttons.Controls.Add(nextButton);
 
@@ -236,13 +246,15 @@ namespace Jw_Quiz_Development
 
         private void RenderStory()
         {
-            captionLabel.Text = "Clicca su un'immagine per scoprire un indizio sul racconto";
+            localizedText = StoryLocalizationService.GetText(story);
+            Text = AppText.Get("AppTitle");
+            captionLabel.Text = AppText.Get("ClickImageHint");
             captionLabel.ForeColor = Color.FromArgb(230, 242, 255);
             captionLabel.BackColor = Color.FromArgb(19, 37, 59);
 
             // Hide title and scripture reference — player must guess them!
-            titleLabel.Text = "Episodio " + story.Id + "  —  Indovina la storia!";
-            referenceLabel.Text = "Categoria: " + story.Keyword;
+            titleLabel.Text = AppText.Get("EpisodePrefix") + " " + story.Id + "  —  " + AppText.Get("GuessStory");
+            referenceLabel.Text = AppText.Get("Category") + ": " + localizedText.Keyword;
 
             var fallback = GetResourceImage(StoryResources.KeyUnknown); // ❓ placeholder
             string[] visible = story.VisibleEmojis ?? new string[0];
@@ -267,16 +279,21 @@ namespace Jw_Quiz_Development
 
             // Build solution text with scripture quote if available
             var sb = new System.Text.StringBuilder();
-            sb.AppendLine("Soluzione: " + story.Solution);
-            if (!string.IsNullOrWhiteSpace(story.ScriptureQuote))
+            sb.AppendLine(AppText.Get("Solution") + ": " + localizedText.Solution);
+            if (!string.IsNullOrWhiteSpace(localizedText.ScriptureQuote))
             {
                 sb.AppendLine();
-                sb.AppendLine(story.ScriptureQuote);
+                sb.AppendLine(localizedText.ScriptureQuote);
             }
             sb.AppendLine();
-            sb.Append("Nota: " + story.EngagementNote);
+            sb.Append(AppText.Get("Note") + ": " + localizedText.EngagementNote);
             solutionLabel.Text = sb.ToString();
-            solutionLabel.Height = string.IsNullOrWhiteSpace(story.ScriptureQuote) ? 120 : 160;
+            solutionLabel.Height = string.IsNullOrWhiteSpace(localizedText.ScriptureQuote) ? 120 : 160;
+
+            revealButton.Text = revealed[0] || revealed[1] ? AppText.Get("HideImages") : AppText.Get("RevealImages");
+            hintButton.Text = revealed[2] ? AppText.Get("HideHint") : AppText.Get("ShowHint");
+            solutionButton.Text = solutionLabel.Visible ? AppText.Get("HideSolution") : AppText.Get("RevealSolution");
+            nextButton.Text = AppText.Get("NextStory");
 
             UpdateXpLabel();
         }
@@ -290,7 +307,7 @@ namespace Jw_Quiz_Development
 
         private void UpdateXpLabel()
         {
-            xpLabel.Text = "XP Previsti: " + CalculateXp();
+            xpLabel.Text = AppText.Get("ExpectedXp") + ": " + CalculateXp();
         }
 
         private void RevealButton_Click(object sender, EventArgs e)
@@ -300,6 +317,7 @@ namespace Jw_Quiz_Development
                 var img = GetResourceImage(picBoxes[5].Tag as string);
                 if (img != null) picBoxes[5].Image = img;
                 revealed[0] = true;
+                revealButton.Text = AppText.Get("HideImages");
                 UpdateXpLabel();
             }
             else if (!revealed[1])
@@ -308,6 +326,7 @@ namespace Jw_Quiz_Development
                 if (img != null) picBoxes[6].Image = img;
                 revealed[1] = true;
                 revealButton.Enabled = false;
+                revealButton.Text = AppText.Get("HideImages");
                 UpdateXpLabel();
             }
         }
@@ -320,6 +339,7 @@ namespace Jw_Quiz_Development
                 if (img != null) picBoxes[7].Image = img;
                 revealed[2] = true;
                 hintButton.Enabled = false;
+                hintButton.Text = AppText.Get("HideHint");
                 UpdateXpLabel();
             }
         }
@@ -327,20 +347,20 @@ namespace Jw_Quiz_Development
         private void SolutionButton_Click(object sender, EventArgs e)
         {
             solutionLabel.Visible = !solutionLabel.Visible;
-            solutionButton.Text = solutionLabel.Visible ? "Nascondi soluzione" : "Rivela soluzione";
+            solutionButton.Text = solutionLabel.Visible ? AppText.Get("HideSolution") : AppText.Get("RevealSolution");
 
             // Reveal (or hide) the story title and scripture reference together with the solution panel
             if (solutionLabel.Visible)
             {
-                titleLabel.Text = "Episodio " + story.Id + "  —  " + story.Title;
-                referenceLabel.Text = story.ScriptureReference + "   |   Categoria: " + story.Keyword;
+                titleLabel.Text = AppText.Get("EpisodePrefix") + " " + story.Id + "  —  " + localizedText.Title;
+                referenceLabel.Text = localizedText.ScriptureReference + "   |   " + AppText.Get("Category") + ": " + localizedText.Keyword;
                 // Reset caption label to neutral invite color when solution is revealed
                 captionLabel.ForeColor = Color.FromArgb(180, 210, 255);
             }
             else
             {
-                titleLabel.Text = "Episodio " + story.Id + "  —  Indovina la storia!";
-                referenceLabel.Text = "Categoria: " + story.Keyword;
+                titleLabel.Text = AppText.Get("EpisodePrefix") + " " + story.Id + "  —  " + AppText.Get("GuessStory");
+                referenceLabel.Text = AppText.Get("Category") + ": " + localizedText.Keyword;
             }
         }
 
@@ -368,6 +388,7 @@ namespace Jw_Quiz_Development
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             base.OnFormClosing(e);
+            LanguageManager.LanguageChanged -= LanguageManager_LanguageChanged;
             if (hintPulseTimer != null)
             {
                 hintPulseTimer.Stop();

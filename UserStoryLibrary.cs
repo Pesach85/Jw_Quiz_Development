@@ -74,14 +74,27 @@ namespace Jw_Quiz_Development
                         case "Hint": current.Hint = value; break;
                         case "Solution": current.Solution = value; break;
                         case "EngagementNote": current.EngagementNote = value; break;
+                        case "ScriptureQuote": current.ScriptureQuote = value; break;
+                        case "SourceLanguage":
+                            AppLanguage parsedLanguage;
+                            current.SourceLanguage = System.Enum.TryParse(value, true, out parsedLanguage) ? parsedLanguage : AppLanguage.Italian;
+                            break;
                         case "VisibleEmojis": current.VisibleEmojis = SplitPipe(value, 5); break;
                         case "HiddenEmojis": current.HiddenEmojis = SplitPipe(value, 2); break;
                         case "HintEmoji": current.HintEmoji = value; break;
-                                            case "ImageCaptions":
-                                                current.ImageCaptions = string.IsNullOrWhiteSpace(value)
-                                                    ? null
-                                                    : value.Split('|');
-                                                break;
+                        case "ImageCaptions":
+                            current.ImageCaptions = string.IsNullOrWhiteSpace(value)
+                                ? null
+                                : value.Split('|');
+                            break;
+                        case "Title_en": EnsureEnglish(current).Title = value; break;
+                        case "ScriptureReference_en": EnsureEnglish(current).ScriptureReference = value; break;
+                        case "Keyword_en": EnsureEnglish(current).Keyword = value; break;
+                        case "Hint_en": EnsureEnglish(current).Hint = value; break;
+                        case "Solution_en": EnsureEnglish(current).Solution = value; break;
+                        case "EngagementNote_en": EnsureEnglish(current).EngagementNote = value; break;
+                        case "ScriptureQuote_en": EnsureEnglish(current).ScriptureQuote = value; break;
+                        case "ImageCaptions_en": EnsureEnglish(current).ImageCaptions = string.IsNullOrWhiteSpace(value) ? null : value.Split('|'); break;
                     }
                 }
             }
@@ -102,6 +115,7 @@ namespace Jw_Quiz_Development
             story.IsDynamic = true;
             story.IsUserCreated = true;
             NormalizeStory(story);
+            StoryLocalizationService.EnsureTranslations(story);
 
             SaveStory(story);
             return story;
@@ -119,12 +133,22 @@ namespace Jw_Quiz_Development
                 "Hint=" + NullSafe(story.Hint),
                 "Solution=" + NullSafe(story.Solution),
                 "EngagementNote=" + NullSafe(story.EngagementNote),
+                "ScriptureQuote=" + NullSafe(story.ScriptureQuote),
+                "SourceLanguage=" + story.SourceLanguage,
                 "VisibleEmojis=" + string.Join("|", story.VisibleEmojis ?? new string[0]),
                 "HiddenEmojis=" + string.Join("|", story.HiddenEmojis ?? new string[0]),
                 "HintEmoji=" + NullSafe(story.HintEmoji),
                 "ImageCaptions=" + (story.ImageCaptions != null
                     ? string.Join("|", story.ImageCaptions)
                     : string.Empty),
+                "Title_en=" + NullSafe(GetTranslation(story, AppLanguage.English).Title),
+                "ScriptureReference_en=" + NullSafe(GetTranslation(story, AppLanguage.English).ScriptureReference),
+                "Keyword_en=" + NullSafe(GetTranslation(story, AppLanguage.English).Keyword),
+                "Hint_en=" + NullSafe(GetTranslation(story, AppLanguage.English).Hint),
+                "Solution_en=" + NullSafe(GetTranslation(story, AppLanguage.English).Solution),
+                "EngagementNote_en=" + NullSafe(GetTranslation(story, AppLanguage.English).EngagementNote),
+                "ScriptureQuote_en=" + NullSafe(GetTranslation(story, AppLanguage.English).ScriptureQuote),
+                "ImageCaptions_en=" + JoinPipe(GetTranslation(story, AppLanguage.English).ImageCaptions),
                 "[END]"
             };
 
@@ -150,12 +174,12 @@ namespace Jw_Quiz_Development
 
         private static void NormalizeStory(Story story)
         {
-            story.Title = string.IsNullOrWhiteSpace(story.Title) ? "Storia Utente" : story.Title;
-            story.ScriptureReference = string.IsNullOrWhiteSpace(story.ScriptureReference) ? "N/D" : story.ScriptureReference;
-            story.Keyword = string.IsNullOrWhiteSpace(story.Keyword) ? "Tema" : story.Keyword;
-            story.Hint = string.IsNullOrWhiteSpace(story.Hint) ? "Indizio non disponibile" : story.Hint;
-            story.Solution = string.IsNullOrWhiteSpace(story.Solution) ? "Soluzione non disponibile" : story.Solution;
-            story.EngagementNote = string.IsNullOrWhiteSpace(story.EngagementNote) ? "Nota non disponibile" : story.EngagementNote;
+            story.Title = string.IsNullOrWhiteSpace(story.Title) ? AppText.Get(story.SourceLanguage, "CreatedStoryDefaultTitle") : story.Title;
+            story.ScriptureReference = string.IsNullOrWhiteSpace(story.ScriptureReference) ? AppText.Get(story.SourceLanguage, "DefaultReference") : story.ScriptureReference;
+            story.Keyword = string.IsNullOrWhiteSpace(story.Keyword) ? AppText.Get(story.SourceLanguage, "DefaultKeyword") : story.Keyword;
+            story.Hint = string.IsNullOrWhiteSpace(story.Hint) ? AppText.Get(story.SourceLanguage, "DefaultHint") : story.Hint;
+            story.Solution = string.IsNullOrWhiteSpace(story.Solution) ? AppText.Get(story.SourceLanguage, "DefaultSolution") : story.Solution;
+            story.EngagementNote = string.IsNullOrWhiteSpace(story.EngagementNote) ? AppText.Get(story.SourceLanguage, "DefaultNote") : story.EngagementNote;
 
             if (story.VisibleEmojis == null || story.VisibleEmojis.Length < 5)
             {
@@ -169,11 +193,35 @@ namespace Jw_Quiz_Development
 
             if (string.IsNullOrWhiteSpace(story.HintEmoji))
                 story.HintEmoji = StoryResources.KeyHint; // 🔥 PNG key, not Unicode emoji
+
+            StoryLocalizationService.EnsureTranslations(story);
         }
 
         private static string NullSafe(string value)
         {
             return value ?? string.Empty;
+        }
+
+        private static StoryLocalizedText EnsureEnglish(Story story)
+        {
+            if (story.Translations == null)
+                story.Translations = new StoryTranslations();
+
+            if (story.Translations.English == null)
+                story.Translations.English = new StoryLocalizedText();
+
+            return story.Translations.English;
+        }
+
+        private static StoryLocalizedText GetTranslation(Story story, AppLanguage language)
+        {
+            StoryLocalizationService.EnsureTranslations(story);
+            return story.Translations.Get(language) ?? new StoryLocalizedText();
+        }
+
+        private static string JoinPipe(string[] values)
+        {
+            return values != null ? string.Join("|", values) : string.Empty;
         }
     }
 }

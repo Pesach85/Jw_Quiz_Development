@@ -56,23 +56,24 @@ namespace Jw_Quiz_Development
             if (story == null || slotIndex < 0)
                 return string.Empty;
 
+            StoryLocalizedText localized = StoryLocalizationService.GetText(story);
             string imageKey = GetImageKey(story, slotIndex);
             string fallback = BuildFallbackCaption(slotIndex, imageKey);
-            string raw = GetRawCaption(story, slotIndex);
+            string raw = GetRawCaption(localized, slotIndex);
 
             if (string.IsNullOrWhiteSpace(raw))
                 return fallback;
 
             raw = raw.Trim();
-            return IsTooExplicit(story, raw) ? fallback : raw;
+            return IsTooExplicit(localized, raw) ? fallback : raw;
         }
 
-        private static string GetRawCaption(Story story, int slotIndex)
+        private static string GetRawCaption(StoryLocalizedText text, int slotIndex)
         {
-            if (story.ImageCaptions == null || slotIndex >= story.ImageCaptions.Length)
+            if (text == null || text.ImageCaptions == null || slotIndex >= text.ImageCaptions.Length)
                 return string.Empty;
 
-            return story.ImageCaptions[slotIndex] ?? string.Empty;
+            return text.ImageCaptions[slotIndex] ?? string.Empty;
         }
 
         private static string GetImageKey(Story story, int slotIndex)
@@ -99,7 +100,7 @@ namespace Jw_Quiz_Development
             return "Un elemento importante del racconto";
         }
 
-        private static bool IsTooExplicit(Story story, string caption)
+        private static bool IsTooExplicit(StoryLocalizedText story, string caption)
         {
             HashSet<string> captionTerms = Tokenize(caption);
             if (captionTerms.Count == 0)
@@ -127,7 +128,7 @@ namespace Jw_Quiz_Development
             return false;
         }
 
-        private static HashSet<string> GetStrongTerms(Story story)
+        private static HashSet<string> GetStrongTerms(StoryLocalizedText story)
         {
             var result = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             AddTokens(result, story.Title);
@@ -139,7 +140,7 @@ namespace Jw_Quiz_Development
             return result;
         }
 
-        private static HashSet<string> GetContextTerms(Story story)
+        private static HashSet<string> GetContextTerms(StoryLocalizedText story)
         {
             var result = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             AddTokens(result, story.Title);

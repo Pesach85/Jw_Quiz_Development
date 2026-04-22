@@ -9,12 +9,25 @@ namespace Jw_Quiz_Development
 {
     public class StoryEditorForm : Form
     {
+        private Label titleFieldLabel;
+        private Label scriptureFieldLabel;
+        private Label keywordFieldLabel;
+        private Label hintFieldLabel;
+        private Label solutionFieldLabel;
+        private Label engagementFieldLabel;
+        private Label sourceLanguageFieldLabel;
+        private Label visibleImagesLabel;
+        private Label hiddenImagesLabel;
+        private Label hintImageLabel;
         private TextBox titleBox;
         private TextBox scriptureBox;
         private TextBox keywordBox;
         private TextBox hintTextBox;
         private TextBox solutionBox;
         private TextBox engagementBox;
+        private ComboBox sourceLanguageBox;
+        private Button previewButton;
+        private Button saveButton;
 
         private TextBox[] visibleImageBoxes;
         private TextBox[] hiddenImageBoxes;
@@ -22,12 +35,19 @@ namespace Jw_Quiz_Development
 
         public StoryEditorForm()
         {
+            LanguageManager.LanguageChanged += LanguageManager_LanguageChanged;
             InitializeUi();
+        }
+
+        private void LanguageManager_LanguageChanged(object sender, EventArgs e)
+        {
+            if (!IsDisposed)
+                ApplyLocalization();
         }
 
         private void InitializeUi()
         {
-            Text = "Crea Nuova Storia";
+            Text = AppText.Get("EditorTitle");
             Width = 920;
             Height = 820;
             StartPosition = FormStartPosition.CenterParent;
@@ -45,32 +65,45 @@ namespace Jw_Quiz_Development
             panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
             Controls.Add(panel);
 
-            AddLabel(panel, "Titolo", 0);
+            titleFieldLabel = AddLabel(panel, AppText.Get("EditorFieldTitle"), 0);
             titleBox = AddText(panel, 0);
 
-            AddLabel(panel, "Riferimento biblico", 1);
+            scriptureFieldLabel = AddLabel(panel, AppText.Get("EditorFieldReference"), 1);
             scriptureBox = AddText(panel, 1);
 
-            AddLabel(panel, "Parola chiave", 2);
+            keywordFieldLabel = AddLabel(panel, AppText.Get("EditorFieldKeyword"), 2);
             keywordBox = AddText(panel, 2);
 
-            AddLabel(panel, "Indizio testo", 3);
+            hintFieldLabel = AddLabel(panel, AppText.Get("EditorFieldHint"), 3);
             hintTextBox = AddText(panel, 3);
 
-            AddLabel(panel, "Soluzione", 4);
+            solutionFieldLabel = AddLabel(panel, AppText.Get("EditorFieldSolution"), 4);
             solutionBox = AddMultilineText(panel, 4, 90);
 
-            AddLabel(panel, "Nota engagement", 5);
+            engagementFieldLabel = AddLabel(panel, AppText.Get("EditorFieldEngagement"), 5);
             engagementBox = AddMultilineText(panel, 5, 80);
 
-            AddLabel(panel, "5 immagini visibili", 6);
-            panel.Controls.Add(BuildImageInputRow(out visibleImageBoxes, 5), 1, 6);
+            sourceLanguageFieldLabel = AddLabel(panel, AppText.Get("EditorFieldInputLanguage"), 6);
+            sourceLanguageBox = new ComboBox
+            {
+                Dock = DockStyle.Top,
+                DropDownStyle = ComboBoxStyle.DropDownList,
+                Font = new Font("Segoe UI", 10, FontStyle.Regular)
+            };
+            sourceLanguageBox.Items.Add(AppLanguage.Italian);
+            sourceLanguageBox.Items.Add(AppLanguage.English);
+            sourceLanguageBox.SelectedItem = LanguageManager.CurrentLanguage;
+            sourceLanguageBox.Format += SourceLanguageBox_Format;
+            panel.Controls.Add(sourceLanguageBox, 1, 6);
 
-            AddLabel(panel, "2 immagini nascoste", 7);
-            panel.Controls.Add(BuildImageInputRow(out hiddenImageBoxes, 2), 1, 7);
+            visibleImagesLabel = AddLabel(panel, AppText.Get("EditorVisibleImages"), 7);
+            panel.Controls.Add(BuildImageInputRow(out visibleImageBoxes, 5), 1, 7);
 
-            AddLabel(panel, "Immagine indizio", 8);
-            panel.Controls.Add(BuildSingleImageInput(out hintImageBox), 1, 8);
+            hiddenImagesLabel = AddLabel(panel, AppText.Get("EditorHiddenImages"), 8);
+            panel.Controls.Add(BuildImageInputRow(out hiddenImageBoxes, 2), 1, 8);
+
+            hintImageLabel = AddLabel(panel, AppText.Get("EditorHintImage"), 9);
+            panel.Controls.Add(BuildSingleImageInput(out hintImageBox), 1, 9);
 
             var buttons = new FlowLayoutPanel
             {
@@ -81,32 +114,61 @@ namespace Jw_Quiz_Development
             };
             panel.Controls.Add(buttons, 1, 10);
 
-            var preview = new Button
+            previewButton = new Button
             {
-                Text = "Anteprima",
+                Text = AppText.Get("Preview"),
                 Width = 150,
                 Height = 38,
                 BackColor = Color.FromArgb(52, 152, 219),
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat
             };
-            preview.Click += Preview_Click;
-            buttons.Controls.Add(preview);
+            previewButton.Click += Preview_Click;
+            buttons.Controls.Add(previewButton);
 
-            var save = new Button
+            saveButton = new Button
             {
-                Text = "Salva Storia",
+                Text = AppText.Get("SaveStory"),
                 Width = 150,
                 Height = 38,
                 BackColor = Color.FromArgb(46, 204, 113),
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat
             };
-            save.Click += Save_Click;
-            buttons.Controls.Add(save);
+            saveButton.Click += Save_Click;
+            buttons.Controls.Add(saveButton);
+
+            ApplyLocalization();
         }
 
-        private void AddLabel(TableLayoutPanel panel, string text, int row)
+        private void SourceLanguageBox_Format(object sender, ListControlConvertEventArgs e)
+        {
+            if (!(e.ListItem is AppLanguage))
+                return;
+
+            var language = (AppLanguage)e.ListItem;
+            e.Value = AppText.Get(language == AppLanguage.English ? "English" : "Italian");
+        }
+
+        private void ApplyLocalization()
+        {
+            Text = AppText.Get("EditorTitle");
+            titleFieldLabel.Text = AppText.Get("EditorFieldTitle");
+            scriptureFieldLabel.Text = AppText.Get("EditorFieldReference");
+            keywordFieldLabel.Text = AppText.Get("EditorFieldKeyword");
+            hintFieldLabel.Text = AppText.Get("EditorFieldHint");
+            solutionFieldLabel.Text = AppText.Get("EditorFieldSolution");
+            engagementFieldLabel.Text = AppText.Get("EditorFieldEngagement");
+            sourceLanguageFieldLabel.Text = AppText.Get("EditorFieldInputLanguage");
+            visibleImagesLabel.Text = AppText.Get("EditorVisibleImages");
+            hiddenImagesLabel.Text = AppText.Get("EditorHiddenImages");
+            hintImageLabel.Text = AppText.Get("EditorHintImage");
+            previewButton.Text = AppText.Get("Preview");
+            saveButton.Text = AppText.Get("SaveStory");
+            sourceLanguageBox.Refresh();
+        }
+
+        private Label AddLabel(TableLayoutPanel panel, string text, int row)
         {
             var lbl = new Label
             {
@@ -116,6 +178,7 @@ namespace Jw_Quiz_Development
                 Font = new Font("Segoe UI", 10, FontStyle.Bold)
             };
             panel.Controls.Add(lbl, 0, row);
+            return lbl;
         }
 
         private TextBox AddText(TableLayoutPanel panel, int row)
@@ -166,7 +229,7 @@ namespace Jw_Quiz_Development
 
                 var pick = new Button
                 {
-                    Text = "Scegli...",
+                    Text = AppText.Get("ChooseImage"),
                     Width = 72,
                     Height = box.Height + 4,
                     FlatStyle = FlatStyle.Flat,
@@ -209,7 +272,7 @@ namespace Jw_Quiz_Development
 
             var pick = new Button
             {
-                Text = "Scegli...",
+                Text = AppText.Get("ChooseImage"),
                 Width = 72,
                 Height = box.Height + 4,
                 FlatStyle = FlatStyle.Flat,
@@ -233,7 +296,7 @@ namespace Jw_Quiz_Development
             var keys = GetAvailableImageKeys();
             if (keys.Count == 0)
             {
-                MessageBox.Show("Nessuna immagine disponibile.", "Galleria", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(AppText.Get("NoImageAvailable"), AppText.Get("ImageGallery"), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return null;
             }
 
@@ -241,7 +304,7 @@ namespace Jw_Quiz_Development
 
             using (var picker = new Form())
             {
-                picker.Text = "Scegli un'immagine";
+                picker.Text = AppText.Get("ImageGallery");
                 picker.Width = 780;
                 picker.Height = 560;
                 picker.StartPosition = FormStartPosition.CenterParent;
@@ -249,7 +312,7 @@ namespace Jw_Quiz_Development
 
                 var info = new Label
                 {
-                    Text = "Clicca su un'immagine per selezionarla",
+                    Text = AppText.Get("ImageGalleryHint"),
                     Dock = DockStyle.Top,
                     Height = 30,
                     TextAlign = ContentAlignment.MiddleCenter,
@@ -361,20 +424,27 @@ namespace Jw_Quiz_Development
                 throw new InvalidOperationException("Inserisci 5 immagini visibili, 2 immagini nascoste e 1 immagine indizio.");
             }
 
-            return new Story
+            var story = new Story
             {
-                Title = titleBox.Text.Trim(),
-                ScriptureReference = scriptureBox.Text.Trim(),
-                Keyword = keywordBox.Text.Trim(),
-                Hint = hintTextBox.Text.Trim(),
-                Solution = solutionBox.Text.Trim(),
-                EngagementNote = engagementBox.Text.Trim(),
                 VisibleEmojis = visible,
                 HiddenEmojis = hidden,
                 HintEmoji = hintImageBox.Text.Trim(),
                 IsDynamic = true,
                 IsUserCreated = true
             };
+
+            var sourceText = new StoryLocalizedText
+            {
+                Title = titleBox.Text.Trim(),
+                ScriptureReference = scriptureBox.Text.Trim(),
+                Keyword = keywordBox.Text.Trim(),
+                Hint = hintTextBox.Text.Trim(),
+                Solution = solutionBox.Text.Trim(),
+                EngagementNote = engagementBox.Text.Trim()
+            };
+
+            StoryLocalizationService.SetSourceText(story, sourceText, (AppLanguage)sourceLanguageBox.SelectedItem);
+            return story;
         }
 
         private void Preview_Click(object sender, EventArgs e)
@@ -390,7 +460,7 @@ namespace Jw_Quiz_Development
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Dati incompleti", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(ex.Message, AppText.Get("IncompleteData"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -400,7 +470,7 @@ namespace Jw_Quiz_Development
             {
                 Story story = BuildStoryFromInputs();
                 Story saved = UserStoryLibrary.AddStory(story);
-                MessageBox.Show("Storia salvata con ID " + saved.Id + ".", "Salvataggio completato", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(string.Format(AppText.Get("SaveStoryMessage"), saved.Id), AppText.Get("SaveCompleted"), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 DialogResult = DialogResult.OK;
                 Close();
             }
@@ -408,6 +478,12 @@ namespace Jw_Quiz_Development
             {
                 MessageBox.Show(ex.Message, "Errore", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
+            LanguageManager.LanguageChanged -= LanguageManager_LanguageChanged;
         }
     }
 }

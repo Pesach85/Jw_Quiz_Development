@@ -17,10 +17,23 @@ namespace Jw_Quiz_Development
         private ToolStripMenuItem nuoviEpisodiMenuItem;
         private ToolStripMenuItem storieUtenteMenuItem;
         private ToolStripMenuItem creaStoriaMenuItem;
+        private ToolStripMenuItem linguaMenuItem;
+        private ToolStripMenuItem italianoMenuItem;
+        private ToolStripMenuItem englishMenuItem;
 
         public Form1()
         {
             InitializeComponent();
+            LanguageManager.LanguageChanged += LanguageManager_LanguageChanged;
+        }
+
+        private void LanguageManager_LanguageChanged(object sender, EventArgs e)
+        {
+            if (IsDisposed)
+                return;
+
+            ApplyLocalization();
+            RefreshUserStoriesMenu();
         }
 
         protected override void OnLoad(EventArgs e)
@@ -35,7 +48,68 @@ namespace Jw_Quiz_Development
             this.groupBox1.Dock = DockStyle.Fill;
 
             BuildDynamicMenus();
+            BuildLanguageMenu();
+            ApplyLocalization();
             RefreshUserStoriesMenu();
+        }
+
+        private void BuildLanguageMenu()
+        {
+            if (linguaMenuItem != null)
+                return;
+
+            linguaMenuItem = new ToolStripMenuItem();
+            italianoMenuItem = new ToolStripMenuItem();
+            englishMenuItem = new ToolStripMenuItem();
+
+            italianoMenuItem.Click += delegate { LanguageManager.SetLanguage(AppLanguage.Italian); };
+            englishMenuItem.Click += delegate { LanguageManager.SetLanguage(AppLanguage.English); };
+
+            linguaMenuItem.DropDownItems.Add(italianoMenuItem);
+            linguaMenuItem.DropDownItems.Add(englishMenuItem);
+            impostazioniToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
+            impostazioniToolStripMenuItem.DropDownItems.Add(linguaMenuItem);
+        }
+
+        private void ApplyLocalization()
+        {
+            Text = AppText.Get("AppTitle");
+            menuToolStripMenuItem.Text = AppText.Get("Menu");
+            storieToolStripMenuItem.Text = AppText.Get("Stories");
+            esciToolStripMenuItem.Text = AppText.Get("Exit");
+            impostazioniToolStripMenuItem.Text = AppText.Get("Settings");
+            guidaToolStripMenuItem.Text = AppText.Get("Guide");
+            aiutoToolStripMenuItem.Text = AppText.Get("Help");
+            tuttoschermoToolStripMenuItem.Text = AppText.Get("Fullscreen");
+            minimizzaSchermoToolStripMenuItem.Text = AppText.Get("Windowed");
+            statisticheToolStripMenuItem.Text = AppText.Get("StatsTitle");
+
+            storia1ToolStripMenuItem.Text = AppText.Get("StoryPrefix") + " 1";
+            storia2ToolStripMenuItem.Text = AppText.Get("StoryPrefix") + " 2";
+            storia2ToolStripMenuItem1.Text = AppText.Get("StoryPrefix") + " 3";
+            storia2ToolStripMenuItem2.Text = AppText.Get("StoryPrefix") + " 4";
+            storia2ToolStripMenuItem3.Text = AppText.Get("StoryPrefix") + " 5";
+            storia2ToolStripMenuItem4.Text = AppText.Get("StoryPrefix") + " 6";
+            storia2ToolStripMenuItem5.Text = AppText.Get("StoryPrefix") + " 7";
+            storia2ToolStripMenuItem6.Text = AppText.Get("StoryPrefix") + " 8";
+            storia9ToolStripMenuItem.Text = AppText.Get("StoryPrefix") + " 9";
+            toolStripMenuItem1.Text = AppText.Get("StoryPrefix") + " 10";
+            toolStripMenuItem2.Text = AppText.Get("StoryPrefix") + " 11";
+            storia10ToolStripMenuItem.Text = AppText.Get("StoryPrefix") + " 12";
+
+            nuoviEpisodiMenuItem.Text = AppText.Get("NewEpisodes");
+            creaStoriaMenuItem.Text = AppText.Get("CreateStory");
+            storieUtenteMenuItem.Text = AppText.Get("UserStories");
+            linguaMenuItem.Text = AppText.Get("Language");
+            italianoMenuItem.Text = AppText.Get("Italian");
+            englishMenuItem.Text = AppText.Get("English");
+            italianoMenuItem.Checked = LanguageManager.CurrentLanguage == AppLanguage.Italian;
+            englishMenuItem.Checked = LanguageManager.CurrentLanguage == AppLanguage.English;
+
+            for (int id = 13; id <= 18 && id - 13 < nuoviEpisodiMenuItem.DropDownItems.Count; id++)
+            {
+                nuoviEpisodiMenuItem.DropDownItems[id - 13].Text = AppText.Get("StoryPrefix") + " " + id;
+            }
         }
 
         private void BuildDynamicMenus()
@@ -43,19 +117,19 @@ namespace Jw_Quiz_Development
             if (nuoviEpisodiMenuItem != null)
                 return;
 
-            nuoviEpisodiMenuItem = new ToolStripMenuItem("Nuovi Episodi");
+            nuoviEpisodiMenuItem = new ToolStripMenuItem(AppText.Get("NewEpisodes"));
             for (int id = 13; id <= 18; id++)
             {
                 int capturedId = id;
-                var item = new ToolStripMenuItem("Storia " + capturedId);
+                var item = new ToolStripMenuItem(AppText.Get("StoryPrefix") + " " + capturedId);
                 item.Click += (s, e) => OpenStory(capturedId);
                 nuoviEpisodiMenuItem.DropDownItems.Add(item);
             }
 
-            creaStoriaMenuItem = new ToolStripMenuItem("Crea Nuova Storia");
+            creaStoriaMenuItem = new ToolStripMenuItem(AppText.Get("CreateStory"));
             creaStoriaMenuItem.Click += CreaStoriaMenuItem_Click;
 
-            storieUtenteMenuItem = new ToolStripMenuItem("Storie Utente");
+            storieUtenteMenuItem = new ToolStripMenuItem(AppText.Get("UserStories"));
 
             storieToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
             storieToolStripMenuItem.DropDownItems.Add(nuoviEpisodiMenuItem);
@@ -72,7 +146,7 @@ namespace Jw_Quiz_Development
             var userStories = UserStoryLibrary.GetUserStories();
             if (userStories.Count == 0)
             {
-                var empty = new ToolStripMenuItem("Nessuna storia utente");
+                var empty = new ToolStripMenuItem(AppText.Get("NoUserStories"));
                 empty.Enabled = false;
                 storieUtenteMenuItem.DropDownItems.Add(empty);
                 return;
@@ -80,7 +154,7 @@ namespace Jw_Quiz_Development
 
             foreach (var story in userStories)
             {
-                var item = new ToolStripMenuItem("#" + story.Id + " - " + story.Title);
+                var item = new ToolStripMenuItem("#" + story.Id + " - " + StoryLocalizationService.GetText(story).Title);
                 int capturedId = story.Id;
                 item.Click += (s, e) => OpenStory(capturedId);
                 storieUtenteMenuItem.DropDownItems.Add(item);
@@ -215,14 +289,14 @@ namespace Jw_Quiz_Development
         private void statisticheToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var tracker = ProgressTracker.Instance;
-            string stats = $"STATISTICHE GIOCATORE\n\n";
-            stats += $"Livello: {tracker.GetLevel()}\n";
-            stats += $"Esperienza (XP): {tracker.CurrentXP}\n";
-            stats += $"Progresso: {tracker.CompletedStories.Count}/{StoryEngine.TotalStories} storie\n";
-            stats += $"Percentuale: {tracker.GetProgressPercentage()}%\n";
-            stats += $"Data Inizio: {tracker.StartDate:dd/MM/yyyy HH:mm}\n";
-            stats += $"Badge Sbloccati: {tracker.UnlockedBadges.Count}\n\n";
-            stats += $"STORIE COMPLETATE:\n";
+            string stats = AppText.Get("StatsPlayer") + "\n\n";
+            stats += AppText.Get("StatsLevel") + ": " + tracker.GetLevel() + "\n";
+            stats += AppText.Get("StatsXp") + ": " + tracker.CurrentXP + "\n";
+            stats += AppText.Get("StatsProgress") + ": " + tracker.CompletedStories.Count + "/" + StoryEngine.TotalStories + " " + AppText.Get("Stories").ToLowerInvariant() + "\n";
+            stats += AppText.Get("StatsPercentage") + ": " + tracker.GetProgressPercentage() + "%\n";
+            stats += AppText.Get("StatsStartDate") + ": " + tracker.StartDate.ToString("dd/MM/yyyy HH:mm") + "\n";
+            stats += AppText.Get("StatsBadges") + ": " + tracker.UnlockedBadges.Count + "\n\n";
+            stats += AppText.Get("StatsCompletedStories") + ":\n";
             
             var completedIds = tracker.CompletedStories.OrderBy(x => x).ToList();
             foreach (int id in completedIds)
@@ -231,11 +305,17 @@ namespace Jw_Quiz_Development
                 if (story != null)
                 {
                     int attempts = tracker.StoryAttempts.ContainsKey(id) ? tracker.StoryAttempts[id] : 0;
-                    stats += $"  {id}. {story.Title} ({attempts} volte)\n";
+                    stats += "  " + id + ". " + StoryLocalizationService.GetText(story).Title + " (" + attempts + " " + AppText.Get("Times") + ")\n";
                 }
             }
 
-            MessageBox.Show(stats, "Statistiche Dettagliate", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(stats, AppText.Get("StatsTitle"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
+            LanguageManager.LanguageChanged -= LanguageManager_LanguageChanged;
         }
     }
 }

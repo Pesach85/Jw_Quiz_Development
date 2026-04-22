@@ -1,5 +1,6 @@
 namespace Jw_Quiz_Development
 {
+    [System.Serializable]
     public class Story
     {
         public int Id { get; set; }
@@ -22,5 +23,7 @@ namespace Jw_Quiz_Development
         public string[] ImageCaptions { get; set; }
         public bool IsDynamic { get; set; }           // true = renderizzata da DynamicStoryForm
         public bool IsUserCreated { get; set; }       // true = creata dall'utente nell'app
+        public AppLanguage SourceLanguage { get; set; } = AppLanguage.Italian;
+        public StoryTranslations Translations { get; set; }
     }
 }

@@ -16,7 +16,7 @@
 | Build command | `.\build.bat` oppure `MSBuild Jw_Quiz_Development.csproj /p:Configuration=Debug` |
 | Output | `bin\Debug\Jw_Quiz_Development.exe` |
 | Controllo versione | Git — branch `main` |
-| Lingua UI | Italiano |
+| Lingua UI | Italiano + English (motore multilanguage desktop) |
 
 ---
 
@@ -35,6 +35,10 @@
 | `DynamicStoryForm.cs` | Form generico per storie dinamiche (ID 13–18 e user-created) |
 | `StoryEditorForm.cs` | Editor in-app per creare nuove storie con galleria immagini |
 | `UserStoryLibrary.cs` | Persistenza storie utente su `UserStories.dat` |
+| `LanguageManager.cs` | Stato lingua corrente app + persistenza preferenza lingua |
+| `AppText.cs` | Catalogo centralizzato testi UI desktop it/en |
+| `StoryLocalizationService.cs` | Risoluzione testi localizzati per ogni storia + cache traduzioni |
+| `StoryTranslationEngine.cs` | Traduttore rule-based it/en, sostituibile con provider futuro |
 | `ProgressTracker.cs` | XP, badge, persistenza su `UserProgress.dat` |
 | `ProgressPanel.cs` | UI pannello progresso |
 | `Resources/` | PNG colorati (~100 file) usati come simboli nel rebus |
@@ -67,6 +71,7 @@
 - Slot 7 mostra `1F525.png` (🔥) con animazione pulsante ambra (Timer 300ms) finché indizio non cliccato
 - Didascalia click immagini: label dedicata ad alto contrasto **in alto al pannello** (non sovrapposta alle immagini)
 - Didascalie click immagini: policy **anti-spoiler** attiva su desktop e web; se una descrizione cita titolo, personaggi o dettagli troppo rivelatori, viene sostituita da una formulazione neutra
+- Testi storia e chrome del form dinamico localizzati via `StoryLocalizationService` + `AppText`, con lingua runtime it/en
 - Pulsante "Rivela 2 immagini": rivela slot 5, poi 6 (secondo click)
 - XP base 100, -20 per ogni aiuto usato (minimo 20)
 - Header: titolo e riferimento biblico **NASCOSTI** fino a "Rivela soluzione"
@@ -177,8 +182,10 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 - `StoryEditorForm.cs`: form editor con galleria visiva PNG (`Scegli...` per ogni slot immagine)
 - Storie salvate con `IsUserCreated = true`, `IsDynamic = true`
 - Persistenza estesa: `ImageCaptions[]` serializzato/deserializzato in `UserStories.dat`
+- Persistenza estesa: `SourceLanguage` + campi tradotti `*_en` serializzati in `UserStories.dat` (backward-compatible con file legacy)
 - Fallback immagini utente normalizzati su chiavi PNG (`2753`, `1F525`), mai emoji unicode
 - ID assegnato incrementalmente oltre 1000
+- All'atto di creazione/salvataggio, il motore genera automaticamente la lingua mancante tra italiano e inglese
 - Webapp: editor locale in-browser con `localStorage` (`jwquiz_web_user_stories_v1`)
 - Webapp: galleria immagini alimentata da `assets.js`, con ricerca per chiave PNG e anteprima per ogni slot
 - Webapp: episodi creati lato browser vengono uniti ai 18 built-in nel selettore senza mostrare il titolo
@@ -199,6 +206,7 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 - **Emoji come testo** nei Label: evitare — usare PictureBox con PNG da Resources per coerenza visiva
 - **Cloudflare shared mode** richiede 2 binding configurati in Pages: KV `JWQUIZ_DATA` e R2 `JWQUIZ_UPLOADS`
 - In locale (`python -m http.server`) le Pages Functions non esistono: la webapp va automaticamente in fallback locale
+- Motore multilanguage corrente applicato ai flussi data-driven desktop (`Form1`, `StoryEditorForm`, `DynamicStoryForm`, storie utente); i form statici legacy 1–12 restano candidati a migrazione runtime separata per evitare regressioni nei Designer
 
 ---
 
@@ -249,6 +257,7 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-04-22 | **Hotfix deploy**: rimossi binding KV/R2 da `wrangler.toml` (placeholder ID invalido) per usare i binding reali configurati nel pannello Pages | ✅ Implementato |
 | 2026-04-22 | **Hotfix runtime webapp**: corretto ordine inizializzazione `builtInAssetLookup` in `webapp/app.js` (risolto errore console e lista episodi vuota) | ✅ Implementato |
 | 2026-04-22 | **Content anti-spoiler**: introdotta policy centrale per neutralizzare didascalie immagini troppo esplicite e ripulite le caption piu' scoperte degli episodi dinamici | ✅ Implementata |
+| 2026-04-22 | **Motore multilanguage desktop**: introdotti `LanguageManager`, `AppText`, `StoryLocalizationService` e auto-traduzione it/en per storie dinamiche e storie utente | ✅ Implementato |
 
 ---
 
@@ -262,6 +271,7 @@ Aggiornare questa sezione ad ogni sessione di lavoro.
 | Alta | Gamification | **Sistema a Stelle** (1-3 per storia): 3=nessun aiuto, 2=1 aiuto, 1=tutti aiuti — visual memorabile per proiezione |
 | Alta | Gameplay | Form statici (2–13): indizio animato come DynamicStoryForm (pulsazione su pictureBox8) |
 | Alta | Content | Aggiungere ImageCaptions[] anche alle storie statiche id 1-12 (attualmente solo ID 13-18) |
+| Alta | Multilanguage | Migrare anche i form statici legacy 1-12 al runtime multilanguage senza toccare i `Designer.cs` |
 | Media | Gamification | **Streak + Badge**: N storie consecutive senza hint = badge "Saggio/Profeta/Apostolo" |
 | Media | Gamification | **Classifica sessione locale**: 2-8 partecipanti inseriscono nome, XP aggregati, classifica finale |
 | Media | Gamification | **Percorsi Tematici**: raccolte storie per tema (Fede/Amore/Coraggio) con barra progresso sbloccabile |
