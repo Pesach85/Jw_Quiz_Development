@@ -246,6 +246,7 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-04-22 | **Picker web avanzato**: aggiunto upload PNG custom dal browser con riuso immediato nei nuovi episodi | ✅ Implementato |
 | 2026-04-22 | **Deploy readiness**: aggiunto `wrangler.toml` con naming `jwquiz` per primo deploy | ✅ Implementato |
 | 2026-04-22 | **Hotfix deploy**: rimossi binding KV/R2 da `wrangler.toml` (placeholder ID invalido) per usare i binding reali configurati nel pannello Pages | ✅ Implementato |
+| 2026-04-22 | **Hotfix runtime webapp**: corretto ordine inizializzazione `builtInAssetLookup` in `webapp/app.js` (risolto errore console e lista episodi vuota) | ✅ Implementato |
 
 ---
 

@@ -45,8 +45,9 @@
   var assetUploadStatusEl = document.getElementById("assetUploadStatus");
   var uploadAssetBtn = document.getElementById("btnUploadAsset");
 
-  var builtInStories = sanitizeStories(window.JW_STORIES || []);
   var builtInAssetKeys = (window.JW_ASSET_KEYS || []).slice();
+  var builtInAssetLookup = buildAssetLookup(builtInAssetKeys);
+  var builtInStories = sanitizeStories(window.JW_STORIES || []);
   var slotInputs = { visible: [], hidden: [], hint: [] };
   var pickerTarget = null;
 
@@ -59,8 +60,6 @@
     quote: document.getElementById("editorQuote"),
     note: document.getElementById("editorNote")
   };
-
-  var builtInAssetLookup = buildAssetLookup(builtInAssetKeys);
 
   function normalizeAssetToken(value) {
     return String(value || "").toLowerCase().replace(/[^a-z0-9]/g, "");
