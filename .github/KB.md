@@ -66,6 +66,7 @@
 - Slot 5–6 mostrano `2753.png` (❓) finché non rivelati
 - Slot 7 mostra `1F525.png` (🔥) con animazione pulsante ambra (Timer 300ms) finché indizio non cliccato
 - Didascalia click immagini: label dedicata ad alto contrasto **in alto al pannello** (non sovrapposta alle immagini)
+- Didascalie click immagini: policy **anti-spoiler** attiva su desktop e web; se una descrizione cita titolo, personaggi o dettagli troppo rivelatori, viene sostituita da una formulazione neutra
 - Pulsante "Rivela 2 immagini": rivela slot 5, poi 6 (secondo click)
 - XP base 100, -20 per ogni aiuto usato (minimo 20)
 - Header: titolo e riferimento biblico **NASCOSTI** fino a "Rivela soluzione"
@@ -247,6 +248,7 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-04-22 | **Deploy readiness**: aggiunto `wrangler.toml` con naming `jwquiz` per primo deploy | ✅ Implementato |
 | 2026-04-22 | **Hotfix deploy**: rimossi binding KV/R2 da `wrangler.toml` (placeholder ID invalido) per usare i binding reali configurati nel pannello Pages | ✅ Implementato |
 | 2026-04-22 | **Hotfix runtime webapp**: corretto ordine inizializzazione `builtInAssetLookup` in `webapp/app.js` (risolto errore console e lista episodi vuota) | ✅ Implementato |
+| 2026-04-22 | **Content anti-spoiler**: introdotta policy centrale per neutralizzare didascalie immagini troppo esplicite e ripulite le caption piu' scoperte degli episodi dinamici | ✅ Implementata |
 
 ---
 

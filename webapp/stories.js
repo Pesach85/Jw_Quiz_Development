@@ -310,14 +310,14 @@ window.JW_STORIES = [
     hiddenKeys: ["1F480", "1F451"],
     hintKey: "1F4AA-1F3FD",
     imageCaptions: [
-      "Un giovane pastore di Betlemme",
-      "Le pecore al suo pascolo",
+      "Un giovane pastore",
+      "Un piccolo gregge",
       "Armi e combattimento",
-      "Paura e sorpresa nel campo",
+      "Paura nel campo",
       "Qualcosa manca in questa storia...",
-      "Il destino del gigante",
-      "La vittoria e il regno",
-      "La forza che viene da Geova"
+      "La caduta del nemico",
+      "Una vittoria inattesa",
+      "Una forza piu' grande delle apparenze"
     ]
   },
 
@@ -335,14 +335,14 @@ window.JW_STORIES = [
     hiddenKeys: ["1F46D", "1F498"],
     hintKey: "1F4D6",
     imageCaptions: [
-      "Un governatore d'Egitto",
+      "Un uomo con grande autorita'",
       "Il viaggio nel deserto",
       "Argento e commercio",
       "Anni di sofferenza",
-      "Un riconoscimento inaspettato",
-      "I fratelli riconciliati",
-      "L'amore fraterno restaurato",
-      "Un messaggio di speranza"
+      "Un incontro inatteso",
+      "Un abbraccio ritrovato",
+      "Un legame ricostruito",
+      "Una svolta guidata da Dio"
     ]
   },
 
@@ -360,14 +360,14 @@ window.JW_STORIES = [
     hiddenKeys: ["1F4B0", "039-baby"],
     hintKey: "1F411",
     imageCaptions: [
-      "Una donna che cammina verso l'ignoto",
-      "La suocera Naomi",
-      "Il campo di grano",
-      "Il parente redentore",
-      "Un amore nascente",
-      "Il riscatto del terreno",
-      "Il frutto della devozione",
-      "Il popolo di Geova"
+      "Una donna in cammino",
+      "Una figura di famiglia",
+      "Un campo di raccolta",
+      "Un uomo con un ruolo decisivo",
+      "Un legame che nasce",
+      "Un diritto di riscatto",
+      "Una discendenza benedetta",
+      "Scegliere il popolo di Geova"
     ]
   },
 
@@ -385,14 +385,14 @@ window.JW_STORIES = [
     hiddenKeys: ["1F932-1F3FC", "1F47C"],
     hintKey: "1F440",
     imageCaptions: [
-      "Un neonato da salvare",
-      "Il fiume Nilo",
-      "Il palazzo del faraone",
-      "La figlia del faraone",
-      "I giunchi della riva del Nilo",
+      "Un neonato da proteggere",
+      "Acqua in movimento",
+      "Un luogo di potere",
+      "Una donna di alto rango",
+      "Piante lungo la riva",
       "Le mani che lo tengono al sicuro",
-      "Protetto come un dono celeste",
-      "Lo sguardo vigilante di Geova"
+      "Protetto in modo inatteso",
+      "Uno sguardo vigile dall'alto"
     ]
   },
 
@@ -410,14 +410,14 @@ window.JW_STORIES = [
     hiddenKeys: ["039-baby", "1F4D6"],
     hintKey: "203C",
     imageCaptions: [
-      "Una preghiera fervente al Signore",
-      "Lacrime e tormento interiore",
-      "Il santuario di Silo",
-      "Un canto di lode a Geova",
-      "Un percorso di fede",
-      "Il dono tanto atteso",
-      "Una vita consacrata alla Parola",
-      "Geova ha ascoltato!"
+      "Una preghiera intensa",
+      "Dolore interiore",
+      "Un luogo di adorazione",
+      "Un canto di gratitudine",
+      "Un cammino di fede",
+      "Un dono atteso a lungo",
+      "Una vita dedicata a Geova",
+      "Una richiesta ascoltata"
     ]
   },
 
@@ -435,14 +435,14 @@ window.JW_STORIES = [
     hiddenKeys: ["26D4", "1F498"],
     hintKey: "1F440",
     imageCaptions: [
-      "Un uomo derubato e abbandonato",
+      "Un uomo ferito lungo la strada",
       "La violenza dei briganti",
-      "L'asino del Samaritano",
-      "Denari lasciati per le cure",
+      "Un animale da viaggio",
+      "Un pagamento per le cure",
       "Chi si fermera' ad aiutare?",
-      "Chi passo' oltre senza fermarsi",
-      "L'amore per il prossimo",
-      "Geova vede chi mostra misericordia"
+      "Chi scelse di tirare dritto",
+      "Un gesto di misericordia",
+      "Conta chi si ferma ad aiutare"
     ]
   }
 ];

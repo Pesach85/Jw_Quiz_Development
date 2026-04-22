@@ -164,6 +164,167 @@
     return stories[state.storyIndex] || stories[0];
   }
 
+  function normalizeCaptionToken(value) {
+    if (!value) {
+      return "";
+    }
+    var normalized = String(value).toLowerCase();
+    if (typeof normalized.normalize === "function") {
+      normalized = normalized.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    }
+    return normalized.replace(/[^a-z0-9]+/g, " ").trim();
+  }
+
+  function captionStopWords() {
+    return {
+      a: true, ad: true, agli: true, ai: true, al: true, alla: true, alle: true, allo: true, anche: true,
+      chi: true, che: true, come: true, con: true, da: true, dagli: true, dai: true, dal: true,
+      dalla: true, dalle: true, dallo: true, dei: true, degli: true, del: true, della: true,
+      delle: true, dello: true, di: true, dove: true, e: true, ed: true, fra: true, gli: true,
+      ha: true, ho: true, i: true, il: true, in: true, indizio: true, l: true, la: true, le: true,
+      lo: true, ma: true, mi: true, ne: true, nei: true, negli: true, nel: true, nella: true,
+      nelle: true, nello: true, no: true, non: true, o: true, per: true, piu: true, questa: true,
+      queste: true, questi: true, questo: true, quella: true, quelle: true, quelli: true,
+      quello: true, racconto: true, solo: true, storia: true, su: true, sua: true, sue: true,
+      suo: true, suoi: true, tnm: true, tra: true, un: true, una: true, uno: true, va: true
+    };
+  }
+
+  function tokenizeCaptionText(value) {
+    var stopWords = captionStopWords();
+    var result = {};
+    normalizeCaptionToken(value).split(/\s+/).forEach(function (piece) {
+      if (!piece || piece.length < 4 || stopWords[piece]) {
+        return;
+      }
+      result[piece] = true;
+    });
+    return result;
+  }
+
+  function addCapitalizedCaptionTerms(target, value) {
+    var matches = String(value || "").match(/[A-Za-zÀ-ÿ']+/g) || [];
+    matches.forEach(function (word) {
+      if (!word || word.charAt(0) !== word.charAt(0).toUpperCase()) {
+        return;
+      }
+      var token = normalizeCaptionToken(word);
+      if (!token || token.length < 4 || captionStopWords()[token]) {
+        return;
+      }
+      target[token] = true;
+    });
+  }
+
+  function mergeCaptionTerms(target, source) {
+    Object.keys(source).forEach(function (key) {
+      target[key] = true;
+    });
+  }
+
+  function buildStrongCaptionTerms(currentStory) {
+    var result = {};
+    [currentStory.title, currentStory.keyword].forEach(function (value) {
+      mergeCaptionTerms(result, tokenizeCaptionText(value));
+      addCapitalizedCaptionTerms(result, value);
+    });
+    [currentStory.hint, currentStory.solution, currentStory.scriptureQuote].forEach(function (value) {
+      addCapitalizedCaptionTerms(result, value);
+    });
+    return result;
+  }
+
+  function buildContextCaptionTerms(currentStory) {
+    var result = {};
+    [currentStory.title, currentStory.keyword, currentStory.hint, currentStory.solution, currentStory.scriptureQuote].forEach(function (value) {
+      mergeCaptionTerms(result, tokenizeCaptionText(value));
+    });
+    return result;
+  }
+
+  function imageKeyForIndex(currentStory, index) {
+    if (index < 5) {
+      return currentStory.visibleKeys[index] || KEY_UNKNOWN;
+    }
+    if (index < 7) {
+      return currentStory.hiddenKeys[index - 5] || KEY_UNKNOWN;
+    }
+    return currentStory.hintKey || KEY_HINT_PLACEHOLDER;
+  }
+
+  function neutralCaptionByImageKey(key) {
+    var neutral = {
+      "038-boy-1": "Un giovane coinvolto nel racconto",
+      "039-baby": "Un bambino al centro della scena",
+      "036-man-1": "Un uomo nella scena",
+      "031-man-2": "Un altro uomo nella scena",
+      "094-user": "Una persona importante",
+      "093-users": "Un gruppo di persone",
+      "1F411": "Un animale del gregge",
+      "1F42A": "Un animale da carico",
+      "Hackney-100": "Un animale da viaggio",
+      "2694": "Armi e conflitto",
+      "1F632": "Sorpresa e tensione",
+      "1F629": "Dolore e fatica",
+      "1F498": "Un gesto di amore o compassione",
+      "1F4B0": "Un pagamento o una ricompensa",
+      "1F3DB": "Un luogo di adorazione",
+      "1F30A": "Acqua in movimento",
+      "1F3F0": "Un luogo di potere",
+      "1F451": "Un'autorita' importante",
+      "1F333": "Piante lungo il cammino",
+      "1F932-1F3FC": "Una preghiera o una supplica",
+      "1F47C": "Un aiuto inatteso",
+      "1F3B6": "Un canto o una celebrazione",
+      "1F5FA": "Un percorso da seguire",
+      "1F440": "Un dettaglio da osservare bene",
+      "203C": "Un richiamo importante",
+      "1F4D6": "Un messaggio da comprendere",
+      "26D4": "Un rifiuto o un ostacolo",
+      "2753": "Un dettaglio ancora nascosto"
+    };
+    return neutral[key] || "";
+  }
+
+  function fallbackCaption(currentStory, index) {
+    var neutral = neutralCaptionByImageKey(imageKeyForIndex(currentStory, index));
+    if (neutral) {
+      return neutral;
+    }
+    if (index === 7) {
+      return "Un indizio visivo da interpretare";
+    }
+    if (index >= 5) {
+      return "Un dettaglio che si rivelera' piu' avanti";
+    }
+    return "Un elemento importante del racconto";
+  }
+
+  function isCaptionTooExplicit(currentStory, caption) {
+    var captionTerms = tokenizeCaptionText(caption);
+    var strongTerms = buildStrongCaptionTerms(currentStory);
+    var contextTerms = buildContextCaptionTerms(currentStory);
+    var overlap = 0;
+
+    return Object.keys(captionTerms).some(function (term) {
+      if (strongTerms[term]) {
+        return true;
+      }
+      if (contextTerms[term]) {
+        overlap += 1;
+      }
+      return overlap >= 2;
+    });
+  }
+
+  function getDisplayCaption(currentStory, index) {
+    var raw = (currentStory.imageCaptions && currentStory.imageCaptions[index]) || "";
+    if (!raw) {
+      return fallbackCaption(currentStory, index);
+    }
+    return isCaptionTooExplicit(currentStory, raw) ? fallbackCaption(currentStory, index) : raw;
+  }
+
   function isKnownAsset(key) {
     if (isCustomAssetKey(key)) {
       return state.customAssets.some(function (item) { return item.key === key; });
@@ -197,7 +358,7 @@
   }
 
   function onSlotClick(index) {
-    var text = (story().imageCaptions && story().imageCaptions[index]) || "";
+    var text = getDisplayCaption(story(), index);
     if (!text) {
       return;
     }

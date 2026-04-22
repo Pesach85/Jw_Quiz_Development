@@ -175,14 +175,14 @@ namespace Jw_Quiz_Development
                 HiddenEmojis = new[] { "1F480", "1F451" },
                 HintEmoji = "1F4AA-1F3FD",
                 ImageCaptions = new[] {
-                    "Un giovane pastore di Betlemme",
-                    "Le pecore al suo pascolo",
+                    "Un giovane pastore",
+                    "Un piccolo gregge",
                     "Armi e combattimento",
-                    "Paura e sorpresa nel campo",
+                    "Paura nel campo",
                     "Qualcosa manca in questa storia...",
-                    "Il destino del gigante",      // nascosto 1
-                    "La vittoria e il regno",       // nascosto 2
-                    "La forza che viene da Geova"   // indizio
+                    "La caduta del nemico",         // nascosto 1
+                    "Una vittoria inattesa",        // nascosto 2
+                    "Una forza piu' grande delle apparenze" // indizio
                 }
             },
             new Story
@@ -201,14 +201,14 @@ namespace Jw_Quiz_Development
                 HiddenEmojis = new[] { "1F46D", "1F498" },
                 HintEmoji = "1F4D6",
                 ImageCaptions = new[] {
-                    "Un governatore d'Egitto",
+                    "Un uomo con grande autorita'",
                     "Il viaggio nel deserto",
                     "Argento e commercio",
                     "Anni di sofferenza",
-                    "Un riconoscimento inaspettato",
-                    "I fratelli riconciliati",       // nascosto 1
-                    "L'amore fraterno restaurato",  // nascosto 2
-                    "Un messaggio di speranza"       // indizio
+                    "Un incontro inatteso",
+                    "Un abbraccio ritrovato",       // nascosto 1
+                    "Un legame ricostruito",        // nascosto 2
+                    "Una svolta guidata da Dio"     // indizio
                 }
             },
             new Story
@@ -227,14 +227,14 @@ namespace Jw_Quiz_Development
                 HiddenEmojis = new[] { "1F4B0", "039-baby" },
                 HintEmoji = "1F411",
                 ImageCaptions = new[] {
-                    "Una donna che cammina verso l'ignoto",
-                    "La suocera Naomi",
-                    "Il campo di grano",
-                    "Il parente redentore",
-                    "Un amore nascente",
-                    "Il riscatto del terreno",      // nascosto 1
-                    "Il frutto della devozione",    // nascosto 2
-                    "Il popolo di Geova"            // indizio
+                    "Una donna in cammino",
+                    "Una figura di famiglia",
+                    "Un campo di raccolta",
+                    "Un uomo con un ruolo decisivo",
+                    "Un legame che nasce",
+                    "Un diritto di riscatto",       // nascosto 1
+                    "Una discendenza benedetta",    // nascosto 2
+                    "Scegliere il popolo di Geova"  // indizio
                 }
             },
             new Story
@@ -253,14 +253,14 @@ namespace Jw_Quiz_Development
                 HiddenEmojis = new[] { "1F932-1F3FC", "1F47C" },
                 HintEmoji = "1F440",
                 ImageCaptions = new[] {
-                    "Un neonato da salvare",
-                    "Il fiume Nilo",
-                    "Il palazzo del faraone",
-                    "La figlia del faraone",
-                    "I giunchi della riva del Nilo",
+                    "Un neonato da proteggere",
+                    "Acqua in movimento",
+                    "Un luogo di potere",
+                    "Una donna di alto rango",
+                    "Piante lungo la riva",
                     "Le mani che lo tengono al sicuro",  // nascosto 1
-                    "Protetto come un dono celeste",     // nascosto 2
-                    "Lo sguardo vigilante di Geova"      // indizio
+                    "Protetto in modo inatteso",         // nascosto 2
+                    "Uno sguardo vigile dall'alto"       // indizio
                 }
             },
             new Story
@@ -279,14 +279,14 @@ namespace Jw_Quiz_Development
                 HiddenEmojis = new[] { "039-baby", "1F4D6" },
                 HintEmoji = "203C",
                 ImageCaptions = new[] {
-                    "Una preghiera fervente al Signore",
-                    "Lacrime e tormento interiore",
-                    "Il santuario di Silo",
-                    "Un canto di lode a Geova",
-                    "Un percorso di fede",
-                    "Il dono tanto atteso",                // nascosto 1
-                    "Una vita consacrata alla Parola",     // nascosto 2
-                    "Geova ha ascoltato!"                  // indizio
+                    "Una preghiera intensa",
+                    "Dolore interiore",
+                    "Un luogo di adorazione",
+                    "Un canto di gratitudine",
+                    "Un cammino di fede",
+                    "Un dono atteso a lungo",              // nascosto 1
+                    "Una vita dedicata a Geova",           // nascosto 2
+                    "Una richiesta ascoltata"              // indizio
                 }
             },
             new Story
@@ -305,14 +305,14 @@ namespace Jw_Quiz_Development
                 HiddenEmojis = new[] { "26D4", "1F498" },
                 HintEmoji = "1F440",
                 ImageCaptions = new[] {
-                    "Un uomo derubato e abbandonato",
+                    "Un uomo ferito lungo la strada",
                     "La violenza dei briganti",
-                    "L'asino del Samaritano",
-                    "Denari lasciati per le cure",
-                    "Chi si fermerà ad aiutare?",
-                    "Chi passò oltre senza fermarsi",  // nascosto 1
-                    "L'amore per il prossimo",         // nascosto 2
-                    "Geova vede chi mostra misericordia" // indizio
+                    "Un animale da viaggio",
+                    "Un pagamento per le cure",
+                    "Chi si fermera' ad aiutare?",
+                    "Chi scelse di tirare dritto",    // nascosto 1
+                    "Un gesto di misericordia",       // nascosto 2
+                    "Conta chi si ferma ad aiutare"   // indizio
                 }
             }
             };

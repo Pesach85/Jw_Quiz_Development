@@ -225,10 +225,7 @@ namespace Jw_Quiz_Development
 
         private void ShowCaption(int slotIndex)
         {
-            string[] captions = story.ImageCaptions;
-            if (captions == null || slotIndex >= captions.Length)
-                return;
-            string text = captions[slotIndex];
+            string text = StoryCaptionPolicy.GetDisplayCaption(story, slotIndex);
             if (string.IsNullOrWhiteSpace(text))
                 return;
 
