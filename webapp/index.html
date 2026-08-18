@@ -1,196 +1,2595 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="it">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>JW Quiz Web MVP</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Bree+Serif&family=Nunito+Sans:wght@400;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <main class="shell">
-      <section class="topbar">
-        <h1 class="brand">JW Quiz Web</h1>
-        <div class="controls">
-          <select id="languageSelect" class="select" title="Lingua"></select>
-          <select id="storySelect" class="select" data-i18n-title="StorySelectTitle" title="Seleziona episodio"></select>
-          <button id="btnCreateStory" class="btn btn-create" type="button" data-i18n="CreateEpisodeButton">Crea episodio</button>
-          <div id="onlineBadge" class="online-badge" hidden><span class="online-dot"></span><span id="onlineCount">1</span>&nbsp;online</div>
-          <button id="btnAdmin" class="btn btn-ghost" type="button" title="Login Admin" aria-label="Login Admin">Login</button>
-          <div class="xp-box"><span data-i18n="TotalXpLabel">XP Totali</span>: <span id="xpValue">0</span></div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="JW Quiz Immersive — storie bibliche animate, quiz e insegnamenti morali." />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <title>JW Quiz Immersive</title>
+
+  <!-- ========== FONTS (CDN) ========== -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet" />
+
+  <!-- ========== IMPORT MAP — Three.js ESM via CDN ========== -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+    }
+  }
+  </script>
+
+  <style>
+    /* ========== THEME TOKENS — customize palette here ========== */
+    :root {
+      --bg-deep: #0b1220;
+      --bg-mid: #132033;
+      --ink: #e8eef7;
+      --muted: #9bb0c9;
+      --brand: #f0c36a;
+      --brand-soft: #d4a24a;
+      --accent: #3d8fd1;
+      --ok: #3cb371;
+      --bad: #e05a5a;
+      --line: rgba(240, 195, 106, 0.28);
+      --panel: rgba(19, 32, 51, 0.82);
+      --font-display: "Cormorant Garamond", Georgia, serif;
+      --font-body: "Outfit", "Segoe UI", sans-serif;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      --max: 1120px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-body);
+      background:
+        radial-gradient(1200px 700px at 80% -10%, rgba(61, 143, 209, 0.18), transparent 55%),
+        radial-gradient(900px 600px at 10% 20%, rgba(240, 195, 106, 0.12), transparent 50%),
+        linear-gradient(180deg, var(--bg-deep), var(--bg-mid) 45%, #0e1828);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button, select { font: inherit; }
+
+    /* ========== LAYOUT ========== */
+    .topnav {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 22px;
+      backdrop-filter: blur(12px);
+      background: rgba(11, 18, 32, 0.72);
+      border-bottom: 1px solid var(--line);
+    }
+    .brand {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      color: var(--brand);
+      line-height: 1;
+    }
+    .nav-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .select, .btn {
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+      color: var(--ink);
+      padding: 10px 14px;
+      cursor: pointer;
+      transition: transform 0.2s var(--ease), background 0.2s var(--ease), border-color 0.2s;
+    }
+    .btn:hover { transform: translateY(-1px); border-color: var(--brand); }
+    .btn:active { transform: translateY(0); }
+    .btn-primary {
+      background: linear-gradient(135deg, #c9942e, #f0c36a);
+      color: #1a1408;
+      border-color: transparent;
+      font-weight: 700;
+    }
+    .btn-ghost { background: transparent; }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+    /* ========== HERO ========== */
+    .hero {
+      position: relative;
+      min-height: 100svh;
+      display: grid;
+      place-items: end start;
+      padding: clamp(24px, 5vw, 64px);
+      overflow: hidden;
+    }
+    #webglCanvas, #fallbackCanvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      z-index: 0;
+    }
+    #fallbackCanvas { display: none; }
+    body.fallback-3d #webglCanvas { display: none; }
+    body.fallback-3d #fallbackCanvas { display: block; }
+
+    .hero-copy {
+      position: relative;
+      z-index: 2;
+      max-width: 640px;
+      animation: riseIn 0.9s var(--ease) both;
+    }
+    .hero-copy h1 {
+      margin: 0 0 12px;
+      font-family: var(--font-display);
+      font-size: clamp(2.4rem, 7vw, 4.4rem);
+      line-height: 0.98;
+      color: var(--brand);
+      text-shadow: 0 8px 40px rgba(0,0,0,0.45);
+    }
+    .hero-copy p {
+      margin: 0 0 22px;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: var(--muted);
+      max-width: 36ch;
+    }
+    .cta-row { display: flex; gap: 12px; flex-wrap: wrap; }
+
+    /* ========== SECTIONS ========== */
+    .section {
+      position: relative;
+      z-index: 2;
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 72px 22px 24px;
+    }
+    .section h2 {
+      margin: 0 0 10px;
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      color: var(--brand);
+    }
+    .section > .lead {
+      margin: 0 0 28px;
+      color: var(--muted);
+      max-width: 52ch;
+    }
+
+    .story-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+    }
+    .story-tile {
+      appearance: none;
+      text-align: left;
+      padding: 18px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: transform 0.25s var(--ease), border-color 0.25s, background 0.25s;
+    }
+    .story-tile.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.6s var(--ease), transform 0.6s var(--ease), border-color 0.25s, background 0.25s;
+    }
+    .story-tile:hover {
+      border-color: var(--brand);
+      background: rgba(240, 195, 106, 0.08);
+      transform: translateY(-3px);
+    }
+    .story-tile .ep {
+      display: block;
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .story-tile strong {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      margin-bottom: 6px;
+    }
+    .story-tile .theme { color: var(--muted); font-size: 0.95rem; }
+
+    .how-list {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+    .how-item {
+      padding: 18px;
+      border-left: 3px solid var(--brand);
+      background: linear-gradient(90deg, rgba(240,195,106,0.08), transparent);
+      opacity: 0;
+      transform: translateX(-16px);
+    }
+    .how-item.is-visible {
+      opacity: 1;
+      transform: none;
+      transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+    }
+    .how-item h3 {
+      margin: 0 0 6px;
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      color: var(--brand);
+    }
+    .how-item p { margin: 0; color: var(--muted); }
+
+    /* ========== REBUS 3D STAGE ========== */
+    .rebus-act {
+      width: min(960px, 100%);
+      display: grid;
+      gap: 14px;
+      justify-items: center;
+    }
+    .rebus-viewport {
+      position: relative;
+      width: min(1100px, 100%);
+      height: min(74vh, 680px);
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      overflow: hidden;
+      background:
+        radial-gradient(600px 280px at 50% 20%, rgba(61,143,209,0.22), transparent 70%),
+        rgba(0,0,0,0.35);
+      box-shadow: inset 0 0 80px rgba(0,0,0,0.35);
+    }
+    .rebus-viewport::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background: url("assets/theater-atmosphere.png") center/cover no-repeat;
+      opacity: 0.38;
+      pointer-events: none;
+      filter: saturate(1.05) contrast(1.05);
+    }
+    #rebusCanvas, #rebusFallback {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      touch-action: none;
+      z-index: 1;
+    }
+    #rebusFallback { display: none; }
+    .rebus-act.is-fallback #rebusCanvas { display: none; }
+    .rebus-act.is-fallback #rebusFallback { display: grid; }
+    #rebusFallback {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      padding: 18px;
+      place-content: center;
+    }
+    .rebus-card {
+      aspect-ratio: 1;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.08);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      overflow: hidden;
+      transform-style: preserve-3d;
+      animation: floatY 3s ease-in-out infinite;
+      transition: transform 0.25s var(--ease), box-shadow 0.25s, border-color 0.25s;
+      min-height: 110px;
+    }
+    .rebus-card:hover { border-color: var(--brand); transform: translateY(-4px) scale(1.04); }
+    .rebus-card img {
+      width: 88%;
+      height: 88%;
+      object-fit: contain;
+      pointer-events: none;
+      filter: contrast(1.08) saturate(1.12) drop-shadow(0 8px 16px rgba(0,0,0,0.35));
+      image-rendering: auto;
+    }
+    .rebus-card.is-hint-pulse {
+      border-color: #f0c36a;
+      box-shadow: 0 0 0 2px rgba(240,195,106,0.35), 0 10px 28px rgba(240,195,106,0.25);
+      animation: hintPulse 0.6s ease-in-out infinite alternate, floatY 3s ease-in-out infinite;
+    }
+    .rebus-card.is-reveal-pop { animation: revealPop 0.55s var(--ease) both; }
+    @keyframes hintPulse {
+      from { filter: brightness(1); }
+      to { filter: brightness(1.25); }
+    }
+    @keyframes revealPop {
+      0% { transform: scale(0.7) rotateY(70deg); opacity: 0.2; }
+      100% { transform: scale(1) rotateY(0); opacity: 1; }
+    }
+    .rebus-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+    .btn-reveal { border-color: rgba(61,143,209,0.55); color: #9fd0ff; }
+    .btn-hint { border-color: rgba(240,195,106,0.55); color: var(--brand); }
+    .btn-solution { border-color: rgba(226,125,0,0.55); color: #ffb86b; }
+    .rebus-caption {
+      min-height: 1.4em;
+      color: var(--muted);
+      font-weight: 600;
+      text-align: center;
+      max-width: 52ch;
+    }
+    .rebus-solution {
+      width: min(720px, 100%);
+      text-align: left;
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: rgba(240,195,106,0.08);
+      animation: riseIn 0.45s var(--ease) both;
+    }
+    .rebus-solution h3 { margin: 0 0 8px; color: var(--brand); font-family: var(--font-display); }
+    .rebus-solution p { margin: 0 0 8px; color: var(--ink); }
+    .rebus-solution .quote { color: var(--muted); font-style: italic; border-left: 3px solid var(--accent); padding-left: 10px; }
+
+    /* ========== STORY THEATER (game stage) ========== */
+    .theater {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      display: none;
+      grid-template-rows: auto 1fr auto;
+      background:
+        radial-gradient(800px 400px at 50% 0%, rgba(61,143,209,0.2), transparent 60%),
+        rgba(8, 12, 20, 0.96);
+      backdrop-filter: blur(8px);
+    }
+    .theater.is-open { display: grid; animation: fadeIn 0.35s var(--ease); }
+    .theater-bar {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--line);
+      flex-wrap: wrap;
+    }
+    .theater-meta { color: var(--muted); font-size: 0.95rem; }
+    .theater-meta strong { color: var(--brand); }
+    .progress-track {
+      height: 4px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 999px;
+      overflow: hidden;
+      width: min(280px, 40vw);
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--brand));
+      transition: width 0.4s var(--ease);
+    }
+
+    .theater-stage {
+      position: relative;
+      overflow: auto;
+      padding: 28px 18px 40px;
+      display: grid;
+      place-items: center;
+    }
+    .act {
+      width: min(720px, 100%);
+      text-align: center;
+      animation: riseIn 0.55s var(--ease) both;
+    }
+    .act h2 {
+      margin: 0 0 10px;
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      color: var(--brand);
+    }
+    .act .scripture {
+      color: var(--accent);
+      margin: 0 0 16px;
+      font-size: 0.95rem;
+      letter-spacing: 0.04em;
+    }
+    .act p { color: var(--muted); line-height: 1.55; margin: 0 0 18px; }
+
+    .symbol-orbit {
+      position: relative;
+      width: min(320px, 70vw);
+      height: min(320px, 70vw);
+      margin: 10px auto 24px;
+      border-radius: 50%;
+      border: 1px dashed rgba(240,195,106,0.25);
+    }
+    .symbol {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 56px;
+      height: 56px;
+      margin: -28px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-size: 1.6rem;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--line);
+      animation: floatY 3.2s ease-in-out infinite;
+      will-change: transform;
+    }
+
+    .choices { display: grid; gap: 10px; margin-top: 8px; }
+    .choice {
+      text-align: left;
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+      color: var(--ink);
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s, transform 0.2s var(--ease);
+    }
+    .choice:hover:not(:disabled) {
+      border-color: var(--brand);
+      transform: translateX(4px);
+    }
+    .choice.is-correct {
+      border-color: var(--ok);
+      background: rgba(60, 179, 113, 0.15);
+    }
+    .choice.is-wrong {
+      border-color: var(--bad);
+      background: rgba(224, 90, 90, 0.12);
+    }
+    .feedback {
+      min-height: 1.4em;
+      margin: 14px 0 0;
+      font-weight: 600;
+    }
+    .feedback.ok { color: var(--ok); }
+    .feedback.bad { color: var(--bad); }
+
+    .moral-box {
+      margin-top: 18px;
+      padding: 18px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: linear-gradient(160deg, rgba(240,195,106,0.12), rgba(61,143,209,0.08));
+      text-align: left;
+    }
+    .moral-box h3 {
+      margin: 0 0 8px;
+      font-family: var(--font-display);
+      color: var(--brand);
+      font-size: 1.45rem;
+    }
+    .moral-box blockquote {
+      margin: 12px 0 0;
+      padding-left: 12px;
+      border-left: 3px solid var(--accent);
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .theater-footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding: 14px 18px;
+      border-top: 1px solid var(--line);
+      background: rgba(0,0,0,0.25);
+    }
+    .score-chip {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      color: var(--brand);
+      font-weight: 700;
+    }
+    .hud-chip {
+      font-size: 0.85rem;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 6px 12px;
+      white-space: nowrap;
+    }
+    .story-tile.is-done { border-color: rgba(60, 179, 113, 0.55); }
+    .story-tile .stars-mini { display: block; margin-top: 8px; color: var(--brand); letter-spacing: 0.08em; }
+    .loop-rail {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin: 0 0 28px;
+    }
+    .loop-step {
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      min-height: 7.5rem;
+    }
+    .loop-step span {
+      display: block;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+    .loop-step strong { color: var(--brand); font-family: var(--font-display); font-size: 1.2rem; }
+    .loop-step p { margin: 6px 0 0; color: var(--muted); font-size: 0.9rem; }
+    @media (max-width: 800px) {
+      .loop-rail { grid-template-columns: 1fr 1fr; }
+    }
+
+    .footer {
+      max-width: var(--max);
+      margin: 40px auto 0;
+      padding: 28px 22px 48px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      border-top: 1px solid var(--line);
+    }
+    .footer a { color: var(--brand); text-decoration: underline; }
+
+    /* ========== MODE SELECTOR ========== */
+    .mode-switch {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .mode-btn {
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+      color: var(--muted);
+      padding: 8px 14px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.92rem;
+      transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.2s var(--ease);
+    }
+    .mode-btn:hover { border-color: var(--brand); color: var(--ink); }
+    .mode-btn.is-active {
+      background: linear-gradient(135deg, rgba(201,148,46,0.35), rgba(240,195,106,0.25));
+      border-color: var(--brand);
+      color: var(--brand);
+    }
+    .mode-panel {
+      margin: 18px 0 8px;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(19, 32, 51, 0.65);
+      max-width: 640px;
+    }
+    .mode-panel p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+    .sound-btn.is-muted { opacity: 0.55; }
+
+    @keyframes riseIn {
+      from { opacity: 0; transform: translateY(22px); }
+      to { opacity: 1; transform: none; }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes floatY {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    @media (max-width: 640px) {
+      .topnav { padding: 12px 14px; }
+      .hero { place-items: end stretch; min-height: 92svh; }
+      .symbol { width: 48px; height: 48px; margin: -24px; font-size: 1.3rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- ========== TOP NAV ========== -->
+  <header class="topnav">
+    <div class="brand" data-i18n="brand">JW Quiz Immersive</div>
+    <div class="nav-actions">
+      <div class="mode-switch" id="modeSwitchNav" role="radiogroup" aria-label="Game mode"></div>
+      <div class="hud-chip" id="hudProgress" title="Progresso">0/18 · 0 XP</div>
+      <button id="btnSound" class="btn btn-ghost sound-btn" type="button" data-i18n="soundOn" title="Audio">🔊</button>
+      <select id="langSelect" class="select" aria-label="Language" title="Language"></select>
+      <a class="btn btn-ghost" href="classic.html" data-i18n="classicMode">Editor / Admin</a>
+      <button id="btnStartStories" class="btn btn-primary" type="button" data-i18n="startJourney">Inizia il viaggio</button>
+    </div>
+  </header>
+
+  <!-- ========== HERO — 3D particle canvas ========== -->
+  <section class="hero" id="hero">
+    <canvas id="webglCanvas" aria-hidden="true"></canvas>
+    <canvas id="fallbackCanvas" aria-hidden="true"></canvas>
+    <div class="hero-copy">
+      <h1 data-i18n="heroTitle">Fai vivere il racconto</h1>
+      <p data-i18n="heroLead">Tre modalità di gioco: Quiz, Rebus 3D o Avventura completa — immersiva, con audio e scene animate.</p>
+      <div class="mode-panel">
+        <div class="mode-switch" id="modeSwitchHero" role="radiogroup" aria-label="Game mode"></div>
+        <p id="modeHelp" data-i18n="modeHelpJourney">Avventura: rebus 3D e poi domande di rinforzo.</p>
+      </div>
+      <div class="cta-row">
+        <button id="btnHeroPlay" class="btn btn-primary" type="button" data-i18n="playFirst">Gioca il primo episodio</button>
+        <a class="btn" href="#stories" data-i18n="browseStories">Sfoglia gli episodi</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== HOW IT WORKS ========== -->
+  <section class="section" id="how">
+    <h2 data-i18n="howTitle">Come si impara giocando</h2>
+    <p class="lead" data-i18n="howLead">Un solo loop, tre modalità originali. Scegli come entrare nella storia.</p>
+    <div class="loop-rail">
+      <article class="loop-step reveal">
+        <span>01</span>
+        <strong data-i18n="loop1Title">Curiosità</strong>
+        <p data-i18n="loop1Body">La scena si apre senza spoiler: il cervello cerca il significato.</p>
+      </article>
+      <article class="loop-step reveal">
+        <span>02</span>
+        <strong data-i18n="loop2Title">Sfida</strong>
+        <p data-i18n="loop2Body">Rebus 3D o quiz: sforzo utile, non risposta regalata.</p>
+      </article>
+      <article class="loop-step reveal">
+        <span>03</span>
+        <strong data-i18n="loop3Title">Recupero</strong>
+        <p data-i18n="loop3Body">Le domande richiamano ciò che hai visto: si fissa la memoria.</p>
+      </article>
+      <article class="loop-step reveal">
+        <span>04</span>
+        <strong data-i18n="loop4Title">Senso</strong>
+        <p data-i18n="loop4Body">L’insegnamento morale chiude il cerchio e dà il “perché”.</p>
+      </article>
+    </div>
+    <div class="how-list">
+      <article class="how-item reveal">
+        <h3 data-i18n="how1Title">1. Immersione</h3>
+        <p data-i18n="how1Body">Simboli fluttuanti e una breve narrazione aprono la scena biblica.</p>
+      </article>
+      <article class="how-item reveal">
+        <h3 data-i18n="howRebusTitle">2. Rebus 3D</h3>
+        <p data-i18n="howRebusBody">Le immagini del rebus fluttuano in scena 3D: rivelale, usa l’indizio, indovina la storia.</p>
+      </article>
+      <article class="how-item reveal">
+        <h3 data-i18n="how2Title">3. Quiz</h3>
+        <p data-i18n="how2Body">Domande a scelta multipla su fatti, scelte e lezioni della storia.</p>
+      </article>
+      <article class="how-item reveal">
+        <h3 data-i18n="how3Title">4. Insegnamento</h3>
+        <p data-i18n="how3Body">Alla fine emerge il messaggio morale e la citazione scritturale.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ========== STORY CATALOG ========== -->
+  <section class="section" id="stories">
+    <h2 data-i18n="storiesTitle">Episodi animati</h2>
+    <p class="lead" data-i18n="storiesLead">Scegli una storia. Titolo e soluzione restano nascosti nel rebus classico; qui giochi in modalità immersiva Q&amp;A.</p>
+    <div id="storyGrid" class="story-grid"></div>
+  </section>
+
+  <footer class="footer">
+    <p data-i18n="footerNote">Ispirato alle attività “Fai vivere il racconto!” su jw.org — quiz e riflessioni per ragazzi. Questa app non è un prodotto ufficiale Watch Tower.</p>
+    <p><a href="https://www.jw.org/it/cosa-dice-la-Bibbia/ragazzi/fai-vivere-il-racconto/" target="_blank" rel="noopener noreferrer" data-i18n="jwLink">Vedi le attività su JW.ORG</a> · <a href="classic.html" data-i18n="classicMode">Editor / Admin</a></p>
+  </footer>
+
+  <!-- ========== STORY THEATER OVERLAY ========== -->
+  <div id="theater" class="theater" role="dialog" aria-modal="true" aria-labelledby="theaterTitle">
+    <div class="theater-bar">
+      <div class="theater-meta">
+        <strong id="theaterTitle">—</strong>
+        <span id="theaterStepLabel"></span>
+      </div>
+      <div class="progress-track" aria-hidden="true"><div id="progressFill" class="progress-fill"></div></div>
+      <button id="btnCloseTheater" class="btn btn-ghost" type="button" data-i18n="close">Chiudi</button>
+    </div>
+    <div class="theater-stage" id="theaterStage"></div>
+    <div class="theater-footer">
+      <div class="score-chip" id="scoreChip">★ 0</div>
+      <div class="cta-row">
+        <button id="btnTheaterBack" class="btn" type="button" data-i18n="back">Indietro</button>
+        <button id="btnTheaterNext" class="btn btn-primary" type="button" data-i18n="continue">Continua</button>
+        <a id="btnOpenRebus" class="btn" href="classic.html" data-i18n="openRebus">Apri editor classico</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rebus PNG keys from shared catalog (same as classic webapp) -->
+  <script src="stories.js"></script>
+
+  <script type="module">
+    /* ========================================================================
+     * SECTION: I18N — Italian (full) + English
+     * Customize strings here. Italian is the source of truth.
+     * ======================================================================== */
+    const LANGS = ["it", "en"];
+    const LANG_STORAGE_KEY = "jwquiz_immersive_lang_v1";
+
+    const UI = {
+      it: {
+        brand: "JW Quiz Immersive",
+        langLabel: "Lingua",
+        classicMode: "Editor / Admin",
+        startJourney: "Inizia",
+        heroTitle: "Fai vivere il racconto",
+        heroLead: "Tre modalità di gioco: Quiz, Rebus 3D o Avventura completa — immersiva, con audio e scene animate.",
+        modeQuiz: "Quiz",
+        modeRebus: "Rebus 3D",
+        modeJourney: "Avventura",
+        modeHelpQuiz: "Solo domande e risposte con insegnamento morale.",
+        modeHelpRebus: "Solo rebus 3D immersivo: rivela, indizio, soluzione.",
+        modeHelpJourney: "Avventura: rebus 3D e poi domande di rinforzo.",
+        soundOn: "Audio on",
+        soundOff: "Audio off",
+        playFirst: "Gioca il primo episodio",
+        browseStories: "Sfoglia gli episodi",
+        howTitle: "Come si impara giocando",
+        howLead: "Un solo loop, tre modalità originali. Scegli come entrare nella storia.",
+        loop1Title: "Curiosità",
+        loop1Body: "La scena si apre senza spoiler: il cervello cerca il significato.",
+        loop2Title: "Sfida",
+        loop2Body: "Rebus 3D o quiz: sforzo utile, non risposta regalata.",
+        loop3Title: "Recupero",
+        loop3Body: "Le domande richiamano ciò che hai visto: si fissa la memoria.",
+        loop4Title: "Senso",
+        loop4Body: "L’insegnamento morale chiude il cerchio e dà il “perché”.",
+        hudLabel: "Progresso",
+        how1Title: "1. Scegli la modalità",
+        how1Body: "Quiz, Rebus 3D oppure Avventura (rebus + quiz) — selezionabili in alto o nel hero.",
+        howRebusTitle: "2. Gioca immerso",
+        howRebusBody: "Scene 3D, immagini grandi, audio di feedback e parallax al movimento.",
+        how2Title: "3. Rifletti",
+        how2Body: "Nel Quiz o in Avventura rispondi alle domande sui temi biblici.",
+        how3Title: "4. Insegnamento",
+        how3Body: "Alla fine emerge il messaggio morale e la citazione scritturale.",
+        storiesTitle: "Episodi",
+        storiesLead: "Scegli un episodio. Il titolo resta nascosto nel rebus finché non riveli la soluzione.",
+        footerNote: "Ispirato alle attività “Fai vivere il racconto!” su jw.org — quiz e riflessioni per ragazzi. Questa app non è un prodotto ufficiale Watch Tower.",
+        jwLink: "Vedi le attività su JW.ORG",
+        close: "Chiudi",
+        back: "Indietro",
+        continue: "Continua",
+        openRebus: "Apri editor classico",
+        episode: "Episodio",
+        theme: "Tema",
+        actIntro: "Scena",
+        actRebus: "Rebus 3D",
+        actQuiz: "Quiz",
+        actMoral: "Insegnamento",
+        guessStory: "Indovina la storia!",
+        correct: "Ottimo! Risposta corretta.",
+        incorrect: "Non proprio. Rifletti e continua.",
+        scoreLabel: "Stelle scena",
+        play: "Gioca",
+        moralHeading: "Cosa impariamo",
+        finished: "Scena completata",
+        pickAnswer: "Scegli una risposta per continuare.",
+        revealTwo: "Rivela 2 immagini",
+        showHint: "Mostra indizio",
+        revealSolution: "Rivela soluzione",
+        hideSolution: "Nascondi soluzione",
+        captionDefault: "Tocca un’immagine fluttuante per un indizio breve",
+        captionPrefix: "Indicazione",
+        needSolution: "Rivela la soluzione del rebus per continuare.",
+        reducedMotionNote: "Modalità leggera attiva (mobile / risparmio)."
+      },
+      en: {
+        brand: "JW Quiz Immersive",
+        langLabel: "Language",
+        classicMode: "Editor / Admin",
+        startJourney: "Start",
+        heroTitle: "Bring the account to life",
+        heroLead: "Three game modes: Quiz, 3D Rebus, or full Adventure — immersive, with audio and animated scenes.",
+        modeQuiz: "Quiz",
+        modeRebus: "3D Rebus",
+        modeJourney: "Adventure",
+        modeHelpQuiz: "Questions and answers only, with a moral teaching.",
+        modeHelpRebus: "Immersive 3D rebus only: reveal, hint, solution.",
+        modeHelpJourney: "Adventure: 3D rebus then reinforcement questions.",
+        soundOn: "Audio on",
+        soundOff: "Audio off",
+        playFirst: "Play the first episode",
+        browseStories: "Browse episodes",
+        howTitle: "How it works",
+        howLead: "Pick a mode, then an episode. Immersion, play, and teaching in an educational game style.",
+        how1Title: "1. Choose the mode",
+        how1Body: "Quiz, 3D Rebus, or Adventure (rebus + quiz) — selectable in the nav or hero.",
+        howRebusTitle: "2. Play immersed",
+        howRebusBody: "3D scenes, large images, feedback audio, and mouse parallax.",
+        how2Title: "3. Reflect",
+        how2Body: "In Quiz or Adventure, answer questions on Bible themes.",
+        how3Title: "4. Teaching",
+        how3Body: "At the end, the moral message and scripture quotation appear.",
+        storiesTitle: "Episodes",
+        storiesLead: "Pick an episode. In rebus mode the title stays hidden until you reveal the solution.",
+        footerNote: "Inspired by “Bring Your Bible Accounts to Life!” on jw.org — quizzes and reflections for young people. This app is not an official Watch Tower product.",
+        jwLink: "See the activities on JW.ORG",
+        close: "Close",
+        back: "Back",
+        continue: "Continue",
+        openRebus: "Open classic editor",
+        episode: "Episode",
+        theme: "Theme",
+        actIntro: "Scene",
+        actRebus: "3D Rebus",
+        actQuiz: "Quiz",
+        actMoral: "Teaching",
+        guessStory: "Guess the story!",
+        correct: "Great! Correct answer.",
+        incorrect: "Not quite. Reflect and continue.",
+        scoreLabel: "Scene stars",
+        play: "Play",
+        moralHeading: "What we learn",
+        finished: "Scene complete",
+        pickAnswer: "Choose an answer to continue.",
+        revealTwo: "Reveal 2 images",
+        showHint: "Show hint",
+        revealSolution: "Reveal solution",
+        hideSolution: "Hide solution",
+        captionDefault: "Tap a floating image for a short clue",
+        captionPrefix: "Clue",
+        needSolution: "Reveal the rebus solution to continue.",
+        reducedMotionNote: "Lite mode active (mobile / power save)."
+      }
+    };
+
+    /* ========================================================================
+     * SECTION: STORY DATA — immersive Q&A (IT full / EN)
+     * Aligns with built-in episodes 1–18 (titles/themes). Customize questions here.
+     * Inspired by jw.org “Fai vivere il racconto!” style (immerse → reflect → learn).
+     * ======================================================================== */
+    const STORIES = [
+      story(1, "Il Giardino di Eden", "The Garden of Eden", "Obbedienza", "Obedience", "Genesi 2-3",
+        ["🌳", "🍎", "🐍"],
+        {
+          it: "Nel giardino tutto era perfetto, finché una scelta cambiò la storia umana.",
+          en: "In the garden everything was perfect — until one choice changed human history."
+        },
+        [
+          q(
+            { it: "Cosa comandò Geova riguardo all’albero della conoscenza?", en: "What did Jehovah command about the tree of knowledge?" },
+            [
+              { it: "Di non mangiarne il frutto", en: "Not to eat its fruit", ok: true },
+              { it: "Di piantarlo altrove", en: "To plant it elsewhere", ok: false },
+              { it: "Di venderne i frutti", en: "To sell its fruit", ok: false }
+            ]
+          ),
+          q(
+            { it: "Quale qualità mette alla prova questa storia?", en: "Which quality does this account test?" },
+            [
+              { it: "L’obbedienza a Dio", en: "Obedience to God", ok: true },
+              { it: "La velocità nel correre", en: "Running speed", ok: false },
+              { it: "La ricchezza materiale", en: "Material wealth", ok: false }
+            ]
+          )
+        ],
+        {
+          it: "L’obbedienza protegge. Anche quando una scelta sembra piccola, fidarsi di Dio è saggezza.",
+          en: "Obedience protects. Even when a choice seems small, trusting God is wisdom."
+        },
+        {
+          it: "«Dell’albero della conoscenza… non devi mangiare.» — Genesi 2:17",
+          en: "“As for the tree of the knowledge… you must not eat from it.” — Genesis 2:17"
+        }
+      ),
+      story(2, "Sansone e Dalila", "Samson and Delilah", "Fedeltà", "Faithfulness", "Giudici 14-16",
+        ["💪", "✂️", "🏛️"],
+        { it: "Una forza straordinaria… e una lealtà messa alla prova.", en: "Extraordinary strength — and loyalty put to the test." },
+        [
+          q(
+            { it: "Da dove veniva davvero la forza di Sansone?", en: "Where did Samson’s strength really come from?" },
+            [
+              { it: "Dal suo voto e dall’aiuto di Geova", en: "From his vow and Jehovah’s help", ok: true },
+              { it: "Solo dai capelli lunghi", en: "Only from long hair", ok: false },
+              { it: "Da un’armatura magica", en: "From magic armor", ok: false }
+            ]
+          ),
+          q(
+            { it: "Cosa ci insegna il pentimento di Sansone?", en: "What does Samson’s repentance teach?" },
+            [
+              { it: "Si può tornare a Dio con sincerità", en: "One can return to God sincerely", ok: true },
+              { it: "Non serve chiedere perdono", en: "There is no need to ask forgiveness", ok: false },
+              { it: "La forza umana basta sempre", en: "Human strength is always enough", ok: false }
+            ]
+          )
+        ],
+        {
+          it: "La fedeltà a Dio vale più di qualsiasi attrazione pericolosa. Il pentimento apre una via.",
+          en: "Loyalty to God matters more than any dangerous attraction. Repentance opens a way."
+        },
+        { it: "Sansone invocò Geova… — Giudici 16:28", en: "Samson called on Jehovah… — Judges 16:28" }
+      ),
+      story(3, "Giona e il Pesce", "Jonah and the Fish", "Misericordia", "Mercy", "Giona 2-3",
+        ["⛵", "🐋", "🏙️"],
+        { it: "Fuggire da Dio non funziona. La misericordia, sì.", en: "Running from God does not work. Mercy does." },
+        [
+          q(
+            { it: "Perché Giona finì nel grande pesce?", en: "Why did Jonah end up in the great fish?" },
+            [
+              { it: "Perché stava fuggendo dall’incarico di Dio", en: "Because he was fleeing God’s assignment", ok: true },
+              { it: "Per una gara di nuoto", en: "Because of a swimming contest", ok: false },
+              { it: "Per cercare un tesoro", en: "To look for treasure", ok: false }
+            ]
+          ),
+          q(
+            { it: "Cosa mostra Geova verso Ninive?", en: "What does Jehovah show toward Nineveh?" },
+            [
+              { it: "Misericordia verso chi si pente", en: "Mercy toward those who repent", ok: true },
+              { it: "Indifferenza totale", en: "Total indifference", ok: false },
+              { it: "Solo punizione senza avviso", en: "Only punishment with no warning", ok: false }
+            ]
+          )
+        ],
+        {
+          it: "Dio ascolta anche dal “ventre” delle nostre difficoltà. Accetta la missione con cuore disposto.",
+          en: "God hears even from the “belly” of our hardships. Accept the mission with a willing heart."
+        },
+        { it: "«Mi ricordai di Geova…» — Giona 2:7", en: "“I remembered Jehovah…” — Jonah 2:7" }
+      ),
+      story(4, "Le Pecore e le Capre", "The Sheep and the Goats", "Giudizio", "Judgment", "Matteo 25:31-46",
+        ["🐑", "🐐", "⚖️"],
+        { it: "Gesù parla di un giudizio basato sull’amore in azione.", en: "Jesus speaks of a judgment based on love in action." },
+        [
+          q(
+            { it: "Cosa distingue le “pecore” nella parabola?", en: "What sets the “sheep” apart in the parable?" },
+            [
+              { it: "Hanno aiutato i fratelli di Cristo", en: "They helped Christ’s brothers", ok: true },
+              { it: "Avevano più denaro", en: "They had more money", ok: false },
+              { it: "Parlavano più lingue", en: "They spoke more languages", ok: false }
+            ]
+          ),
+          q(
+            { it: "Quale insegnamento pratico possiamo trarre?", en: "What practical lesson can we draw?" },
+            [
+              { it: "L’amore si dimostra con azioni concrete", en: "Love is shown by concrete actions", ok: true },
+              { it: "Basta solo parlare bene", en: "Speaking well is enough", ok: false },
+              { it: "Non serve interessarsi degli altri", en: "There is no need to care about others", ok: false }
+            ]
+          )
+        ],
+        {
+          it: "Il giudizio di Dio valorizza chi tratta con bontà i suoi. L’amore non è teoria.",
+          en: "God’s judgment values those who treat His own with kindness. Love is not theory."
+        },
+        { it: "«In quanto lo avete fatto a uno…» — Matteo 25:40", en: "“To the extent that you did it to one…” — Matthew 25:40" }
+      ),
+      story(5, "Le 10 Piaghe d’Egitto", "The 10 Plagues of Egypt", "Potere di Dio", "God's Power", "Esodo 7-12",
+        ["🐸", "🌊", "👑"],
+        { it: "Faraone resistette. Il potere di Geova si rivelò chiaro.", en: "Pharaoh resisted. Jehovah’s power became clear." },
+        [
+          q(
+            { it: "Perché Dio mandò le piaghe?", en: "Why did God send the plagues?" },
+            [
+              { it: "Per liberare Israele e mostrare chi è il vero Dio", en: "To free Israel and show who the true God is", ok: true },
+              { it: "Per distruggere il Nilo per gioco", en: "To destroy the Nile for fun", ok: false },
+              { it: "Per premiare Faraone", en: "To reward Pharaoh", ok: false }
+            ]
+          ),
+          q(
+            { it: "Cosa impariamo sull’ostinazione di Faraone?", en: "What do we learn from Pharaoh’s stubbornness?" },
+            [
+              { it: "Opporsi a Dio porta solo danno", en: "Opposing God only brings harm", ok: true },
+              { it: "L’orgoglio è una virtù", en: "Pride is a virtue", ok: false },
+              { it: "Non serve ascoltare gli avvertimenti", en: "There is no need to heed warnings", ok: false }
+            ]
+          )
+        ],
+        {
+          it: "Nessun potere umano supera Geova. Affidarsi a Lui è la scelta saggia.",
+          en: "No human power surpasses Jehovah. Trusting Him is the wise choice."
+        },
+        { it: "«Così sapranno che io sono Geova.» — Esodo 7:5", en: "“And the Egyptians will certainly know that I am Jehovah.” — Exodus 7:5" }
+      ),
+      story(6, "Elia e la Siccità", "Elijah and the Drought", "Preghiera", "Prayer", "1 Re 17-18",
+        ["🔥", "☁️", "🙏"],
+        { it: "Un profeta, un altare e una preghiera ascoltata.", en: "A prophet, an altar, and a prayer that was heard." },
+        [
+          q(
+            { it: "Cosa dimostrò Elia sul Monte Carmelo?", en: "What did Elijah prove on Mount Carmel?" },
+            [
+              { it: "Che Geova è il vero Dio che risponde", en: "That Jehovah is the true God who answers", ok: true },
+              { it: "Che Baal era più forte", en: "That Baal was stronger", ok: false },
+              { it: "Che la pioggia non esiste", en: "That rain does not exist", ok: false }
+            ]
+          ),
+          q(
+            { it: "Quale ruolo ebbe la preghiera nella storia?", en: "What role did prayer play in the account?" },
+            [
+              { it: "Elia pregò e Dio rispose con fuoco e pioggia", en: "Elijah prayed and God answered with fire and rain", ok: true },
+              { it: "Nessuno pregò mai", en: "No one ever prayed", ok: false },
+              { it: "La preghiera era inutile", en: "Prayer was useless", ok: false }
+            ]
+          )
+        ],
+        {
+          it: "La preghiera fervente di un uomo giusto ha grande potenza. Dio ascolta.",
+          en: "The fervent prayer of a righteous man has great power. God listens."
+        },
+        { it: "«Rispondimi, o Geova…» — 1 Re 18:37", en: "“Answer me, O Jehovah…” — 1 Kings 18:37" }
+      ),
+      story(7, "Ester Salva il Popolo", "Esther Saves Her People", "Coraggio", "Courage", "Ester 4-7",
+        ["👑", "📜", "🛡️"],
+        { it: "Coraggio al momento giusto può salvare molti.", en: "Courage at the right moment can save many." },
+        [
+          q(
+            { it: "Cosa rischiò Ester presentandosi al re?", en: "What did Esther risk by approaching the king?" },
+            [
+              { it: "La propria vita, per salvare il suo popolo", en: "Her own life, to save her people", ok: true },
+              { it: "Solo un pranzo", en: "Only a lunch", ok: false },
+              { it: "Niente di importante", en: "Nothing important", ok: false }
+            ]
+          ),
+          q(
+            { it: "Quale frase famosa riassume il suo coraggio?", en: "Which famous line sums up her courage?" },
+            [
+              { it: "«Se dovrò morire, morrò»", en: "“If I perish, I perish”", ok: true },
+              { it: "«Meglio scappare»", en: "“Better to run away”", ok: false },
+              { it: "«Non è affar mio»", en: "“It is not my business”", ok: false }
+            ]
+          )
+        ],
+        {
+          it: "Dio può usare persone coraggiose nel momento decisivo. Il coraggio ama il prossimo.",
+          en: "God can use courageous people at the decisive moment. Courage loves neighbor."
+        },
+        { it: "«Chi sa se non sei giunta… proprio per un tempo come questo?» — Ester 4:14", en: "“Who knows whether you have attained… for a time like this?” — Esther 4:14" }
+      ),
+      story(8, "Abramo e Isacco", "Abraham and Isaac", "Fede", "Faith", "Genesi 22",
+        ["⛰️", "🐏", "✨"],
+        { it: "Una fede che obbedisce anche quando non capisce tutto.", en: "A faith that obeys even when it does not understand everything." },
+        [
+          q(
+            { it: "Cosa dimostrò Abramo sul monte?", en: "What did Abraham show on the mountain?" },
+            [
+              { it: "Fiducia totale in Geova", en: "Complete trust in Jehovah", ok: true },
+              { it: "Paura degli uomini", en: "Fear of men", ok: false },
+              { it: "Desiderio di ricchezza", en: "Desire for wealth", ok: false }
+            ]
+          ),
+          q(
+            { it: "Cosa fornì Dio al posto del sacrificio di Isacco?", en: "What did God provide instead of Isaac’s sacrifice?" },
+            [
+              { it: "Un montone", en: "A ram", ok: true },
+              { it: "Una corona d’oro", en: "A gold crown", ok: false },
+              { it: "Un esercito", en: "An army", ok: false }
+            ]
+          )
+        ],
+        {
+          it: "La fede vera agisce. Dio provvede per chi si fida di Lui.",
+          en: "True faith acts. God provides for those who trust Him."
+        },
+        { it: "«Ora so che temi Dio…» — Genesi 22:12", en: "“Now I do know that you fear God…” — Genesis 22:12" }
+      ),
+      story(9, "Il Figlio Prodigo", "The Prodigal Son", "Perdono", "Forgiveness", "Luca 15:11-32",
+        ["🏠", "💰", "🤗"],
+        { it: "Un ritorno a casa… e un padre che corre incontro.", en: "A return home — and a father who runs to meet him." },
+        [
+          q(
+            { it: "Come reagì il padre al ritorno del figlio?", en: "How did the father react to the son’s return?" },
+            [
+              { it: "Con misericordia e gioia", en: "With mercy and joy", ok: true },
+              { it: "Con rifiuto definitivo", en: "With final rejection", ok: false },
+              { it: "Ignorandolo", en: "By ignoring him", ok: false }
+            ]
+          ),
+          q(
+            { it: "Cosa rappresenta questa parabola?", en: "What does this parable represent?" },
+            [
+              { it: "Il perdono di Dio verso chi si pente", en: "God’s forgiveness toward those who repent", ok: true },
+              { it: "Una regola di economia", en: "A rule of economics", ok: false },
+              { it: "Un consiglio di viaggio", en: "Travel advice", ok: false }
+            ]
+          )
+        ],
+        {
+          it: "Geova è pronto a perdonare. Tornare a Lui non è mai troppo tardi.",
+          en: "Jehovah is ready to forgive. Returning to Him is never too late."
+        },
+        { it: "«Questo mio figlio era morto ed è tornato in vita.» — Luca 15:24", en: "“This son of mine was dead, but has come to life again.” — Luke 15:24" }
+      ),
+      story(10, "La Profezia di Isaia", "Isaiah’s Prophecy", "Profezia", "Prophecy", "Isaia 2; 11",
+        ["🕊️", "📜", "🌍"],
+        { it: "Una visione di pace che viene da Dio.", en: "A vision of peace that comes from God." },
+        [
+          q(
+            { it: "Cosa promette la profezia di pace di Isaia?", en: "What does Isaiah’s peace prophecy promise?" },
+            [
+              { it: "Che le armi diventeranno strumenti di pace", en: "That weapons will become tools of peace", ok: true },
+              { it: "Guerre infinite", en: "Endless wars", ok: false },
+              { it: "Solo ricchezza per pochi", en: "Wealth only for a few", ok: false }
+            ]
+          ),
+          q(
+            { it: "Su chi dobbiamo fondare la nostra speranza?", en: "On whom should we base our hope?" },
+            [
+              { it: "Sul Regno di Dio", en: "On God’s Kingdom", ok: true },
+              { it: "Solo sulla politica umana", en: "Only on human politics", ok: false },
+              { it: "Sul caso", en: "On chance", ok: false }
+            ]
+          )
+        ],
+        {
+          it: "Le promesse di Dio danno una speranza reale. Studiare la profezia rafforza la fede.",
+          en: "God’s promises give real hope. Studying prophecy strengthens faith."
+        },
+        { it: "«Non impareranno più la guerra.» — Isaia 2:4", en: "“Neither will they learn war anymore.” — Isaiah 2:4" }
+      ),
+      story(11, "Noè e il Diluvio", "Noah and the Flood", "Salvezza", "Salvation", "Genesi 6-9",
+        ["🛶", "🌈", "🌧️"],
+        { it: "Obbedienza paziente… e una porta che Dio chiuse.", en: "Patient obedience — and a door that God shut." },
+        [
+          q(
+            { it: "Perché Noè fu salvato?", en: "Why was Noah saved?" },
+            [
+              { it: "Perché camminò con Dio e obbedì", en: "Because he walked with God and obeyed", ok: true },
+              { it: "Perché era il più ricco", en: "Because he was the richest", ok: false },
+              { it: "Per caso", en: "By chance", ok: false }
+            ]
+          ),
+          q(
+            { it: "Cosa simboleggia l’arcobaleno dopo il diluvio?", en: "What does the rainbow after the Flood symbolize?" },
+            [
+              { it: "La promessa di Dio", en: "God’s promise", ok: true },
+              { it: "Un premio di guerra", en: "A war prize", ok: false },
+              { it: "Un gioco di luci senza significato", en: "A meaningless light show", ok: false }
+            ]
+          )
+        ],
+        {
+          it: "La salvezza passa dall’ascoltare Dio anche quando il mondo non lo fa.",
+          en: "Salvation comes from listening to God even when the world does not."
+        },
+        { it: "«Noè… camminò con il vero Dio.» — Genesi 6:9", en: "“Noah… walked with the true God.” — Genesis 6:9" }
+      ),
+      story(12, "Filippo e l’Eunuco", "Philip and the Eunuch", "Buona Novella", "Good News", "Atti 8:26-40",
+        ["📖", "💧", "🛤️"],
+        { it: "Uno che spiega le Scritture… e un cuore pronto.", en: "Someone who explains the Scriptures — and a ready heart." },
+        [
+          q(
+            { it: "Cosa stava leggendo l’eunuco?", en: "What was the eunuch reading?" },
+            [
+              { it: "Il profeta Isaia", en: "The prophet Isaiah", ok: true },
+              { it: "Un romanzo", en: "A novel", ok: false },
+              { it: "Un contratto commerciale", en: "A business contract", ok: false }
+            ]
+          ),
+          q(
+            { it: "Cosa fece dopo aver compreso la buona novella?", en: "What did he do after understanding the good news?" },
+            [
+              { it: "Chiese di essere battezzato", en: "He asked to be baptized", ok: true },
+              { it: "Tornò indietro senza cambiare", en: "He went back unchanged", ok: false },
+              { it: "Nascose il rotolo", en: "He hid the scroll", ok: false }
+            ]
+          )
+        ],
+        {
+          it: "Condividere la Bibbia con chiarezza può cambiare una vita. Sii pronto ad aiutare.",
+          en: "Sharing the Bible clearly can change a life. Be ready to help."
+        },
+        { it: "«Come potrei comprendere… a meno che qualcuno non mi guidi?» — Atti 8:31", en: "“How could I ever do so unless someone guided me?” — Acts 8:31" }
+      ),
+      story(13, "Davide e Golia", "David and Goliath", "Coraggio", "Courage", "1 Samuele 17",
+        ["🪨", "🛡️", "⚔️"],
+        { it: "Un giovane pastore e un gigante… ma Dio era con lui.", en: "A young shepherd and a giant — but God was with him." },
+        [
+          q(
+            { it: "In chi confidò Davide per affrontare Golia?", en: "In whom did David trust to face Goliath?" },
+            [
+              { it: "In Geova", en: "In Jehovah", ok: true },
+              { it: "Solo nella sua armatura", en: "Only in his armor", ok: false },
+              { it: "Nell’esercito di Saul", en: "In Saul’s army", ok: false }
+            ]
+          ),
+          q(
+            { it: "Quale lezione morale emerge?", en: "What moral lesson emerges?" },
+            [
+              { it: "La fede in Dio vince la paura delle apparenze", en: "Faith in God overcomes fear of appearances", ok: true },
+              { it: "Vince sempre il più alto", en: "The tallest always wins", ok: false },
+              { it: "Meglio non affrontare i problemi", en: "Better never to face problems", ok: false }
+            ]
+          )
+        ],
+        {
+          it: "Non guardare solo le dimensioni del problema: guarda la grandezza di Dio.",
+          en: "Do not look only at the size of the problem — look at the greatness of God."
+        },
+        { it: "«La battaglia appartiene a Geova.» — 1 Samuele 17:47", en: "“The battle belongs to Jehovah.” — 1 Samuel 17:47" }
+      ),
+      story(14, "Giuseppe Perdona i Fratelli", "Joseph Forgives His Brothers", "Perdono", "Forgiveness", "Genesi 45",
+        ["💎", "🌾", "🤝"],
+        { it: "Dal tradimento al perdono: Dio guidò ogni passo.", en: "From betrayal to forgiveness: God guided every step." },
+        [
+          q(
+            { it: "Come trattò Giuseppe i fratelli che lo avevano venduto?", en: "How did Joseph treat the brothers who sold him?" },
+            [
+              { it: "Li perdonò e li aiutò", en: "He forgave them and helped them", ok: true },
+              { it: "Li fece imprigionare per sempre", en: "He imprisoned them forever", ok: false },
+              { it: "Li ignorò", en: "He ignored them", ok: false }
+            ]
+          ),
+          q(
+            { it: "Cosa riconosce Giuseppe nel suo percorso?", en: "What does Joseph recognize in his path?" },
+            [
+              { it: "Che Dio aveva un proposito buono", en: "That God had a good purpose", ok: true },
+              { it: "Che tutto fu solo sfortuna", en: "That everything was only bad luck", ok: false },
+              { it: "Che il perdono è debolezza", en: "That forgiveness is weakness", ok: false }
+            ]
+          )
+        ],
+        {
+          it: "Il perdono libera. Dio può trasformare il male subito in un bene maggiore.",
+          en: "Forgiveness frees. God can turn harm suffered into a greater good."
+        },
+        { it: "«Voi… meditaste del male contro di me. Dio… lo meditò per il bene.» — Genesi 50:20", en: "“You intended to do bad… God intended it for good.” — Genesis 50:20" }
+      ),
+      story(15, "Rut e Boaz", "Ruth and Boaz", "Devozione", "Devotion", "Rut 1-4",
+        ["🌾", "💍", "🚶‍♀️"],
+        { it: "Lealtà a Dio e al popolo Suo, anche in terra straniera.", en: "Loyalty to God and His people, even in a foreign land." },
+        [
+          q(
+            { it: "Cosa scelse Rut riguardo a Noemi e al popolo di Dio?", en: "What did Ruth choose regarding Naomi and God’s people?" },
+            [
+              { it: "Di restare fedele e seguire il loro Dio", en: "To remain loyal and follow their God", ok: true },
+              { it: "Di tornare agli dèi di Moab", en: "To return to Moab’s gods", ok: false },
+              { it: "Di abbandonare Noemi", en: "To abandon Naomi", ok: false }
+            ]
+          ),
+          q(
+            { it: "Quale qualità risplende in Rut?", en: "Which quality shines in Ruth?" },
+            [
+              { it: "La devozione leale", en: "Loyal devotion", ok: true },
+              { it: "L’egoismo", en: "Selfishness", ok: false },
+              { it: "La pigrizia", en: "Laziness", ok: false }
+            ]
+          )
+        ],
+        {
+          it: "Scegliere il popolo di Geova è una decisione di cuore che Dio benedice.",
+          en: "Choosing Jehovah’s people is a heart decision that God blesses."
+        },
+        { it: "«Il tuo popolo sarà il mio popolo e il tuo Dio il mio Dio.» — Rut 1:16", en: "“Your people will be my people, and your God my God.” — Ruth 1:16" }
+      ),
+      story(16, "La Nascita di Mosè", "The Birth of Moses", "Protezione", "Protection", "Esodo 2",
+        ["🧺", "🌊", "👀"],
+        { it: "Un neonato protetto… e un piano più grande di Dio.", en: "A newborn protected — and a greater plan from God." },
+        [
+          q(
+            { it: "Come fu protetto Mosè da bambino?", en: "How was Moses protected as a baby?" },
+            [
+              { it: "Fu messo in un cestello sul Nilo e trovato dalla figlia di Faraone", en: "He was placed in a basket on the Nile and found by Pharaoh’s daughter", ok: true },
+              { it: "Fu nascosto in una grotta per sempre", en: "He was hidden in a cave forever", ok: false },
+              { it: "Fuggì da solo", en: "He fled alone", ok: false }
+            ]
+          ),
+          q(
+            { it: "Cosa insegna questa storia sulla protezione di Dio?", en: "What does this account teach about God’s protection?" },
+            [
+              { it: "Dio può proteggere in modi inattesi", en: "God can protect in unexpected ways", ok: true },
+              { it: "Dio non si interessa dei deboli", en: "God does not care about the weak", ok: false },
+              { it: "Solo i potenti sono al sicuro", en: "Only the powerful are safe", ok: false }
+            ]
+          )
+        ],
+        {
+          it: "Anche quando tutto sembra perso, Dio può aprire una via di salvezza.",
+          en: "Even when all seems lost, God can open a way of salvation."
+        },
+        { it: "«Ella… lo chiamò Mosè.» — Esodo 2:10", en: "“She… called him Moses.” — Exodus 2:10" }
+      ),
+      story(17, "Anna e Samuele", "Hannah and Samuel", "Preghiera", "Prayer", "1 Samuele 1-2",
+        ["🙏", "👶", "🎶"],
+        { it: "Una preghiera intensa… e un dono dedicato a Dio.", en: "An intense prayer — and a gift dedicated to God." },
+        [
+          q(
+            { it: "Cosa chiese Anna a Geova?", en: "What did Hannah ask of Jehovah?" },
+            [
+              { it: "Un figlio, che poi dedicò al servizio di Dio", en: "A son, whom she then dedicated to God’s service", ok: true },
+              { it: "Solo ricchezza", en: "Only wealth", ok: false },
+              { it: "Una corona reale", en: "A royal crown", ok: false }
+            ]
+          ),
+          q(
+            { it: "Come ringraziò Anna?", en: "How did Hannah give thanks?" },
+            [
+              { it: "Con un canto di gratitudine e mantenendo la promessa", en: "With a song of gratitude and by keeping her promise", ok: true },
+              { it: "Dimenticando il voto", en: "By forgetting her vow", ok: false },
+              { it: "Nascondendo Samuele", en: "By hiding Samuel", ok: false }
+            ]
+          )
+        ],
+        {
+          it: "Dio ascolta le preghiere sincere. Mantieni ciò che prometti a Lui.",
+          en: "God hears sincere prayers. Keep what you promise to Him."
+        },
+        { it: "«Io pregavo…» — 1 Samuele 1:15-17", en: "“I was praying…” — 1 Samuel 1:15-17" }
+      ),
+      story(18, "Il Buon Samaritano", "The Good Samaritan", "Amore per il Prossimo", "Love for Neighbor", "Luca 10:25-37",
+        ["🩹", "🐪", "❤️"],
+        { it: "Chi è il mio prossimo? Chi si ferma ad aiutare.", en: "Who is my neighbor? Whoever stops to help." },
+        [
+          q(
+            { it: "Cosa fece il samaritano per l’uomo ferito?", en: "What did the Samaritan do for the wounded man?" },
+            [
+              { it: "Lo curò e pagò per le sue cure", en: "He cared for him and paid for his care", ok: true },
+              { it: "Passò oltre senza fermarsi", en: "He passed by without stopping", ok: false },
+              { it: "Chiese un premio", en: "He asked for a prize", ok: false }
+            ]
+          ),
+          q(
+            { it: "Secondo Gesù, chi si dimostrò prossimo?", en: "According to Jesus, who proved to be a neighbor?" },
+            [
+              { it: "Colui che usò misericordia", en: "The one who showed mercy", ok: true },
+              { it: "Solo chi aveva lo stesso popolo", en: "Only someone of the same people", ok: false },
+              { it: "Chi aveva più fretta", en: "Whoever was in more of a hurry", ok: false }
+            ]
+          )
+        ],
+        {
+          it: "L’amore vero si ferma. Non chiedere “chi merita aiuto?”, ma “a chi posso farlo?”.",
+          en: "True love stops. Do not ask “who deserves help?” but “whom can I help?”."
+        },
+        { it: "«Va’ e fa’ anche tu lo stesso.» — Luca 10:37", en: "“Go and do the same yourself.” — Luke 10:37" }
+      )
+    ];
+
+    function pair(it, en) { return { it, en }; }
+    function story(id, titleIt, titleEn, themeIt, themeEn, scripture, symbols, intro, questions, moral, quote) {
+      return {
+        id,
+        title: pair(titleIt, titleEn),
+        theme: pair(themeIt, themeEn),
+        scripture,
+        symbols,
+        intro,
+        questions,
+        moral,
+        quote
+      };
+    }
+    function q(prompt, answers) {
+      return { prompt, answers };
+    }
+
+    /* ========================================================================
+     * SECTION: APP STATE + I18N APPLY
+     * ======================================================================== */
+    let lang = localStorage.getItem(LANG_STORAGE_KEY) || "it";
+    if (!LANGS.includes(lang)) lang = "it";
+
+    const KEY_UNKNOWN = "2753";
+    const KEY_HINT_PLACEHOLDER = "1F525";
+    const MODE_STORAGE_KEY = "jwquiz_immersive_mode_v1";
+    const SOUND_STORAGE_KEY = "jwquiz_immersive_sound_v1";
+    const PROGRESS_KEY = "jwquiz_immersive_progress_v1";
+    const XP_KEY = "jwquiz_web_xp";
+    const MODES = ["quiz", "rebus", "journey"];
+    const REBUS_LOOKUP = buildRebusLookup(window.JW_STORIES || []);
+
+    const state = {
+      mode: MODES.includes(localStorage.getItem(MODE_STORAGE_KEY)) ? localStorage.getItem(MODE_STORAGE_KEY) : "journey",
+      soundOn: localStorage.getItem(SOUND_STORAGE_KEY) !== "0",
+      storyIndex: 0,
+      step: 0,
+      flow: [],
+      answered: false,
+      lastCorrect: null,
+      selectedIndex: null,
+      stars: 3,
+      helps: 0,
+      rebus: {
+        revealCount: 0,
+        hintRevealed: false,
+        solutionVisible: false,
+        caption: "",
+        captionSlot: -1
+      }
+    };
+
+    /* ========================================================================
+     * SECTION: AUDIO — Web Audio procedural SFX (no external files)
+     * ======================================================================== */
+    const audio = {
+      ctx: null,
+      ambientNodes: null,
+      ensure() {
+        if (!state.soundOn) return null;
+        if (!this.ctx) {
+          const AC = window.AudioContext || window.webkitAudioContext;
+          if (!AC) return null;
+          this.ctx = new AC();
+        }
+        if (this.ctx.state === "suspended") this.ctx.resume();
+        return this.ctx;
+      },
+      tone(freq, dur, type, gain, when) {
+        const ctx = this.ensure();
+        if (!ctx) return;
+        const t0 = (when ?? 0) + ctx.currentTime;
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.type = type || "sine";
+        o.frequency.value = freq;
+        g.gain.setValueAtTime(0.0001, t0);
+        g.gain.exponentialRampToValueAtTime(gain || 0.05, t0 + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+        o.connect(g); g.connect(ctx.destination);
+        o.start(t0); o.stop(t0 + dur + 0.02);
+      },
+      click() { this.tone(520, 0.06, "triangle", 0.03); },
+      reveal() { this.tone(392, 0.12, "sine", 0.05); this.tone(523, 0.18, "sine", 0.04, 0.06); },
+      hint() { this.tone(311, 0.2, "triangle", 0.04); this.tone(466, 0.25, "sine", 0.03, 0.05); },
+      success() { this.tone(523, 0.14, "sine", 0.05); this.tone(659, 0.16, "sine", 0.045, 0.08); this.tone(784, 0.22, "sine", 0.04, 0.16); },
+      wrong() { this.tone(180, 0.18, "sawtooth", 0.025); },
+      startAmbient() {
+        const ctx = this.ensure();
+        if (!ctx || this.ambientNodes) return;
+        const o1 = ctx.createOscillator();
+        const o2 = ctx.createOscillator();
+        const g = ctx.createGain();
+        o1.type = "sine"; o2.type = "sine";
+        o1.frequency.value = 110; o2.frequency.value = 164.8;
+        g.gain.value = 0.012;
+        o1.connect(g); o2.connect(g); g.connect(ctx.destination);
+        o1.start(); o2.start();
+        this.ambientNodes = { o1, o2, g };
+      },
+      stopAmbient() {
+        if (!this.ambientNodes) return;
+        try {
+          this.ambientNodes.o1.stop();
+          this.ambientNodes.o2.stop();
+        } catch (_) {}
+        this.ambientNodes = null;
+      }
+    };
+
+    function buildRebusLookup(list) {
+      const map = Object.create(null);
+      (list || []).forEach((s) => {
+        if (s && s.id != null) map[s.id] = s;
+      });
+      return map;
+    }
+
+    function assetUrl(key) {
+      const k = String(key || KEY_UNKNOWN);
+      if (k.indexOf("custom:") === 0) return ""; // custom only in classic shared mode
+      return `assets/${encodeURIComponent(k)}.png`;
+    }
+
+    function getRebusStory(storyId) {
+      return REBUS_LOOKUP[storyId] || null;
+    }
+
+    function recomputeStars() {
+      const used = state.helps + state.rebus.revealCount + (state.rebus.hintRevealed ? 1 : 0);
+      state.stars = Math.max(1, 3 - Math.min(2, used));
+    }
+
+    function loadProgress() {
+      try {
+        const raw = JSON.parse(localStorage.getItem(PROGRESS_KEY) || "{}");
+        return { xp: Number(raw.xp || localStorage.getItem(XP_KEY) || 0), episodes: raw.episodes || {} };
+      } catch {
+        return { xp: Number(localStorage.getItem(XP_KEY) || 0), episodes: {} };
+      }
+    }
+    function saveProgress(p) {
+      localStorage.setItem(PROGRESS_KEY, JSON.stringify(p));
+      localStorage.setItem(XP_KEY, String(p.xp || 0));
+    }
+    function refreshHud() {
+      const p = loadProgress();
+      const done = Object.keys(p.episodes).length;
+      const el = document.getElementById("hudProgress");
+      if (el) el.textContent = `${done}/18 · ${p.xp || 0} XP`;
+    }
+    function completeEpisode() {
+      const s = currentStory();
+      const p = loadProgress();
+      const prev = p.episodes[String(s.id)] || { stars: 0 };
+      const gain = 20 * state.stars;
+      if (!prev.stars) p.xp = (p.xp || 0) + gain;
+      else if (state.stars > prev.stars) p.xp = (p.xp || 0) + 20 * (state.stars - prev.stars);
+      if (state.stars >= (prev.stars || 0)) {
+        p.episodes[String(s.id)] = { stars: state.stars, mode: state.mode, at: Date.now() };
+      }
+      saveProgress(p);
+      refreshHud();
+    }
+
+    function t(key) {
+      return (UI[lang] && UI[lang][key]) || UI.it[key] || key;
+    }
+    function tl(obj) {
+      if (!obj) return "";
+      return obj[lang] || obj.it || "";
+    }
+
+    function applyI18n() {
+      document.documentElement.lang = lang === "it" ? "it" : "en";
+      document.querySelectorAll("[data-i18n]").forEach((el) => {
+        const key = el.getAttribute("data-i18n");
+        if (UI[lang][key] != null) el.textContent = UI[lang][key];
+      });
+      renderModeSwitch();
+      updateSoundButton();
+      renderStoryGrid();
+      refreshHud();
+      if (document.getElementById("theater").classList.contains("is-open")) {
+        renderTheater();
+      }
+    }
+
+    function renderModeSwitch() {
+      const labels = { quiz: t("modeQuiz"), rebus: t("modeRebus"), journey: t("modeJourney") };
+      const helps = { quiz: t("modeHelpQuiz"), rebus: t("modeHelpRebus"), journey: t("modeHelpJourney") };
+      ["modeSwitchNav", "modeSwitchHero"].forEach((id) => {
+        const host = document.getElementById(id);
+        if (!host) return;
+        host.innerHTML = MODES.map((m) => `
+          <button type="button" class="mode-btn${state.mode === m ? " is-active" : ""}" data-mode="${m}" role="radio" aria-checked="${state.mode === m}">${labels[m]}</button>
+        `).join("");
+        host.querySelectorAll("[data-mode]").forEach((btn) => {
+          btn.addEventListener("click", () => setMode(btn.getAttribute("data-mode")));
+        });
+      });
+      const help = document.getElementById("modeHelp");
+      if (help) help.textContent = helps[state.mode] || helps.journey;
+    }
+
+    function setMode(mode) {
+      if (!MODES.includes(mode)) return;
+      state.mode = mode;
+      localStorage.setItem(MODE_STORAGE_KEY, mode);
+      audio.click();
+      renderModeSwitch();
+    }
+
+    function updateSoundButton() {
+      const btn = document.getElementById("btnSound");
+      if (!btn) return;
+      btn.textContent = state.soundOn ? "🔊" : "🔇";
+      btn.classList.toggle("is-muted", !state.soundOn);
+      btn.setAttribute("data-i18n", state.soundOn ? "soundOn" : "soundOff");
+      btn.title = state.soundOn ? t("soundOn") : t("soundOff");
+    }
+
+    function toggleSound() {
+      state.soundOn = !state.soundOn;
+      localStorage.setItem(SOUND_STORAGE_KEY, state.soundOn ? "1" : "0");
+      if (!state.soundOn) audio.stopAmbient();
+      else if (theater.classList.contains("is-open")) {
+        audio.ensure();
+        audio.startAmbient();
+        audio.click();
+      }
+      updateSoundButton();
+    }
+
+    /* ========================================================================
+     * SECTION: STORY GRID + SCROLL REVEAL
+     * ======================================================================== */
+    const storyGrid = document.getElementById("storyGrid");
+
+    function renderStoryGrid() {
+      const progress = loadProgress();
+      storyGrid.innerHTML = STORIES.map((s, i) => {
+        const done = progress.episodes[String(s.id)];
+        const stars = done ? "★".repeat(done.stars) + "☆".repeat(Math.max(0, 3 - done.stars)) : "";
+        return `
+        <button class="story-tile reveal${done ? " is-done" : ""}" type="button" data-story-index="${i}">
+          <span class="ep">${t("episode")} ${s.id}</span>
+          <strong>${t("guessStory")}</strong>
+          <span class="theme">${t("theme")}: ${tl(s.theme)}</span>
+          ${stars ? `<span class="stars-mini">${stars}</span>` : ""}
+        </button>`;
+      }).join("");
+      storyGrid.querySelectorAll("[data-story-index]").forEach((btn) => {
+        btn.addEventListener("click", () => openTheater(Number(btn.dataset.storyIndex)));
+      });
+      observeReveals();
+    }
+
+    function observeReveals() {
+      const nodes = document.querySelectorAll(".reveal:not(.is-visible)");
+      if (!("IntersectionObserver" in window)) {
+        nodes.forEach((n) => n.classList.add("is-visible"));
+        return;
+      }
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add("is-visible");
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.18, rootMargin: "0px 0px -40px 0px" });
+      nodes.forEach((n) => io.observe(n));
+    }
+
+    /* ========================================================================
+     * SECTION: STORY THEATER — intro → rebus 3D → Q&A → moral
+     * ======================================================================== */
+    const theater = document.getElementById("theater");
+    const theaterStage = document.getElementById("theaterStage");
+    const theaterTitle = document.getElementById("theaterTitle");
+    const theaterStepLabel = document.getElementById("theaterStepLabel");
+    const progressFill = document.getElementById("progressFill");
+    const scoreChip = document.getElementById("scoreChip");
+    const btnTheaterNext = document.getElementById("btnTheaterNext");
+    const btnTheaterBack = document.getElementById("btnTheaterBack");
+    const btnOpenRebus = document.getElementById("btnOpenRebus");
+
+    function buildFlow(story) {
+      const flow = ["intro"];
+      if (state.mode === "rebus" || state.mode === "journey") flow.push("rebus");
+      if (state.mode === "quiz" || state.mode === "journey") {
+        for (let i = 0; i < story.questions.length; i++) flow.push("quiz:" + i);
+      }
+      flow.push("moral");
+      return flow;
+    }
+
+    function totalSteps(story) {
+      return buildFlow(story).length;
+    }
+
+    function stepKind(story, step) {
+      const item = (state.flow[step] || buildFlow(story)[step] || "moral");
+      if (item === "intro" || item === "rebus" || item === "moral") return item;
+      if (String(item).startsWith("quiz")) return "quiz";
+      return "moral";
+    }
+
+    function quizIndex(step) {
+      const item = state.flow[step] || "";
+      if (String(item).startsWith("quiz:")) return Number(String(item).split(":")[1]) || 0;
+      return 0;
+    }
+
+    function openTheater(index) {
+      disposeRebus3D();
+      state.storyIndex = index;
+      state.flow = buildFlow(STORIES[index]);
+      state.step = 0;
+      state.answered = true;
+      state.lastCorrect = null;
+      state.selectedIndex = null;
+      state.helps = 0;
+      state.rebus = { revealCount: 0, hintRevealed: false, solutionVisible: false, caption: "", captionSlot: -1 };
+      recomputeStars();
+      audio.ensure();
+      audio.startAmbient();
+      audio.click();
+      theater.classList.add("is-open");
+      document.body.style.overflow = "hidden";
+      renderTheater();
+    }
+
+    function closeTheater() {
+      disposeRebus3D();
+      audio.stopAmbient();
+      theater.classList.remove("is-open");
+      document.body.style.overflow = "";
+    }
+
+    function currentStory() {
+      return STORIES[state.storyIndex];
+    }
+
+    function renderTheater() {
+      const s = currentStory();
+      const steps = state.flow.length || totalSteps(s);
+      const step = state.step;
+      const kind = stepKind(s, step);
+      theaterTitle.textContent = `${t("episode")} ${s.id} · ${t(state.mode === "quiz" ? "modeQuiz" : state.mode === "rebus" ? "modeRebus" : "modeJourney")}`;
+      progressFill.style.width = `${Math.round(((step + 1) / steps) * 100)}%`;
+      recomputeStars();
+      scoreChip.textContent = `★ ${state.stars}`;
+      btnOpenRebus.href = `classic.html`;
+
+      if (kind === "intro") theaterStepLabel.textContent = ` · ${t("actIntro")}`;
+      else if (kind === "rebus") theaterStepLabel.textContent = ` · ${t("actRebus")}`;
+      else if (kind === "quiz") theaterStepLabel.textContent = ` · ${t("actQuiz")} ${quizIndex(step) + 1}/${s.questions.length}`;
+      else theaterStepLabel.textContent = ` · ${t("actMoral")}`;
+
+      btnTheaterBack.disabled = step === 0;
+      if (kind === "quiz") btnTheaterNext.disabled = !state.answered;
+      else if (kind === "rebus") btnTheaterNext.disabled = !state.rebus.solutionVisible;
+      else btnTheaterNext.disabled = false;
+      btnTheaterNext.textContent = kind === "moral" ? t("finished") : t("continue");
+      btnTheaterNext.title = kind === "rebus" && !state.rebus.solutionVisible ? t("needSolution") : "";
+
+      if (kind !== "rebus") disposeRebus3D();
+
+      if (kind === "intro") {
+        theaterStage.innerHTML = `
+          <div class="act">
+            <p class="scripture">${s.scripture}</p>
+            <h2 id="actHeading">${t("guessStory")}</h2>
+            <div class="symbol-orbit" id="symbolOrbit" aria-hidden="true"></div>
+            <p>${tl(s.intro)}</p>
+            <p style="color:var(--brand);font-weight:600">${t("theme")}: ${tl(s.theme)}</p>
+          </div>
+        `;
+        placeSymbols(s.symbols);
+        return;
+      }
+
+      if (kind === "rebus") {
+        renderRebusAct(s);
+        return;
+      }
+
+      if (kind === "quiz") {
+        const qIndex = quizIndex(step);
+        const question = s.questions[qIndex];
+        theaterStage.innerHTML = `
+          <div class="act">
+            <p class="scripture">${s.scripture}</p>
+            <h2>${t("actQuiz")} ${qIndex + 1}</h2>
+            <p style="color:var(--ink);font-size:1.15rem;font-weight:600">${tl(question.prompt)}</p>
+            <div class="choices" id="choices"></div>
+            <p class="feedback" id="feedback"></p>
+          </div>
+        `;
+        const box = document.getElementById("choices");
+        question.answers.forEach((ans, i) => {
+          const b = document.createElement("button");
+          b.type = "button";
+          b.className = "choice";
+          b.textContent = tl(ans);
+          b.disabled = state.answered;
+          if (state.answered) {
+            if (ans.ok) b.classList.add("is-correct");
+            else if (state.selectedIndex === i && !ans.ok) b.classList.add("is-wrong");
+          }
+          b.addEventListener("click", () => selectAnswer(i));
+          box.appendChild(b);
+        });
+        const fb = document.getElementById("feedback");
+        if (state.answered) {
+          fb.textContent = state.lastCorrect ? t("correct") : t("incorrect");
+          fb.className = "feedback " + (state.lastCorrect ? "ok" : "bad");
+        } else {
+          fb.textContent = t("pickAnswer");
+          fb.className = "feedback";
+        }
+        return;
+      }
+
+      // Moral — title revealed
+      theaterStage.innerHTML = `
+        <div class="act">
+          <p class="scripture">${s.scripture}</p>
+          <h2>${tl(s.title)}</h2>
+          <div class="moral-box">
+            <h3>${t("moralHeading")}</h3>
+            <p style="color:var(--ink)">${tl(s.moral)}</p>
+            <blockquote>${tl(s.quote)}</blockquote>
+          </div>
+          <p style="margin-top:18px">${t("scoreLabel")}: ★ ${state.stars}</p>
         </div>
-      </section>
+      `;
+    }
 
-      <section class="header">
-        <h2 id="storyTitle" class="story-title"></h2>
-        <div id="storyRef" class="story-ref"></div>
-        <div class="header-meta">
-          <span><span data-i18n="ExpectedXpLabel">XP Previsti</span>: <strong id="xpExpected">100</strong></span>
-          <span id="starsBox" class="stars-box" title="Stelle ottenute">★★★</span>
+    function placeSymbols(symbols) {
+      const orbit = document.getElementById("symbolOrbit");
+      if (!orbit) return;
+      const n = symbols.length;
+      symbols.forEach((sym, i) => {
+        const el = document.createElement("div");
+        el.className = "symbol";
+        el.textContent = sym;
+        const angle = (i / n) * Math.PI * 2 - Math.PI / 2;
+        const r = Math.min(orbit.clientWidth, orbit.clientHeight) * 0.34 || 100;
+        el.style.transform = `translate(${Math.cos(angle) * r}px, ${Math.sin(angle) * r}px)`;
+        el.style.animationDelay = `${i * 0.25}s`;
+        orbit.appendChild(el);
+      });
+    }
+
+    function selectAnswer(index) {
+      if (state.answered) return;
+      const s = currentStory();
+      const question = s.questions[quizIndex(state.step)];
+      const ans = question.answers[index];
+      state.answered = true;
+      state.selectedIndex = index;
+      state.lastCorrect = !!ans.ok;
+      if (!ans.ok) state.helps += 1;
+      recomputeStars();
+      if (ans.ok) audio.success(); else audio.wrong();
+      renderTheater();
+    }
+
+    function nextStep() {
+      const s = currentStory();
+      const steps = state.flow.length || totalSteps(s);
+      if (state.step >= steps - 1) {
+        audio.success();
+        completeEpisode();
+        closeTheater();
+        renderStoryGrid();
+        return;
+      }
+      const next = state.step + 1;
+      const kind = stepKind(s, next);
+      state.step = next;
+      state.lastCorrect = null;
+      state.selectedIndex = null;
+      state.answered = kind !== "quiz";
+      audio.click();
+      renderTheater();
+    }
+
+    function prevStep() {
+      if (state.step <= 0) return;
+      disposeRebus3D();
+      state.step -= 1;
+      const kind = stepKind(currentStory(), state.step);
+      state.answered = kind !== "quiz";
+      state.lastCorrect = null;
+      state.selectedIndex = null;
+      audio.click();
+      renderTheater();
+    }
+
+    /* ========================================================================
+     * SECTION: REBUS 3D — floating PNG planes + classic reveal/hint/solution
+     * Uses keys from stories.js (window.JW_STORIES) → assets/<key>.png
+     * WebGL path via Three.js; CSS fallback cards if WebGL unavailable.
+     * ======================================================================== */
+    const rebus3d = {
+      running: false,
+      useFallback: false,
+      THREE: null,
+      renderer: null,
+      scene: null,
+      camera: null,
+      group: null,
+      slots: [],
+      particles: null,
+      raf: 0,
+      raycaster: null,
+      pointer: { x: 0, y: 0 },
+      boundClick: null,
+      boundMove: null,
+      boundResize: null,
+      hintPulseT: 0
+    };
+
+    function slotKeysForRebus(rebus) {
+      const visible = (rebus.visibleKeys || []).slice(0, 5);
+      while (visible.length < 5) visible.push(KEY_UNKNOWN);
+      const hidden = (rebus.hiddenKeys || []).slice(0, 2);
+      while (hidden.length < 2) hidden.push(KEY_UNKNOWN);
+      const hint = rebus.hintKey || KEY_HINT_PLACEHOLDER;
+      return [
+        visible[0], visible[1], visible[2], visible[3], visible[4],
+        state.rebus.revealCount > 0 ? hidden[0] : KEY_UNKNOWN,
+        state.rebus.revealCount > 1 ? hidden[1] : KEY_UNKNOWN,
+        state.rebus.hintRevealed ? hint : KEY_HINT_PLACEHOLDER
+      ];
+    }
+
+    function captionForSlot(rebus, slotIndex) {
+      const caps = rebus.imageCaptions || [];
+      const raw = caps[slotIndex];
+      if (!raw) return t("captionDefault");
+      return `${t("captionPrefix")}: ${raw}`;
+    }
+
+    function renderRebusAct(story) {
+      const rebus = getRebusStory(story.id);
+      if (!rebus) {
+        theaterStage.innerHTML = `
+          <div class="act">
+            <h2>${t("actRebus")}</h2>
+            <p>${lang === "it" ? "Dati rebus non disponibili (caricare stories.js)." : "Rebus data unavailable (load stories.js)."}</p>
+          </div>`;
+        return;
+      }
+
+      const caption = state.rebus.caption || t("captionDefault");
+      theaterStage.innerHTML = `
+        <div class="rebus-act" id="rebusAct">
+          <div class="act" style="width:100%;margin:0">
+            <h2>${t("guessStory")}</h2>
+            <p class="scripture">${story.scripture} · ${t("theme")}: ${tl(story.theme)}</p>
+          </div>
+          <div class="rebus-viewport" id="rebusViewport">
+            <canvas id="rebusCanvas" aria-label="Rebus 3D"></canvas>
+            <div id="rebusFallback" aria-label="Rebus"></div>
+          </div>
+          <p class="rebus-caption" id="rebusCaption">${caption}</p>
+          <div class="rebus-toolbar">
+            <button type="button" class="btn btn-reveal" id="btnRebusReveal">${t("revealTwo")}</button>
+            <button type="button" class="btn btn-hint" id="btnRebusHint">${t("showHint")}</button>
+            <button type="button" class="btn btn-solution" id="btnRebusSolution">${state.rebus.solutionVisible ? t("hideSolution") : t("revealSolution")}</button>
+          </div>
+          <div id="rebusSolutionBox" class="rebus-solution" ${state.rebus.solutionVisible ? "" : "hidden"}></div>
         </div>
-      </section>
+      `;
 
-      <section id="caption" class="caption"></section>
+      const box = document.getElementById("rebusSolutionBox");
+      if (state.rebus.solutionVisible) {
+        box.hidden = false;
+        box.innerHTML = `
+          <h3>${tl(story.title)}</h3>
+          <p>${rebus.solution || ""}</p>
+          <p class="quote">${rebus.scriptureQuote || ""}</p>
+        `;
+      }
 
-      <section id="slots" class="slots"></section>
+      document.getElementById("btnRebusReveal").disabled = state.rebus.revealCount >= 2;
+      document.getElementById("btnRebusReveal").addEventListener("click", () => {
+        if (state.rebus.revealCount >= 2) return;
+        state.rebus.revealCount += 1;
+        recomputeStars();
+        audio.reveal();
+        refreshRebusVisuals(story, true);
+      });
+      document.getElementById("btnRebusHint").addEventListener("click", () => {
+        state.rebus.hintRevealed = !state.rebus.hintRevealed;
+        if (state.rebus.hintRevealed) {
+          state.rebus.caption = rebus.hint || t("captionDefault");
+          state.rebus.captionSlot = 7;
+          audio.hint();
+        } else {
+          audio.click();
+        }
+        recomputeStars();
+        refreshRebusVisuals(story, false);
+      });
+      document.getElementById("btnRebusSolution").addEventListener("click", () => {
+        state.rebus.solutionVisible = !state.rebus.solutionVisible;
+        if (state.rebus.solutionVisible) audio.success(); else audio.click();
+        recomputeStars();
+        renderTheater(); // rebuild solution panel + enable Continua
+      });
 
-      <section class="actions">
-        <button id="btnReveal" class="btn btn-reveal" type="button" data-i18n="RevealTwoImagesButton">Rivela 2 immagini</button>
-        <button id="btnHint" class="btn btn-hint" type="button" data-i18n="ShowHintButton">Mostra indizio</button>
-        <button id="btnSolution" class="btn btn-solution" type="button" data-i18n="RevealSolutionButton">Rivela soluzione</button>
-        <button id="btnNext" class="btn btn-next" type="button" data-i18n="NextStoryButton">Prossima storia</button>
-      </section>
+      const forceFallback = preferFallback();
+      initRebusStage(story, rebus, forceFallback);
+    }
 
-      <section id="solutionPanel" class="solution" hidden>
-        <h3 data-i18n="SolutionHeading">Soluzione</h3>
-        <p id="solutionText"></p>
-        <p id="scriptureQuote"></p>
-        <p><strong data-i18n="NoteLabel">Nota:</strong> <span id="engagementNote"></span></p>
-      </section>
+    function refreshRebusVisuals(story, popReveal) {
+      const rebus = getRebusStory(story.id);
+      const keys = slotKeysForRebus(rebus);
+      const captionEl = document.getElementById("rebusCaption");
+      if (captionEl) captionEl.textContent = state.rebus.caption || t("captionDefault");
+      scoreChip.textContent = `★ ${state.stars}`;
+      const revealBtn = document.getElementById("btnRebusReveal");
+      if (revealBtn) revealBtn.disabled = state.rebus.revealCount >= 2;
+      btnTheaterNext.disabled = !state.rebus.solutionVisible;
+      btnTheaterNext.title = state.rebus.solutionVisible ? "" : t("needSolution");
 
-      <section id="editorPanel" class="editor" hidden>
-        <div class="editor-card">
-          <div class="editor-head">
-            <div>
-              <h3 data-i18n="CreateNewEpisodeHeading">Crea nuovo episodio</h3>
-              <p data-i18n="CreateNewEpisodeHelp">Compila i dati come nell'editor desktop. Su Cloudflare gli episodi saranno condivisi tra tutti gli utenti.</p>
-            </div>
-            <button id="btnCloseEditor" class="btn btn-ghost" type="button" data-i18n="CloseButton">Chiudi</button>
-          </div>
+      if (rebus3d.useFallback || !rebus3d.running) {
+        paintRebusFallback(keys, popReveal);
+        return;
+      }
+      updateRebusTextures(keys, popReveal);
+    }
 
-          <div class="editor-grid">
-            <label class="field">
-              <span data-i18n="TitleLabel">Titolo</span>
-              <input id="editorTitle" type="text" maxlength="120" />
-            </label>
-            <label class="field">
-              <span data-i18n="ScriptureReferenceLabel">Riferimento biblico</span>
-              <input id="editorReference" type="text" maxlength="120" />
-            </label>
-            <label class="field">
-              <span data-i18n="KeywordLabel">Parola chiave</span>
-              <input id="editorKeyword" type="text" maxlength="80" />
-            </label>
-            <label class="field">
-              <span data-i18n="InputLanguageLabel">Lingua di inserimento</span>
-              <select id="editorSourceLanguage"></select>
-            </label>
-            <label class="field field-wide">
-              <span data-i18n="HintTextLabel">Indizio testo</span>
-              <textarea id="editorHint" rows="2"></textarea>
-            </label>
-            <label class="field field-wide">
-              <span data-i18n="SolutionLabel">Soluzione</span>
-              <textarea id="editorSolution" rows="4"></textarea>
-            </label>
-            <label class="field field-wide">
-              <span data-i18n="ScriptureQuoteLabel">Citazione scritturale</span>
-              <textarea id="editorQuote" rows="3"></textarea>
-            </label>
-            <label class="field field-wide">
-              <span data-i18n="EngagementNoteLabel">Nota engagement</span>
-              <textarea id="editorNote" rows="3"></textarea>
-            </label>
-          </div>
+    async function initRebusStage(story, rebus, forceFallback) {
+      const act = document.getElementById("rebusAct");
+      if (forceFallback) {
+        act.classList.add("is-fallback");
+        rebus3d.useFallback = true;
+        paintRebusFallback(slotKeysForRebus(rebus), false);
+        return;
+      }
+      try {
+        if (!THREE) THREE = await import("three");
+        rebus3d.THREE = THREE;
+        rebus3d.useFallback = false;
+        act.classList.remove("is-fallback");
+        await bootRebus3D(slotKeysForRebus(rebus));
+      } catch (err) {
+        console.warn("[immersive] rebus 3D failed, CSS fallback", err);
+        act.classList.add("is-fallback");
+        rebus3d.useFallback = true;
+        paintRebusFallback(slotKeysForRebus(rebus), false);
+      }
+    }
 
-          <section class="editor-section">
-            <h4 data-i18n="VisibleImagesHeading">5 immagini visibili</h4>
-            <div id="editorVisibleImages" class="slot-editor-list"></div>
-          </section>
+    function paintRebusFallback(keys, popReveal) {
+      const host = document.getElementById("rebusFallback");
+      if (!host) return;
+      host.innerHTML = "";
+      keys.forEach((key, i) => {
+        const card = document.createElement("button");
+        card.type = "button";
+        card.className = "rebus-card";
+        card.style.animationDelay = `${(i % 4) * 0.12}s`;
+        if (i === 7 && !state.rebus.hintRevealed) card.classList.add("is-hint-pulse");
+        if (popReveal && (i === 5 || i === 6) && key !== KEY_UNKNOWN) card.classList.add("is-reveal-pop");
+        const img = document.createElement("img");
+        img.src = assetUrl(key);
+        img.alt = `slot ${i + 1}`;
+        img.onerror = () => { img.src = assetUrl(KEY_UNKNOWN); };
+        card.appendChild(img);
+        card.addEventListener("click", () => onRebusSlotClick(i));
+        host.appendChild(card);
+      });
+    }
 
-          <section class="editor-section">
-            <h4 data-i18n="HiddenImagesHeading">2 immagini nascoste</h4>
-            <div id="editorHiddenImages" class="slot-editor-list"></div>
-          </section>
+    function onRebusSlotClick(slotIndex) {
+      const s = currentStory();
+      const rebus = getRebusStory(s.id);
+      if (!rebus) return;
+      // Hidden slots not yet revealed: no spoiler caption
+      if (slotIndex === 5 && state.rebus.revealCount < 1) {
+        state.rebus.caption = t("captionDefault");
+      } else if (slotIndex === 6 && state.rebus.revealCount < 2) {
+        state.rebus.caption = t("captionDefault");
+      } else if (slotIndex === 7 && !state.rebus.hintRevealed) {
+        state.rebus.caption = lang === "it" ? "Tocca “Mostra indizio” per rivelare" : "Tap “Show hint” to reveal";
+      } else {
+        state.rebus.caption = captionForSlot(rebus, slotIndex);
+      }
+      state.rebus.captionSlot = slotIndex;
+      const captionEl = document.getElementById("rebusCaption");
+      if (captionEl) captionEl.textContent = state.rebus.caption;
+      if (rebus3d.running && rebus3d.slots[slotIndex]) {
+        const mesh = rebus3d.slots[slotIndex].mesh;
+        mesh.userData.bump = 1;
+      }
+    }
 
-          <section class="editor-section">
-            <h4 data-i18n="HintImageHeading">Immagine indizio</h4>
-            <div id="editorHintImage" class="slot-editor-list"></div>
-          </section>
+    async function bootRebus3D(keys) {
+      disposeRebus3D(true);
+      const canvas = document.getElementById("rebusCanvas");
+      const viewport = document.getElementById("rebusViewport");
+      if (!canvas || !viewport || !THREE) return;
 
-          <div class="editor-actions">
-            <div id="editorStatus" class="editor-status">I nuovi episodi vengono salvati solo nel browser corrente.</div>
-            <button id="btnSaveStory" class="btn btn-next" type="button" data-i18n="SaveEpisodeButton">Salva episodio</button>
-          </div>
-        </div>
-      </section>
+      const w = viewport.clientWidth || 800;
+      const h = viewport.clientHeight || 400;
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: "high-performance" });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.setSize(w, h, false);
+      renderer.setClearColor(0x000000, 0);
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
 
-      <section id="pickerPanel" class="picker" hidden>
-        <div class="picker-card">
-          <div class="picker-head">
-            <h3 data-i18n="PickImageHeading">Scegli un'immagine</h3>
-            <button id="btnClosePicker" class="btn btn-ghost" type="button" data-i18n="CloseButton">Chiudi</button>
-          </div>
-          <div class="picker-upload">
-            <label class="field field-grow">
-              <span data-i18n="CustomPngNameLabel">Nome PNG custom</span>
-              <input id="assetUploadName" type="text" data-i18n-placeholder="CustomPngNamePlaceholder" placeholder="Es. corona-personalizzata" />
-            </label>
-            <label class="field field-grow">
-              <span data-i18n="CustomPngFileLabel">File PNG custom</span>
-              <input id="assetUploadFile" type="file" accept="image/png" />
-            </label>
-            <button id="btnUploadAsset" class="btn btn-create" type="button" data-i18n="UploadPngButton">Carica PNG</button>
-          </div>
-          <div id="assetUploadStatus" class="upload-status" data-i18n="UploadStatusDefault">I PNG custom saranno condivisi online dopo il deploy Cloudflare con storage configurato.</div>
-          <label class="field">
-            <span data-i18n="SearchAssetLabel">Cerca per chiave PNG</span>
-            <input id="assetSearch" type="text" data-i18n-placeholder="SearchAssetPlaceholder" placeholder="Es. 1F411, boy, crown" />
-          </label>
-          <div id="assetGrid" class="asset-grid"></div>
-        </div>
-      </section>
-    </main>
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(40, w / h, 0.1, 100);
+      camera.position.set(0, 0.15, 6.4);
 
-      <section id="adminPanel" class="admin-panel" hidden>
-        <div class="admin-card">
-          <div class="admin-head">
-            <h3>📊 Pannello Admin</h3>
-            <button id="btnCloseAdmin" class="btn btn-ghost" type="button">Chiudi</button>
-          </div>
-          <div id="adminLoginArea">
-            <label class="field admin-login-field">
-              <span>Password admin (<code>ADMIN_SECRET</code>)</span>
-              <input id="adminSecret" type="password" autocomplete="current-password" />
-            </label>
-            <div class="admin-login-actions">
-              <button id="btnAdminLogin" class="btn btn-reveal" type="button">Accedi</button>
-              <span id="adminError" class="admin-error">Password errata o non configurata</span>
-            </div>
-            <p class="admin-help">Configura <code>ADMIN_SECRET</code> nelle variabili d’ambiente di Cloudflare Pages per abilitare le statistiche.</p>
-          </div>
-          <div id="adminStats" hidden>
-            <div class="admin-stat-grid">
-              <div class="admin-stat">
-                <div class="admin-stat-val" id="statOnline">-</div>
-                <div class="admin-stat-lbl">🟢 Online ora</div>
-              </div>
-              <div class="admin-stat">
-                <div class="admin-stat-val" id="statViews">-</div>
-                <div class="admin-stat-lbl">👁 Visioni totali</div>
-              </div>
-              <div class="admin-stat">
-                <div class="admin-stat-val" id="statCompletions">-</div>
-                <div class="admin-stat-lbl">✅ Completamenti</div>
-              </div>
-              <div class="admin-stat">
-                <div class="admin-stat-val" id="statSessions">-</div>
-                <div class="admin-stat-lbl">👤 Sessioni totali</div>
-              </div>
-            </div>
-            <div class="admin-toolbar">
-              <button id="btnAdminRefresh" class="btn btn-reveal" type="button">🔄 Aggiorna</button>
-              <span id="adminStatusMsg" class="admin-status-msg"></span>
-            </div>
-            <div id="adminOfflineNote" class="admin-offline-note">⚠️ Analytics non disponibili in locale. Configura <code>ADMIN_SECRET</code> e distribuisci su Cloudflare Pages.</div>
-          </div>
-        </div>
-      </section>
+      const ambient = new THREE.AmbientLight(0xffffff, 0.85);
+      const key = new THREE.DirectionalLight(0xffe1a8, 1.25);
+      key.position.set(3, 5, 6);
+      const fill = new THREE.DirectionalLight(0x8ec5ff, 0.65);
+      fill.position.set(-4, -1, 3);
+      const rim = new THREE.DirectionalLight(0xf0c36a, 0.45);
+      rim.position.set(0, 2, -4);
+      scene.add(ambient, key, fill, rim);
 
-    <script src="assets.js"></script>
-    <script src="stories.js"></script>
-    <script type="module" src="app.js"></script>
-  </body>
+      // soft particle dust behind cards
+      const COUNT = 160;
+      const pos = new Float32Array(COUNT * 3);
+      for (let i = 0; i < COUNT; i++) {
+        pos[i * 3] = (Math.random() - 0.5) * 12;
+        pos[i * 3 + 1] = (Math.random() - 0.5) * 6;
+        pos[i * 3 + 2] = -2 - Math.random() * 3;
+      }
+      const pGeo = new THREE.BufferGeometry();
+      pGeo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+      const pMat = new THREE.PointsMaterial({ color: 0xf0c36a, size: 0.045, transparent: true, opacity: 0.55, depthWrite: false });
+      const particles = new THREE.Points(pGeo, pMat);
+      scene.add(particles);
+
+      const group = new THREE.Group();
+      scene.add(group);
+      const loader = new THREE.TextureLoader();
+      const slots = [];
+      const maxAniso = renderer.capabilities.getMaxAnisotropy();
+
+      // 2 rows × 4 columns — larger photorealistic-style plates
+      for (let i = 0; i < 8; i++) {
+        const col = i % 4;
+        const row = Math.floor(i / 4);
+        const x = (col - 1.5) * 2.05;
+        const y = (0.55 - row) * 2.05;
+        const z = Math.cos((col - 1.5) * 0.35) * 0.45;
+        const geo = new THREE.PlaneGeometry(1.85, 1.85, 1, 1);
+        const mat = new THREE.MeshPhysicalMaterial({
+          color: 0xffffff,
+          metalness: 0.08,
+          roughness: 0.28,
+          clearcoat: 0.55,
+          clearcoatRoughness: 0.25,
+          transparent: true,
+          side: THREE.DoubleSide
+        });
+        const mesh = new THREE.Mesh(geo, mat);
+        mesh.position.set(x, y, z);
+        mesh.userData = { index: i, base: mesh.position.clone(), phase: i * 0.7, bump: 0, pop: 0, aniso: maxAniso };
+        const frame = new THREE.Mesh(
+          new THREE.PlaneGeometry(2.02, 2.02),
+          new THREE.MeshBasicMaterial({ color: i === 7 ? 0xb56a00 : 0x3d8fd1, transparent: true, opacity: 0.4, side: THREE.DoubleSide })
+        );
+        frame.position.z = -0.03;
+        mesh.add(frame);
+        mesh.userData.frame = frame;
+        group.add(mesh);
+        slots.push({ mesh, key: keys[i] });
+      }
+
+      rebus3d.running = true;
+      rebus3d.renderer = renderer;
+      rebus3d.scene = scene;
+      rebus3d.camera = camera;
+      rebus3d.group = group;
+      rebus3d.slots = slots;
+      rebus3d.particles = particles;
+      rebus3d.raycaster = new THREE.Raycaster();
+      rebus3d.hintPulseT = 0;
+
+      await Promise.all(slots.map((slot, i) => loadSlotTexture(loader, slot, keys[i])));
+
+      rebus3d.boundClick = (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        const y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+        rebus3d.pointer.x = x;
+        rebus3d.pointer.y = y;
+        rebus3d.raycaster.setFromCamera(rebus3d.pointer, camera);
+        const hits = rebus3d.raycaster.intersectObjects(slots.map((s) => s.mesh), false);
+        if (hits[0]) onRebusSlotClick(hits[0].object.userData.index);
+      };
+      rebus3d.boundMove = (e) => {
+        const rect = canvas.getBoundingClientRect();
+        mouse.tx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        mouse.ty = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+      };
+      rebus3d.boundResize = () => {
+        if (!rebus3d.running || !rebus3d.renderer) return;
+        const ww = viewport.clientWidth || 800;
+        const hh = viewport.clientHeight || 400;
+        camera.aspect = ww / hh;
+        camera.updateProjectionMatrix();
+        renderer.setSize(ww, hh, false);
+      };
+      canvas.addEventListener("pointerdown", rebus3d.boundClick);
+      canvas.addEventListener("pointermove", rebus3d.boundMove, { passive: true });
+      window.addEventListener("resize", rebus3d.boundResize, { passive: true });
+
+      const animate = () => {
+        if (!rebus3d.running) return;
+        rebus3d.raf = requestAnimationFrame(animate);
+        const tNow = performance.now() * 0.001;
+        rebus3d.hintPulseT = tNow;
+        mouse.x += (mouse.tx - mouse.x) * 0.08;
+        mouse.y += (mouse.ty - mouse.y) * 0.08;
+        group.rotation.y = mouse.x * 0.18;
+        group.rotation.x = mouse.y * 0.1;
+        if (particles) particles.rotation.y = tNow * 0.05;
+        slots.forEach((slot) => {
+          const m = slot.mesh;
+          const b = m.userData.base;
+          const float = Math.sin(tNow * 1.2 + m.userData.phase) * 0.08;
+          if (m.userData.bump > 0) m.userData.bump *= 0.88;
+          if (m.userData.pop > 0) m.userData.pop *= 0.9;
+          const popScale = 1 + m.userData.pop * 0.35 + m.userData.bump * 0.12;
+          m.position.x = b.x + mouse.x * 0.15;
+          m.position.y = b.y + float + mouse.y * 0.1;
+          m.position.z = b.z;
+          m.scale.setScalar(popScale);
+          // hint pulse on slot 7
+          if (m.userData.index === 7 && !state.rebus.hintRevealed && m.userData.frame) {
+            const pulse = 0.25 + (Math.sin(tNow * 6) * 0.5 + 0.5) * 0.45;
+            m.userData.frame.material.opacity = pulse;
+            m.userData.frame.material.color.setHex(0xf0c36a);
+          }
+        });
+        camera.position.x += (mouse.x * 0.35 - camera.position.x) * 0.05;
+        camera.position.y += (0.2 + mouse.y * 0.2 - camera.position.y) * 0.05;
+        camera.lookAt(0, 0, 0);
+        renderer.render(scene, camera);
+      };
+      animate();
+    }
+
+    function loadSlotTexture(loader, slot, key) {
+      return new Promise((resolve) => {
+        const url = assetUrl(key);
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.onload = () => {
+          // Upscale to sharper plate (2x canvas) + mild contrast for a richer look
+          const size = 512;
+          const c = document.createElement("canvas");
+          c.width = size;
+          c.height = size;
+          const ctx = c.getContext("2d");
+          ctx.fillStyle = "rgba(12,18,28,0.92)";
+          ctx.fillRect(0, 0, size, size);
+          const pad = 28;
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = "high";
+          ctx.filter = "contrast(1.12) saturate(1.15) brightness(1.04)";
+          ctx.drawImage(img, pad, pad, size - pad * 2, size - pad * 2);
+          ctx.filter = "none";
+          // soft vignette
+          const g = ctx.createRadialGradient(size / 2, size / 2, size * 0.2, size / 2, size / 2, size * 0.72);
+          g.addColorStop(0, "rgba(0,0,0,0)");
+          g.addColorStop(1, "rgba(0,0,0,0.28)");
+          ctx.fillStyle = g;
+          ctx.fillRect(0, 0, size, size);
+          const tex = new THREE.CanvasTexture(c);
+          tex.colorSpace = THREE.SRGBColorSpace;
+          tex.anisotropy = slot.mesh.userData.aniso || 4;
+          tex.minFilter = THREE.LinearMipmapLinearFilter;
+          tex.magFilter = THREE.LinearFilter;
+          tex.needsUpdate = true;
+          if (slot.mesh.material.map) slot.mesh.material.map.dispose();
+          slot.mesh.material.map = tex;
+          slot.mesh.material.needsUpdate = true;
+          slot.key = key;
+          resolve();
+        };
+        img.onerror = () => {
+          if (key !== KEY_UNKNOWN) {
+            loadSlotTexture(loader, slot, KEY_UNKNOWN).then(resolve);
+          } else resolve();
+        };
+        img.src = url;
+      });
+    }
+
+    function updateRebusTextures(keys, popReveal) {
+      if (!rebus3d.running || !THREE) return;
+      const loader = new THREE.TextureLoader();
+      keys.forEach((key, i) => {
+        const slot = rebus3d.slots[i];
+        if (!slot) return;
+        if (slot.key === key) {
+          if (popReveal && (i === 5 || i === 6) && key !== KEY_UNKNOWN) slot.mesh.userData.pop = 1;
+          return;
+        }
+        loadSlotTexture(loader, slot, key).then(() => {
+          if (popReveal && (i === 5 || i === 6)) slot.mesh.userData.pop = 1;
+        });
+      });
+    }
+
+    function disposeRebus3D(cancelRaf = true) {
+      if (cancelRaf && rebus3d.raf) cancelAnimationFrame(rebus3d.raf);
+      rebus3d.raf = 0;
+      const canvas = document.getElementById("rebusCanvas");
+      if (canvas && rebus3d.boundClick) canvas.removeEventListener("pointerdown", rebus3d.boundClick);
+      if (canvas && rebus3d.boundMove) canvas.removeEventListener("pointermove", rebus3d.boundMove);
+      if (rebus3d.boundResize) window.removeEventListener("resize", rebus3d.boundResize);
+      if (rebus3d.renderer) {
+        try { rebus3d.renderer.dispose(); } catch (_) { /* noop */ }
+      }
+      if (rebus3d.slots) {
+        rebus3d.slots.forEach((s) => {
+          if (s.mesh) {
+            s.mesh.geometry?.dispose?.();
+            if (s.mesh.material) {
+              s.mesh.material.map?.dispose?.();
+              s.mesh.material.dispose?.();
+            }
+          }
+        });
+      }
+      rebus3d.running = false;
+      rebus3d.renderer = null;
+      rebus3d.scene = null;
+      rebus3d.camera = null;
+      rebus3d.group = null;
+      rebus3d.slots = [];
+      rebus3d.particles = null;
+      rebus3d.boundClick = null;
+      rebus3d.boundMove = null;
+      rebus3d.boundResize = null;
+    }
+
+    /* ========================================================================
+     * SECTION: THREE.JS HERO — particles + floating solids + mouse parallax
+     * Dynamic import() so CDN/WebGL failure never blocks theater/i18n.
+     * Falls back to 2D canvas on mobile / WebGL failure / reduced motion.
+     * Target: ~60fps via capped DPR + single rAF loop.
+     * ======================================================================== */
+    const canvas = document.getElementById("webglCanvas");
+    const fallbackCanvas = document.getElementById("fallbackCanvas");
+    const mouse = { x: 0, y: 0, tx: 0, ty: 0 };
+    let THREE = null;
+    let renderer, scene, camera, particles, solids, rafId = 0, useFallback = false;
+    const clock = { t: 0 };
+
+    function preferFallback() {
+      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const small = window.matchMedia("(max-width: 720px)").matches;
+      const touch = navigator.maxTouchPoints > 0 && small;
+      const lowMem = navigator.deviceMemory && navigator.deviceMemory <= 4;
+      const noWebGL = !detectWebGL();
+      return reduced || touch || lowMem || noWebGL;
+    }
+
+    function detectWebGL() {
+      try {
+        const c = document.createElement("canvas");
+        return !!(c.getContext("webgl") || c.getContext("experimental-webgl"));
+      } catch {
+        return false;
+      }
+    }
+
+    async function initHero() {
+      useFallback = preferFallback();
+      if (useFallback) {
+        document.body.classList.add("fallback-3d");
+        initFallback2D();
+        return;
+      }
+      try {
+        THREE = await import("three");
+        initThree();
+      } catch (err) {
+        console.warn("[immersive] Three.js/WebGL init failed, using fallback", err);
+        document.body.classList.add("fallback-3d");
+        useFallback = true;
+        initFallback2D();
+      }
+    }
+
+    function initThree() {
+      const w = canvas.clientWidth || window.innerWidth;
+      const h = canvas.clientHeight || window.innerHeight;
+      renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: true, powerPreference: "high-performance" });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
+      renderer.setSize(w, h, false);
+      renderer.setClearColor(0x000000, 0);
+
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(55, w / h, 0.1, 100);
+      camera.position.z = 8;
+
+      // Particles
+      const COUNT = h < 700 ? 450 : 900;
+      const positions = new Float32Array(COUNT * 3);
+      const speeds = new Float32Array(COUNT);
+      for (let i = 0; i < COUNT; i++) {
+        positions[i * 3] = (Math.random() - 0.5) * 16;
+        positions[i * 3 + 1] = (Math.random() - 0.5) * 10;
+        positions[i * 3 + 2] = (Math.random() - 0.5) * 8;
+        speeds[i] = 0.15 + Math.random() * 0.45;
+      }
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+      geo.userData.speeds = speeds;
+      const mat = new THREE.PointsMaterial({
+        color: 0xf0c36a,
+        size: 0.035,
+        transparent: true,
+        opacity: 0.85,
+        depthWrite: false,
+        sizeAttenuation: true
+      });
+      particles = new THREE.Points(geo, mat);
+      scene.add(particles);
+
+      // Floating solids
+      solids = new THREE.Group();
+      const shapes = [
+        new THREE.IcosahedronGeometry(0.55, 0),
+        new THREE.OctahedronGeometry(0.5, 0),
+        new THREE.TetrahedronGeometry(0.6, 0),
+        new THREE.TorusGeometry(0.35, 0.12, 8, 24)
+      ];
+      const colors = [0x3d8fd1, 0xf0c36a, 0x9bb0c9, 0xd4a24a];
+      shapes.forEach((g, i) => {
+        const m = new THREE.Mesh(
+          g,
+          new THREE.MeshStandardMaterial({
+            color: colors[i],
+            metalness: 0.35,
+            roughness: 0.35,
+            transparent: true,
+            opacity: 0.85
+          })
+        );
+        m.position.set((i - 1.5) * 1.8, (i % 2 === 0 ? 0.8 : -0.6), -1 + i * 0.2);
+        m.userData.base = m.position.clone();
+        m.userData.phase = i * 1.3;
+        solids.add(m);
+      });
+      scene.add(solids);
+
+      const ambient = new THREE.AmbientLight(0xffffff, 0.55);
+      const key = new THREE.DirectionalLight(0xf0c36a, 1.1);
+      key.position.set(4, 6, 8);
+      const fill = new THREE.DirectionalLight(0x3d8fd1, 0.55);
+      fill.position.set(-5, -2, 4);
+      scene.add(ambient, key, fill);
+
+      window.addEventListener("pointermove", onPointerMove, { passive: true });
+      window.addEventListener("resize", onResize, { passive: true });
+      animateThree();
+    }
+
+    function onPointerMove(e) {
+      mouse.tx = (e.clientX / window.innerWidth) * 2 - 1;
+      mouse.ty = -(e.clientY / window.innerHeight) * 2 + 1;
+    }
+
+    function onResize() {
+      if (useFallback || !renderer) return;
+      const w = canvas.clientWidth || window.innerWidth;
+      const h = canvas.clientHeight || window.innerHeight;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
+      renderer.setSize(w, h, false);
+    }
+
+    function animateThree() {
+      rafId = requestAnimationFrame(animateThree);
+      clock.t += 0.016;
+      mouse.x += (mouse.tx - mouse.x) * 0.06;
+      mouse.y += (mouse.ty - mouse.y) * 0.06;
+
+      const pos = particles.geometry.attributes.position;
+      const speeds = particles.geometry.userData.speeds;
+      for (let i = 0; i < pos.count; i++) {
+        let y = pos.getY(i) + speeds[i] * 0.01;
+        if (y > 5) y = -5;
+        pos.setY(i, y);
+      }
+      pos.needsUpdate = true;
+      particles.rotation.y = clock.t * 0.04 + mouse.x * 0.15;
+      particles.rotation.x = mouse.y * 0.08;
+
+      solids.children.forEach((mesh, i) => {
+        const b = mesh.userData.base;
+        mesh.position.x = b.x + mouse.x * (0.6 + i * 0.15);
+        mesh.position.y = b.y + Math.sin(clock.t * 0.9 + mesh.userData.phase) * 0.25 + mouse.y * 0.35;
+        mesh.rotation.x += 0.004 + i * 0.001;
+        mesh.rotation.y += 0.006;
+      });
+      camera.position.x += (mouse.x * 0.4 - camera.position.x) * 0.04;
+      camera.position.y += (mouse.y * 0.25 - camera.position.y) * 0.04;
+      camera.lookAt(0, 0, 0);
+      renderer.render(scene, camera);
+    }
+
+    /* ========== 2D FALLBACK — lightweight particles for mobile ========== */
+    let fbCtx, fbParticles = [], fbRaf = 0;
+
+    function initFallback2D() {
+      const resize = () => {
+        const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+        fallbackCanvas.width = (fallbackCanvas.clientWidth || window.innerWidth) * dpr;
+        fallbackCanvas.height = (fallbackCanvas.clientHeight || window.innerHeight) * dpr;
+        fbCtx = fallbackCanvas.getContext("2d");
+        fbCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      };
+      resize();
+      window.addEventListener("resize", resize, { passive: true });
+      window.addEventListener("pointermove", onPointerMove, { passive: true });
+      const n = 48;
+      fbParticles = Array.from({ length: n }, () => ({
+        x: Math.random(),
+        y: Math.random(),
+        r: 1 + Math.random() * 2.2,
+        s: 0.08 + Math.random() * 0.25
+      }));
+      const loop = () => {
+        fbRaf = requestAnimationFrame(loop);
+        mouse.x += (mouse.tx - mouse.x) * 0.08;
+        mouse.y += (mouse.ty - mouse.y) * 0.08;
+        const w = fallbackCanvas.clientWidth || window.innerWidth;
+        const h = fallbackCanvas.clientHeight || window.innerHeight;
+        fbCtx.clearRect(0, 0, w, h);
+        const g = fbCtx.createRadialGradient(w * 0.7, h * 0.2, 0, w * 0.7, h * 0.2, w * 0.6);
+        g.addColorStop(0, "rgba(61,143,209,0.16)");
+        g.addColorStop(1, "rgba(0,0,0,0)");
+        fbCtx.fillStyle = g;
+        fbCtx.fillRect(0, 0, w, h);
+        fbParticles.forEach((p) => {
+          p.y -= p.s * 0.002;
+          if (p.y < 0) p.y = 1;
+          const px = p.x * w + mouse.x * 18;
+          const py = p.y * h + mouse.y * 10;
+          fbCtx.beginPath();
+          fbCtx.fillStyle = "rgba(240,195,106,0.75)";
+          fbCtx.arc(px, py, p.r, 0, Math.PI * 2);
+          fbCtx.fill();
+        });
+        // simple floating diamonds
+        for (let i = 0; i < 4; i++) {
+          const x = w * (0.2 + i * 0.18) + mouse.x * (20 + i * 8);
+          const y = h * 0.45 + Math.sin(performance.now() * 0.001 + i) * 18 + mouse.y * 12;
+          fbCtx.save();
+          fbCtx.translate(x, y);
+          fbCtx.rotate(performance.now() * 0.0004 + i);
+          fbCtx.strokeStyle = i % 2 ? "rgba(61,143,209,0.7)" : "rgba(240,195,106,0.7)";
+          fbCtx.lineWidth = 1.5;
+          fbCtx.strokeRect(-16, -16, 32, 32);
+          fbCtx.restore();
+        }
+      };
+      loop();
+    }
+
+    /* ========================================================================
+     * SECTION: WIRE UI EVENTS
+     * ======================================================================== */
+    const langSelect = document.getElementById("langSelect");
+    langSelect.innerHTML = `
+      <option value="it">Italiano</option>
+      <option value="en">English</option>
+    `;
+    langSelect.value = lang;
+    langSelect.addEventListener("change", () => {
+      lang = langSelect.value;
+      localStorage.setItem(LANG_STORAGE_KEY, lang);
+      applyI18n();
+    });
+
+    document.getElementById("btnStartStories").addEventListener("click", () => {
+      document.getElementById("stories").scrollIntoView({ behavior: "smooth" });
+    });
+    document.getElementById("btnHeroPlay").addEventListener("click", () => openTheater(0));
+    document.getElementById("btnCloseTheater").addEventListener("click", closeTheater);
+    document.getElementById("btnSound").addEventListener("click", toggleSound);
+    btnTheaterNext.addEventListener("click", nextStep);
+    btnTheaterBack.addEventListener("click", prevStep);
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && theater.classList.contains("is-open")) closeTheater();
+    });
+
+    // Unlock audio on first gesture (browser autoplay policy)
+    ["pointerdown", "keydown"].forEach((evt) => {
+      window.addEventListener(evt, () => { if (state.soundOn) audio.ensure(); }, { once: true, passive: true });
+    });
+
+    applyI18n();
+    observeReveals();
+    initHero();
+  </script>
+</body>
 </html>

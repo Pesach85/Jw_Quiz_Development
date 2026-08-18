@@ -9,7 +9,7 @@ description: "Workflow skill for JW Quiz agent: KB read/update protocol, git com
 
 Prima di qualsiasi azione tecnica, eseguire in ordine:
 
-1. **Leggi la KB**: `read_file(".github/KB.md")` — sezione per sezione
+1. **Leggi la KB**: `read_file(".github/KB.md")` e `docs/AGENTS.md`
 2. **Verifica stato git**: `git status --short` — deve essere `0` file non tracciati
 3. **Identifica vincoli tecnici**: sezione "8. Convoluzioni/Vincoli Tecnici Noti" della KB
 4. **Consulta Next Best Decisions**: sezione "11. Next Best Decisions" per priorità attive

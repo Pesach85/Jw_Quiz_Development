@@ -168,6 +168,12 @@ body {
   transition: transform 0.15s ease, filter 0.15s ease, opacity 0.15s ease;
 }
 
+a.btn {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
 .btn:disabled {
   opacity: 0.42;
   cursor: not-allowed;

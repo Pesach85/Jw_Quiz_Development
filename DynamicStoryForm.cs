@@ -106,7 +106,7 @@ namespace Jw_Quiz_Development
             var imagePanel = new Panel
             {
                 Dock = DockStyle.Top,
-                Height = 300,
+                Height = 410,
                 BackColor = Color.FromArgb(22, 35, 56)
             };
             Controls.Add(imagePanel);
@@ -131,8 +131,8 @@ namespace Jw_Quiz_Development
             {
                 var pb = new PictureBox
                 {
-                    Width = 110,
-                    Height = 110,
+                    Width = 150,
+                    Height = 150,
                     SizeMode = PictureBoxSizeMode.Zoom,
                     BackColor = Color.FromArgb(34, 52, 77),
                     BorderStyle = BorderStyle.FixedSingle,
@@ -141,8 +141,8 @@ namespace Jw_Quiz_Development
 
                 int row = i / 4;
                 int col = i % 4;
-                pb.Left = 95 + col * 210;
-                pb.Top = 58 + row * 120;
+                pb.Left = 40 + col * 190;
+                pb.Top = 58 + row * 170;
 
                 int capturedIndex = i;
                 pb.Click += (s, e) => ShowCaption(capturedIndex);

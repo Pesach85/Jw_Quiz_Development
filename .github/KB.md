@@ -16,7 +16,8 @@
 | Build command | `.\build.bat` oppure `MSBuild Jw_Quiz_Development.csproj /p:Configuration=Debug` |
 | Output | `bin\Debug\Jw_Quiz_Development.exe` |
 | Controllo versione | Git ÔÇö branch `main` |
-| Lingua UI | Italiano + English (motore multilanguage desktop + web shared) |
+| Lingua UI | Italiano + English (motore multilanguage desktop + web shared + immersive.html it/en) |
+| Web Immersive | `webapp/immersive.html` — Three.js 0.160 CDN (import map), fallback 2D, theater Q&A |
 
 ---
 
@@ -40,13 +41,21 @@
 | `StoryTranslationEngine.cs` | Traduttore rule-based it/en, sostituibile con provider futuro |
 | `ProgressTracker.cs` | XP, badge, persistenza su `UserProgress.dat` |
 | `ProgressPanel.cs` | UI pannello progresso |
-| `Resources/` | PNG colorati (~100 file) usati come simboli nel rebus |
+| `Resources/` | PNG rebus (ora pack **fotorealistico** sync da `tools/photo_masters`) |
+| `tools/photo_concepts.py` | Mappa concept→prompt→alias chiavi rebus |
+| `tools/photo_masters/` | Master PNG fotorealistici (73 concept) |
+| `tools/apply_photo_assets.py` | Applica masters → Resources + webapp/assets (+ android) |
+| `tools/sync_android_www.py` | Copia `webapp/` → `android/.../assets/www` |
+| `android/` | App Android WebView (shell immersiva offline-capable) |
+| `.cursor/mcp.json` | MCP Cloudflare (docs/bindings/builds/observability) |
 | `Properties/Resources.Designer.cs` | Accesso fortemente tipizzato alle risorse |
-| `webapp/index.html` | Shell UI web con gameplay + editor locale episodi |
-| `webapp/app.js` | Logica gameplay web, fallback locale, integrazione API Cloudflare per storie condivise e PNG custom |
+| `webapp/index.html` | **Entry principale** — esperienza immersiva (3 modalità: Quiz / Rebus 3D / Avventura), Three.js, audio |
+| `webapp/immersive.html` | Redirect → `/` (alias legacy bookmark) |
+| `webapp/classic.html` | Editor episodi + admin analytics + rebus flat legacy (mantenuto per tooling) |
+| `webapp/app.js` | Logica gameplay web classic, fallback locale, integrazione API Cloudflare |
 | `webapp/story-i18n.js` | Motore shared i18n web/API: UI text, lingua corrente, auto-traduzione it/en e normalizzazione `sourceLanguage/translations` |
 | `webapp/assets.js` | Manifest JS delle chiavi PNG disponibili nel picker immagini web |
-| `webapp/stories.js` | Dataset storie dinamiche per la versione web |
+| `webapp/stories.js` | Dataset storie dinamiche per la versione web (rebus classico) |
 | `webapp/styles.css` | Tema visuale web responsive |
 | `webapp/assets/*.png` | Asset PNG deployati per gioco e editor web |
 | `functions/api/stories.js` | API Cloudflare Pages Functions per leggere/salvare episodi condivisi |
@@ -272,29 +281,165 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-04-22 | **Unificazione architettura runtime legacy completata**: `Forms_list` ora instrada le storie 1ÔÇô12 direttamente su `DynamicStoryForm`, rimosso fallback statico dal path principale e dismesso `AppFeatureFlags` di rollout | ✅ Implementato e validato (build 0 regressioni) |
 | 2026-04-22 | **Fix webapp pannello admin**: risolto overlay visibile all'avvio (`[hidden]` ora rispettato), corretto flusso apertura solo su click del pulsante "Login" in alto a destra, chiusura robusta con bottone/overlay/Escape | ✅ Implementato |
 | 2026-04-22 | **Deep cleanup legacy completato**: rimossi definitivamente i file `Form2`ÔÇô`Form13` (code-behind, Designer, resx) e `LegacyHintAnimator`; validato che il runtime resta interamente su `DynamicStoryForm` | ✅ Implementato e validato (build 0 regressioni) |
+| 2026-07-19 | **Executive plan Immersive 3D**: landing SaaS + hero particelle Three.js + theater Q&A animato per tutte le 18 storie; file singolo CDN-only; i18n IT full + EN; zero regressioni sul rebus web/desktop | ✅ Validato e implementato |
+| 2026-07-19 | **No-regression boundary**: `webapp/immersive.html` è additivo; `index.html` solo link + chiavi i18n; nessun tocco a `app.js` / gameplay rebus / WinForms | ✅ Validato |
+| 2026-07-19 | **Mobile fallback 3D**: WebGL disabilitato su touch stretto / reduced-motion / low memory / failure → canvas 2D leggero 60fps-friendly | ✅ Implementato |
+| 2026-07-19 | **Rebus 3D immersivo**: theater esteso a Intro → Rebus 3D (PNG fluttuanti Three.js + raycast) → Quiz → Morale; riusa `stories.js` + `assets/*.png`; fallback CSS cards; anti-spoiler titolo fino a soluzione; Continua gated da reveal soluzione | ✅ Implementato |
+| 2026-07-21 | **3 modalità selezionabili**: `quiz` / `rebus` / `journey` (persistenza localStorage); entry point principale = `index.html` immersivo; editor/admin spostato in `classic.html` | ✅ Implementato |
+| 2026-07-21 | **Audio + resa immagini**: Web Audio SFX/ambient; plate 3D più grandi + CanvasTexture upscale 512px; backdrop `theater-atmosphere.png`; fix 404 favicon (`favicon.svg`) | ✅ Implementato |
+| 2026-07-21 | **Pack fotorealistico**: 73 concept masters → alias su 87 chiavi rebus; applicato a `Resources/`, `webapp/assets/`, Android `assets/www`; slot desktop 150×150 | ✅ Implementato |
+| 2026-07-21 | **Android shell**: progetto WebView `android/` + `tools/sync_android_www.py` per pacchettizzare l’esperienza immersiva | ✅ Implementato |
+| 2026-07-21 | **Cloudflare Agent Setup**: skills globali `cloudflare/skills` + MCP in `.cursor/mcp.json` (cloudflare, docs, bindings, builds, observability) | ✅ Configurato (richiede restart agent) |
+| 2026-08-18 | **Prodotto unico**: docs ARCHITECTURE/AGENTS; pipeline `tools/sync_all.py`; Android www e photo_masters gitignored; HUD progresso web; loop pedagogico curiosità→sfida→recupero→senso; ponte desktop→web; 3 modalità restano selezionabili | ✅ Implementato |
 ---
 
 ## 11. Next Best Decisions (Proposte Attive)
 
 Aggiornare questa sezione ad ogni sessione di lavoro.
 
-| Priorit├á | Area | Proposta |
+| Priorità | Area | Proposta |
 |---------|------|---------|
-| Alta | Web | ~~Migrare anche storie statiche 1-12 nel renderer web unificato~~ Ô£à **COMPLETATO** |
-| Alta | Gamification | ~~**Sistema a Stelle** (1-3 per storia): 3=nessun aiuto, 2=1 aiuto, 1=tutti aiuti — visual memorabile per proiezione~~ ✅ **COMPLETATO** |
-| Alta | Content | ~~Aggiungere ImageCaptions[] anche alle storie statiche id 1-12 (attualmente solo ID 13-18)~~ Ô£à **COMPLETATO** |
+| Alta | Web Immersive | ~~Landing 3D + theater Q&A episodi 1–18 (single HTML CDN)~~ ✅ **COMPLETATO** (`webapp/immersive.html`) |
 | Alta | Multilanguage | Rifinire QA linguistico delle storie 1-12 ora renderizzate nel runtime dinamico |
-| Alta | Architettura | ~~Piano 3 fasi unificazione legacy: ✅ F1, F2, F3 completate. Rifinitura residua: cleanup tecnico graduale dei code-behind legacy non piu' in path runtime principale~~ ✅ **COMPLETATO** (runtime 1-12 unificato su `DynamicStoryForm`) |
 | Alta | Webapp | Configurare `ADMIN_SECRET` nelle env var di Cloudflare Pages → Settings → Environment Variables per attivare il pannello admin statistiche |
+| Alta | Immersive | ~~Pack fotorealistico rebus (concept→alias) + sync web/desktop/Android~~ ✅ **COMPLETATO** |
+| Alta | Docs | ~~Unificare documentazione human/agent + pipeline sync~~ ✅ **COMPLETATO** (`docs/`, `tools/sync_all.py`) |
+| Alta | Android | Aprire `android/` in Android Studio **dopo** `python tools/sync_all.py`, generare Gradle Wrapper, smoke test APK |
+| Alta | Cloudflare | Dopo restart agent: OAuth MCP Cloudflare al primo tool use; deploy Pages con wrangler |
+| Media | Immersive | Unificare dataset Q&A immersivo con `stories.js` (source unica) — oggi Q&A vive in `webapp/index.html` |
 | Media | Multilanguage | Rifinire il glossario rule-based it/en del motore shared web/desktop con review manuale delle traduzioni bibliche piu' lunghe |
+| Media | Immersive | Aggiungere FR/ES come terze lingue riusando lo stesso schema `{ it, en, … }` |
 | Media | Gamification | **Streak + Badge**: N storie consecutive senza hint = badge "Saggio/Profeta/Apostolo" |
 | Media | Gamification | **Classifica sessione locale**: 2-8 partecipanti inseriscono nome, XP aggregati, classifica finale |
 | Media | Gamification | **Percorsi Tematici**: raccolte storie per tema (Fede/Amore/Coraggio) con barra progresso sbloccabile |
 | Media | UX | ProgressPanel: aggiungere grafico barre XP e lista storie completate |
-| Media | Content | Aggiungere storia ID 19+ (es. La Torre di Babele, Marta e Maria, Saul ÔåÆ Paolo) |
+| Media | Content | Aggiungere storia ID 19+ (es. La Torre di Babele, Marta e Maria, Saul → Paolo) anche nel theater immersivo |
 | Bassa | Gamification | **Timer di indovinamento**: 60s opzionale, bonus XP se risposta entro scadenza |
-| Bassa | Gamification | **Modalit├á Riflessione**: dopo soluzione, domanda aperta da leggere al gruppo |
+| Bassa | Gamification | **Modalità Riflessione**: dopo soluzione, domanda aperta da leggere al gruppo |
 | Bassa | Gamification | **Storia del Giorno**: selezione automatica basata sulla data del calendario |
 | Bassa | Tecnica | Sostituire BinaryFormatter con `System.Text.Json` + file JSON per persistenza |
 | Bassa | UX grafiche | Hero image per ogni storia (immagine panoramica nell'header) |
 | Bassa | Distribuzione | Build script Release + copia automatica in cartella distribuzione |
+
+---
+
+## 15. Prodotto organico (2026-08-18)
+
+Un solo loop di apprendimento su tre superfici:
+
+- **Web** `index.html` = giocatore (Quiz / Rebus 3D / Avventura)
+- **Web** `classic.html` = editor/admin
+- **Desktop** = rebus proiezione + menu “Apri JW Quiz Web”
+- **Android** = WebView del webapp (bundle generato)
+
+Comando unico: `python tools/sync_all.py`. Dettaglio: `docs/ARCHITECTURE.md`.
+
+
+### Obiettivo
+Offrire una landing SaaS immersiva (Three.js/WebGL) e un “theater” videogioco educativo Q&A ispirato a [Fai vivere il racconto!](https://www.jw.org/it/cosa-dice-la-Bibbia/ragazzi/fai-vivere-il-racconto/), senza regressioni sul rebus classico (web + WinForms).
+
+### Decisioni architetturali (valutate)
+
+| Opzione | Pro | Contro | Esito |
+|---------|-----|--------|-------|
+| A. Sostituire `index.html` con single-file 3D | Un solo entry | Rompe editor, API, rebus, analytics | ❌ Scartata (regressione) |
+| B. File additivo `immersive.html` CDN-only + link da rebus | Zero regressioni; deploy Cloudflare automatico (`pages_build_output_dir=webapp`) | Duplicazione contenuti Q&A vs `stories.js` | ✅ **Scelta** |
+| C. Modulo npm/bundler Three.js | Tree-shake, TS | Fuori dal vincolo “CDN only / single HTML” | ❌ Fuori scope richiesta |
+
+### Flusso utente (no spoiler sul rebus)
+1. Landing hero 3D (particelle + solidi fluttuanti, parallax mouse)
+2. Scroll reveal “Come funziona” + griglia episodi 1–18
+3. Theater: **Intro → Rebus 3D (reveal/hint/soluzione) → Quiz MCQ → Insegnamento morale**
+4. Rebus 3D carica chiavi PNG da `window.JW_STORIES` (`stories.js`) e texture da `assets/<key>.png`
+5. CTA “Apri rebus classico” → `index.html` (gameplay esistente invariato)
+6. Selettore lingua IT/EN (persistenza `localStorage` chiave `jwquiz_immersive_lang_v1`)
+
+### Performance (target 60fps)
+- DPR capped a 1.75; antialias off; `powerPreference: high-performance`
+- Particle count adattivo (~450 mobile-tall / ~900 desktop)
+- Un solo `requestAnimationFrame`; lerp mouse; `will-change` solo su simboli theater
+- Fallback 2D se: `prefers-reduced-motion`, touch+viewport stretto, `deviceMemory<=4`, WebGL assente/fail
+
+### Multilanguage
+- IT = source of truth (UI + tutte le 18 storie, 2 domande ciascuna, morale, citazione)
+- EN = traduzione completa parallela nello stesso file
+- Rebus web: nuove chiavi `ImmersiveExperienceButton` / `ImmersiveExperienceTitle` in `story-i18n.js`
+
+### Customization map (commenti sezione in `immersive.html`)
+1. Theme tokens CSS (`:root`)
+2. I18N `UI.it` / `UI.en`
+3. Story data `STORIES` (Q&A)
+4. Three.js hero init / particle counts
+5. Theater game loop
+6. Fallback 2D
+
+### Disclaimer contenuti
+L’esperienza è **ispirata** allo stile didattico JW.org “Fai vivere il racconto!” (immergersi, riflettere, imparare). Non è un prodotto ufficiale Watch Tower. Link ufficiale in footer.
+
+---
+
+## 13. Troubles & Solutions — Immersive / Web 3D (manutenibilità human+agent)
+
+| Trouble | Sintomo | Soluzione / Guardrail |
+|---------|---------|------------------------|
+| Regressione rebus | Editor/API/slot break dopo landing 3D | **Mai** fondere gameplay in `immersive.html`; modifiche a `app.js` solo se esplicitamente richieste |
+| WebGL crash mobile | Schermo nero / tab kill | `preferFallback()` + try/catch su `initThree()` → canvas 2D |
+| 60fps drop | Frame stutter su laptop integrati | Ridurre `COUNT` particelle; abbassare DPR; disabilitare solids su low-end (estensione futura) |
+| Import map CDN down | Console: failed to resolve `three` | Pin `three@0.160.0` su unpkg; **dynamic `import("three")`** dentro try/catch così theater/i18n restano usabili anche se CDN/WebGL falliscono |
+| Spoiler titoli in rebus | Titolo storia in dropdown | Immersive può mostrare titoli (modalità diversa); rebus resta anti-spoiler |
+| Drift contenuti 1–18 | Q&A immersivo ≠ testi rebus | Documentare in Next Best: unificare dataset; finché single-file, sync manuale ID/titolo/tema |
+| Encoding KB | Caratteri `ÔÇö` / mojibake in KB | Scrivere nuovi aggiornamenti in UTF-8 puro; evitare copy da terminal legacy |
+| i18n link rebus | Bottone “Esperienza 3D” non traduce | Usare `data-i18n` + chiavi in `WEB_TEXT` Italian/English |
+| Accessibilità motion | Vertigini / reduced motion | Media query `prefers-reduced-motion` + fallback 2D |
+| Deploy path | File non online | Deve stare sotto `webapp/` perché `wrangler.toml` → `pages_build_output_dir = "webapp"` |
+| Rebus 3D senza texture | Plane bianchi / ❓ | Verificare `stories.js` caricato prima del module e PNG in `webapp/assets/`; onerror → `2753.png` |
+| Memory leak theater | Tab rallenta dopo molti episodi | `disposeRebus3D()` su close/prev/next fuori dal rebus: dispose geometry/material/map + cancel rAF |
+| Spoiler titolo in intro | Titolo storia prima del rebus | Intro mostra solo `guessStory` + tema; titolo appare in soluzione rebus e atto morale |
+
+### Checklist regressione (sessione Immersive)
+- [ ] `webapp/app.js` invariato (o solo cambi deliberati)
+- [ ] Rebus classic in `classic.html`: reveal/hint/solution/stelle ancora OK
+- [ ] 3 modalità selezionabili e indipendenti (`quiz` / `rebus` / `journey`)
+- [ ] Theater apre episodi 1–18; Continua bloccato fino a risposta in quiz / soluzione in rebus
+- [ ] IT/EN switch aggiorna UI + testi storie
+- [ ] Mobile: body ha classe `fallback-3d` oppure WebGL stabile
+- [ ] Favicon presente (`favicon.svg`) — evita 404 `/favicon.ico`
+- [ ] KB sezioni 10/11/12/13 aggiornate
+
+---
+
+## 14. Deploy Cloudflare Pages → https://jwquiz.pages.dev/
+
+### Cosa viene pubblicato
+`wrangler.toml` → `pages_build_output_dir = "webapp"`. Quindi `/` serve `webapp/index.html` (immersivo).
+
+| URL | Contenuto |
+|-----|-----------|
+| `/` | Immersive 3 modalità |
+| `/classic.html` | Editor + admin + rebus flat |
+| `/assets/*` | PNG + atmosphere |
+
+### Comandi (dal root repo)
+
+```powershell
+# Preview locale (già validata)
+cd webapp
+python -m http.server 8080
+
+# Deploy produzione (richiede wrangler login / token Cloudflare)
+cd ..
+npx wrangler pages deploy webapp --project-name=jwquiz
+```
+
+### Checklist pre-deploy
+1. `webapp/index.html` = esperienza immersiva
+2. `webapp/classic.html` raggiungibile per editor
+3. `webapp/assets/theater-atmosphere.png` presente (~2 MB)
+4. Binding KV `JWQUIZ_DATA` + R2 `JWQUIZ_UPLOADS` già in Pages (per classic editor shared)
+5. Opzionale: `ADMIN_SECRET` in Environment Variables
+
+### Post-deploy smoke
+- Apri https://jwquiz.pages.dev/ → mode switch Quiz/Rebus/Avventura
+- Apri un episodio Rebus 3D → texture PNG caricano
+- https://jwquiz.pages.dev/classic.html → editor OK
+- Nessun 404 su `/favicon.svg` |

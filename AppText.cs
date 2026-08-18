@@ -74,7 +74,8 @@ namespace Jw_Quiz_Development
             { "DefaultHint", "Indizio non disponibile" },
             { "DefaultSolution", "Soluzione non disponibile" },
             { "DefaultNote", "Nota non disponibile" },
-            { "SaveStoryMessage", "Storia salvata con ID {0}." }
+            { "SaveStoryMessage", "Storia salvata con ID {0}." },
+            { "OpenWebImmersive", "Apri JW Quiz Web (3 modalità)" }
         };
 
         private static readonly Dictionary<string, string> English = new Dictionary<string, string>
@@ -147,7 +148,8 @@ namespace Jw_Quiz_Development
             { "DefaultHint", "Hint not available" },
             { "DefaultSolution", "Solution not available" },
             { "DefaultNote", "Note not available" },
-            { "SaveStoryMessage", "Story saved with ID {0}." }
+            { "SaveStoryMessage", "Story saved with ID {0}." },
+            { "OpenWebImmersive", "Open JW Quiz Web (3 modes)" }
         };
 
         public static string Get(string key)

@@ -20,6 +20,7 @@ namespace Jw_Quiz_Development
         private ToolStripMenuItem linguaMenuItem;
         private ToolStripMenuItem italianoMenuItem;
         private ToolStripMenuItem englishMenuItem;
+        private ToolStripMenuItem openWebMenuItem;
 
         public Form1()
         {
@@ -49,6 +50,7 @@ namespace Jw_Quiz_Development
 
             BuildDynamicMenus();
             BuildLanguageMenu();
+            BuildWebBridgeMenu();
             ApplyLocalization();
             RefreshUserStoriesMenu();
         }
@@ -69,6 +71,28 @@ namespace Jw_Quiz_Development
             linguaMenuItem.DropDownItems.Add(englishMenuItem);
             impostazioniToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
             impostazioniToolStripMenuItem.DropDownItems.Add(linguaMenuItem);
+        }
+
+        private void BuildWebBridgeMenu()
+        {
+            if (openWebMenuItem != null)
+                return;
+
+            openWebMenuItem = new ToolStripMenuItem();
+            openWebMenuItem.Click += OpenWebImmersive_Click;
+            guidaToolStripMenuItem.DropDownItems.Insert(0, openWebMenuItem);
+        }
+
+        private void OpenWebImmersive_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                System.Diagnostics.Process.Start("https://jwquiz.pages.dev/");
+            }
+            catch
+            {
+                System.Windows.Forms.MessageBox.Show("https://jwquiz.pages.dev/");
+            }
         }
 
         private void ApplyLocalization()
@@ -103,6 +127,8 @@ namespace Jw_Quiz_Development
             linguaMenuItem.Text = AppText.Get("Language");
             italianoMenuItem.Text = AppText.Get("Italian");
             englishMenuItem.Text = AppText.Get("English");
+            if (openWebMenuItem != null)
+                openWebMenuItem.Text = AppText.Get("OpenWebImmersive");
             italianoMenuItem.Checked = LanguageManager.CurrentLanguage == AppLanguage.Italian;
             englishMenuItem.Checked = LanguageManager.CurrentLanguage == AppLanguage.English;
 

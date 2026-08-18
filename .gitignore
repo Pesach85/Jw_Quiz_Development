@@ -14,3 +14,13 @@ publish.htm
 app.publish/
 .wrangler/
 .dev.vars
+.DS_Store
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/app/src/main/assets/www/**
+!android/app/src/main/assets/www/.gitkeep
+tools/photo_masters/*.png
+tools/__pycache__/
+__pycache__/

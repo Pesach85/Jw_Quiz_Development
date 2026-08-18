@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JW Quiz — Editor / Admin</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bree+Serif&family=Nunito+Sans:wght@400;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="topbar">
+        <h1 class="brand">JW Quiz Editor</h1>
+        <div class="controls">
+          <a class="btn btn-create" href="index.html" data-i18n="ImmersiveExperienceButton" data-i18n-title="ImmersiveExperienceTitle" title="Esperienza immersiva">Esperienza Immersiva</a>
+          <select id="languageSelect" class="select" title="Lingua"></select>
+          <select id="storySelect" class="select" data-i18n-title="StorySelectTitle" title="Seleziona episodio"></select>
+          <button id="btnCreateStory" class="btn btn-create" type="button" data-i18n="CreateEpisodeButton">Crea episodio</button>
+          <div id="onlineBadge" class="online-badge" hidden><span class="online-dot"></span><span id="onlineCount">1</span>&nbsp;online</div>
+          <button id="btnAdmin" class="btn btn-ghost" type="button" title="Login Admin" aria-label="Login Admin">Login</button>
+          <div class="xp-box"><span data-i18n="TotalXpLabel">XP Totali</span>: <span id="xpValue">0</span></div>
+        </div>
+      </section>
+
+      <section class="header">
+        <h2 id="storyTitle" class="story-title"></h2>
+        <div id="storyRef" class="story-ref"></div>
+        <div class="header-meta">
+          <span><span data-i18n="ExpectedXpLabel">XP Previsti</span>: <strong id="xpExpected">100</strong></span>
+          <span id="starsBox" class="stars-box" title="Stelle ottenute">★★★</span>
+        </div>
+      </section>
+
+      <section id="caption" class="caption"></section>
+
+      <section id="slots" class="slots"></section>
+
+      <section class="actions">
+        <button id="btnReveal" class="btn btn-reveal" type="button" data-i18n="RevealTwoImagesButton">Rivela 2 immagini</button>
+        <button id="btnHint" class="btn btn-hint" type="button" data-i18n="ShowHintButton">Mostra indizio</button>
+        <button id="btnSolution" class="btn btn-solution" type="button" data-i18n="RevealSolutionButton">Rivela soluzione</button>
+        <button id="btnNext" class="btn btn-next" type="button" data-i18n="NextStoryButton">Prossima storia</button>
+      </section>
+
+      <section id="solutionPanel" class="solution" hidden>
+        <h3 data-i18n="SolutionHeading">Soluzione</h3>
+        <p id="solutionText"></p>
+        <p id="scriptureQuote"></p>
+        <p><strong data-i18n="NoteLabel">Nota:</strong> <span id="engagementNote"></span></p>
+      </section>
+
+      <section id="editorPanel" class="editor" hidden>
+        <div class="editor-card">
+          <div class="editor-head">
+            <div>
+              <h3 data-i18n="CreateNewEpisodeHeading">Crea nuovo episodio</h3>
+              <p data-i18n="CreateNewEpisodeHelp">Compila i dati come nell'editor desktop. Su Cloudflare gli episodi saranno condivisi tra tutti gli utenti.</p>
+            </div>
+            <button id="btnCloseEditor" class="btn btn-ghost" type="button" data-i18n="CloseButton">Chiudi</button>
+          </div>
+
+          <div class="editor-grid">
+            <label class="field">
+              <span data-i18n="TitleLabel">Titolo</span>
+              <input id="editorTitle" type="text" maxlength="120" />
+            </label>
+            <label class="field">
+              <span data-i18n="ScriptureReferenceLabel">Riferimento biblico</span>
+              <input id="editorReference" type="text" maxlength="120" />
+            </label>
+            <label class="field">
+              <span data-i18n="KeywordLabel">Parola chiave</span>
+              <input id="editorKeyword" type="text" maxlength="80" />
+            </label>
+            <label class="field">
+              <span data-i18n="InputLanguageLabel">Lingua di inserimento</span>
+              <select id="editorSourceLanguage"></select>
+            </label>
+            <label class="field field-wide">
+              <span data-i18n="HintTextLabel">Indizio testo</span>
+              <textarea id="editorHint" rows="2"></textarea>
+            </label>
+            <label class="field field-wide">
+              <span data-i18n="SolutionLabel">Soluzione</span>
+              <textarea id="editorSolution" rows="4"></textarea>
+            </label>
+            <label class="field field-wide">
+              <span data-i18n="ScriptureQuoteLabel">Citazione scritturale</span>
+              <textarea id="editorQuote" rows="3"></textarea>
+            </label>
+            <label class="field field-wide">
+              <span data-i18n="EngagementNoteLabel">Nota engagement</span>
+              <textarea id="editorNote" rows="3"></textarea>
+            </label>
+          </div>
+
+          <section class="editor-section">
+            <h4 data-i18n="VisibleImagesHeading">5 immagini visibili</h4>
+            <div id="editorVisibleImages" class="slot-editor-list"></div>
+          </section>
+
+          <section class="editor-section">
+            <h4 data-i18n="HiddenImagesHeading">2 immagini nascoste</h4>
+            <div id="editorHiddenImages" class="slot-editor-list"></div>
+          </section>
+
+          <section class="editor-section">
+            <h4 data-i18n="HintImageHeading">Immagine indizio</h4>
+            <div id="editorHintImage" class="slot-editor-list"></div>
+          </section>
+
+          <div class="editor-actions">
+            <div id="editorStatus" class="editor-status">I nuovi episodi vengono salvati solo nel browser corrente.</div>
+            <button id="btnSaveStory" class="btn btn-next" type="button" data-i18n="SaveEpisodeButton">Salva episodio</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="pickerPanel" class="picker" hidden>
+        <div class="picker-card">
+          <div class="picker-head">
+            <h3 data-i18n="PickImageHeading">Scegli un'immagine</h3>
+            <button id="btnClosePicker" class="btn btn-ghost" type="button" data-i18n="CloseButton">Chiudi</button>
+          </div>
+          <div class="picker-upload">
+            <label class="field field-grow">
+              <span data-i18n="CustomPngNameLabel">Nome PNG custom</span>
+              <input id="assetUploadName" type="text" data-i18n-placeholder="CustomPngNamePlaceholder" placeholder="Es. corona-personalizzata" />
+            </label>
+            <label class="field field-grow">
+              <span data-i18n="CustomPngFileLabel">File PNG custom</span>
+              <input id="assetUploadFile" type="file" accept="image/png" />
+            </label>
+            <button id="btnUploadAsset" class="btn btn-create" type="button" data-i18n="UploadPngButton">Carica PNG</button>
+          </div>
+          <div id="assetUploadStatus" class="upload-status" data-i18n="UploadStatusDefault">I PNG custom saranno condivisi online dopo il deploy Cloudflare con storage configurato.</div>
+          <label class="field">
+            <span data-i18n="SearchAssetLabel">Cerca per chiave PNG</span>
+            <input id="assetSearch" type="text" data-i18n-placeholder="SearchAssetPlaceholder" placeholder="Es. 1F411, boy, crown" />
+          </label>
+          <div id="assetGrid" class="asset-grid"></div>
+        </div>
+      </section>
+    </main>
+
+      <section id="adminPanel" class="admin-panel" hidden>
+        <div class="admin-card">
+          <div class="admin-head">
+            <h3>📊 Pannello Admin</h3>
+            <button id="btnCloseAdmin" class="btn btn-ghost" type="button">Chiudi</button>
+          </div>
+          <div id="adminLoginArea">
+            <label class="field admin-login-field">
+              <span>Password admin (<code>ADMIN_SECRET</code>)</span>
+              <input id="adminSecret" type="password" autocomplete="current-password" />
+            </label>
+            <div class="admin-login-actions">
+              <button id="btnAdminLogin" class="btn btn-reveal" type="button">Accedi</button>
+              <span id="adminError" class="admin-error">Password errata o non configurata</span>
+            </div>
+            <p class="admin-help">Configura <code>ADMIN_SECRET</code> nelle variabili d’ambiente di Cloudflare Pages per abilitare le statistiche.</p>
+          </div>
+          <div id="adminStats" hidden>
+            <div class="admin-stat-grid">
+              <div class="admin-stat">
+                <div class="admin-stat-val" id="statOnline">-</div>
+                <div class="admin-stat-lbl">🟢 Online ora</div>
+              </div>
+              <div class="admin-stat">
+                <div class="admin-stat-val" id="statViews">-</div>
+                <div class="admin-stat-lbl">👁 Visioni totali</div>
+              </div>
+              <div class="admin-stat">
+                <div class="admin-stat-val" id="statCompletions">-</div>
+                <div class="admin-stat-lbl">✅ Completamenti</div>
+              </div>
+              <div class="admin-stat">
+                <div class="admin-stat-val" id="statSessions">-</div>
+                <div class="admin-stat-lbl">👤 Sessioni totali</div>
+              </div>
+            </div>
+            <div class="admin-toolbar">
+              <button id="btnAdminRefresh" class="btn btn-reveal" type="button">🔄 Aggiorna</button>
+              <span id="adminStatusMsg" class="admin-status-msg"></span>
+            </div>
+            <div id="adminOfflineNote" class="admin-offline-note">⚠️ Analytics non disponibili in locale. Configura <code>ADMIN_SECRET</code> e distribuisci su Cloudflare Pages.</div>
+          </div>
+        </div>
+      </section>
+
+    <script src="assets.js"></script>
+    <script src="stories.js"></script>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>

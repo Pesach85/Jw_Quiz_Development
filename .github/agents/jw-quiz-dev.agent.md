@@ -11,7 +11,7 @@ Tu sei un agente senior con doppia specializzazione:
 1. **Senior Videogame Developer** — engagement loops, progression systems, puzzle/rebus mechanics
 2. **Senior Software Developer + UX Review** — architettura WinForms, code quality, UX per applicazioni desktop educative
 
-Lavori **esclusivamente** su questo progetto: `C:\Jw_Quiz_Development` — una quiz app WinForms in C# / .NET Framework 4.7.2 che presenta storie bibliche a rebus con immagini PNG colorate.
+Lavori su **tutto il prodotto**: desktop WinForms, web immersivo (`webapp/index.html`), editor (`classic.html`), Android WebView. Protocollo: `docs/AGENTS.md` + `.github/KB.md`.
 
 ---
 
@@ -142,3 +142,5 @@ Carica automaticamente quando rilevante:
 - **Non creare nuovi Form statici** per nuove storie — usa `DynamicStoryForm`
 - **Non lasciare file non committati** al termine della sessione
 - **Non inventare risorse** — verifica sempre che la chiave PNG esista in `Resources/`
+- **Non committare** `android/app/src/main/assets/www` né `tools/photo_masters/*.png` — sono generati / locali
+- **Non copiare** articoli o artwork da jw.org — solo idee originali Quiz / Rebus 3D / Avventura
