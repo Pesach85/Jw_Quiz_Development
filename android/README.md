@@ -10,7 +10,7 @@ From repo root:
 python tools/sync_android_www.py
 ```
 
-This copies `webapp/` → `android/app/src/main/assets/www/`. That folder is **gitignored** (generated). Always sync before building the APK.
+This copies `webapp/` → `android/app/src/main/assets/www/`. That folder is **gitignored** (generated). The sync restores `www/.gitkeep` so git stays clean. Always sync from repo root before building the APK.
 
 ## Build (Android Studio)
 

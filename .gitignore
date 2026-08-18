@@ -21,6 +21,7 @@ android/build/
 android/app/build/
 android/local.properties
 android/app/src/main/assets/www/**
+!android/app/src/main/assets/www/
 !android/app/src/main/assets/www/.gitkeep
 tools/photo_masters/*.png
 tools/__pycache__/

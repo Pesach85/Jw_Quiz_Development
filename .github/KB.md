@@ -220,9 +220,10 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 
 - Branch: `main`
 - Push dopo ogni modifica significativa
-- No file non tracciati (`git status --short` deve essere pulito)
+- No file non tracciati (`git status --short` deve essere pulito) — Wrangler Pages avvisa se il tree è sporco
 - Build deve passare (`MSBuild /verbosity:quiet`) prima di ogni commit
 - Commit message in italiano, prefisso convenzionale: `feat:`, `fix:`, `refactor:`, `kb:`
+- Cleanup intelligente e handoff sessione: §16 e §17
 
 ---
 
@@ -291,6 +292,7 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-07-21 | **Android shell**: progetto WebView `android/` + `tools/sync_android_www.py` per pacchettizzare l’esperienza immersiva | ✅ Implementato |
 | 2026-07-21 | **Cloudflare Agent Setup**: skills globali `cloudflare/skills` + MCP in `.cursor/mcp.json` (cloudflare, docs, bindings, builds, observability) | ✅ Configurato (richiede restart agent) |
 | 2026-08-18 | **Prodotto unico**: docs ARCHITECTURE/AGENTS; pipeline `tools/sync_all.py`; Android www e photo_masters gitignored; HUD progresso web; loop pedagogico curiosità→sfida→recupero→senso; ponte desktop→web; 3 modalità restano selezionabili | ✅ Implementato |
+| 2026-08-18 | **Fix Wrangler dirty tree**: `sync_android_www.py` riscrive `www/.gitkeep` dopo rmtree; 0 regressioni gameplay; KB troubles + cleanup + session handoff | ✅ Implementato |
 ---
 
 ## 11. Next Best Decisions (Proposte Attive)
@@ -395,6 +397,10 @@ L’esperienza è **ispirata** allo stile didattico JW.org “Fai vivere il racc
 | Rebus 3D senza texture | Plane bianchi / ❓ | Verificare `stories.js` caricato prima del module e PNG in `webapp/assets/`; onerror → `2753.png` |
 | Memory leak theater | Tab rallenta dopo molti episodi | `disposeRebus3D()` su close/prev/next fuori dal rebus: dispose geometry/material/map + cancel rAF |
 | Spoiler titolo in intro | Titolo storia prima del rebus | Intro mostra solo `guessStory` + tema; titolo appare in soluzione rebus e atto morale |
+| Wrangler `--commit-dirty` | `Warning: git repo has uncommitted changes` | Working tree **deve** essere pulito prima del deploy. Causa tipica: `sync_all.py` cancellava `android/.../www/.gitkeep`. Fix: lo script riscrive `.gitkeep` dopo il copy. **Non** usare `--commit-dirty=true` come scusa per lasciare sporco il repo |
+| `sync_all.py` File not found | lanciato da `android/` | Sempre dal root: `cd D:\Jw_Quiz_Development` poi `python tools/sync_all.py` |
+| `npx wrangler` Unknown arguments | due comandi incollati sulla stessa riga | Un comando per volta: `npx wrangler pages deploy webapp --project-name=jwquiz` |
+| Wrangler “Unknown arguments: wrangler, pages…” | `npx wrangler` invocato dopo un wrangler già globale/ambiguo | Dal root repo, una sola invocazione; se persiste: `npx --yes wrangler@4.124.0 pages deploy webapp --project-name=jwquiz` |
 
 ### Checklist regressione (sessione Immersive)
 - [ ] `webapp/app.js` invariato (o solo cambi deliberati)
@@ -404,7 +410,7 @@ L’esperienza è **ispirata** allo stile didattico JW.org “Fai vivere il racc
 - [ ] IT/EN switch aggiorna UI + testi storie
 - [ ] Mobile: body ha classe `fallback-3d` oppure WebGL stabile
 - [ ] Favicon presente (`favicon.svg`) — evita 404 `/favicon.ico`
-- [ ] KB sezioni 10/11/12/13 aggiornate
+- [ ] KB sezioni 10/11/13/16/17 aggiornate
 
 ---
 
@@ -422,14 +428,15 @@ L’esperienza è **ispirata** allo stile didattico JW.org “Fai vivere il racc
 ### Comandi (dal root repo)
 
 ```powershell
-# Preview locale (già validata)
+# Preview locale
 cd webapp
 python -m http.server 8080
 
-# Deploy produzione (richiede wrangler login / token Cloudflare)
-cd ..
+# Deploy (dal ROOT del repo, working tree pulito)
 npx wrangler pages deploy webapp --project-name=jwquiz
 ```
+
+Se Wrangler avvisa `uncommitted changes`: `git status --short` e committare o ripristinare. Non silenziare con `--commit-dirty` salvo generate-only atteso e già gitignored.
 
 ### Checklist pre-deploy
 1. `webapp/index.html` = esperienza immersiva
@@ -442,4 +449,102 @@ npx wrangler pages deploy webapp --project-name=jwquiz
 - Apri https://jwquiz.pages.dev/ → mode switch Quiz/Rebus/Avventura
 - Apri un episodio Rebus 3D → texture PNG caricano
 - https://jwquiz.pages.dev/classic.html → editor OK
-- Nessun 404 su `/favicon.svg` |
+- Nessun 404 su `/favicon.svg`
+
+---
+
+## 16. Repo cleanup intelligente (generated vs source)
+
+Obiettivo: working tree pulito **senza** cancellare sorgenti e **senza** committare artefatti rigenerabili. Wrangler usa il commit git come metadato del deploy: se `git status --short` non è vuoto, compare `Warning: Your working directory is a git repo and has uncommitted changes`.
+
+### Source of truth (editare / committare)
+
+| Path | Ruolo |
+|------|--------|
+| `webapp/` | Player (`index.html`) + editor (`classic.html`) + PNG in `webapp/assets/` |
+| `Resources/` | PNG desktop WinForms (stesse chiavi del web) |
+| `StoryLibrary.cs`, `DynamicStoryForm.cs`, `AppText.cs` | Desktop |
+| `functions/` | Cloudflare Pages Functions |
+| `android/app/src/main/` eccetto `assets/www/**` | Shell WebView (Manifest, Activity, Gradle) |
+| `tools/*.py` | Pipeline sync / photo |
+| `.github/KB.md`, `docs/AGENTS.md`, `docs/ARCHITECTURE.md` | Protocollo agent |
+
+### Generated / cache (non committare)
+
+| Path | Come si rigenera / perché ignorato |
+|------|-------------------------------------|
+| `android/app/src/main/assets/www/**` | `python tools/sync_all.py` dal **root** |
+| `android/app/src/main/assets/www/.gitkeep` | **Unica** eccezione tracciata: tiene la cartella in git dopo `rmtree` |
+| `tools/photo_masters/*.png` | Master fotorealistici; copie applicate in `Resources/` + `webapp/assets/` |
+| `android/.gradle/`, `android/build/`, `android/app/build/` | Cache Gradle |
+| `bin/`, `obj/`, `.vs/`, `.vscode/`, `.wrangler/` | Build / IDE / Wrangler local |
+
+### Cosa fare (e non fare) quando il tree è sporco
+
+1. `git status --short` dal root. Classificare ogni riga: sorgente vs generated vs accidentale.
+2. **Generated visibile** (`www/app.js`, `www/assets/*`, `.gradle`): non `git add`. Deve coprirlo `.gitignore`. Se compare, il ignore è rotto o il file era già tracked — non aggiungere, sistemare ignore.
+3. **`.gitkeep` deleted** dopo sync: non è contenuto perso. `sync_android_www.py` deve riscriverlo **byte-identico** al file tracked. Poi `git checkout -- android/app/src/main/assets/www/.gitkeep` se serve allineare a HEAD.
+4. **PNG in `Resources/` / `webapp/assets/`**: sono source applicate (non masters). Committare solo se l’art è voluto in produzione.
+5. **Non** `git clean -fd` alla cieca: cancella untracked utili (`android/README.md` nuovo, tool nuovi). Prima `git clean -nd` (dry-run).
+6. **Non** `--commit-dirty=true` come default. Serve solo se si deve pubblicare `webapp/` sapendo che il commit git non corrisponde (hotfix). Il warning non è un errore: il deploy può comunque riuscire.
+7. Comandi dal **root** `D:\Jw_Quiz_Development`. Mai `python tools/sync_all.py` da `android/`. Mai due comandi incollati sulla stessa riga (`npx wrangler…npx wrangler…` → Unknown arguments).
+
+### Checklist cleanup pre-deploy / pre-commit
+
+- [ ] `git status --short` vuoto, oppure solo file sorgente che stai per committare
+- [ ] Nessun `www/**` staged (solo `.gitkeep` se il testo è cambiato di proposito)
+- [ ] `python tools/sync_all.py` non ha lasciato `.gitkeep` deleted
+- [ ] MSBuild Debug esce 0 se hai toccato C#
+- [ ] Tre modalità ancora selezionabili (nessuna fusione Quiz/Rebus/Avventura)
+
+---
+
+## 17. Session handoff (human + agent)
+
+Protocollo per chiudere una sessione e far ripartire la successiva **senza regressioni** e senza ricalcolare da zero.
+
+### All’avvio (obbligo)
+
+1. Leggere `.github/KB.md` (§10 decisioni, §13 troubles, §16 cleanup, questa §17).
+2. Leggere `docs/AGENTS.md` (invarianti prodotto) e `docs/ARCHITECTURE.md` se si tocca sync/Android/web.
+3. `git status --short` + ultimo `git log -5 --oneline`.
+4. Se il task è un follow-up, cercare nel transcript della chat precedente le keyword (`wrangler`, `sync_all`, `gitkeep`, nome file).
+
+### Invarianti da non rompere (regressione = fallimento handoff)
+
+- Tre modalità selezionabili e distinte: `quiz` / `rebus` / `journey` (Avventura).
+- Anti-spoiler rebus: niente titolo/scrittura prima della soluzione.
+- PNG keys, mai emoji Unicode nei dati storia.
+- Italiano source of truth; English dizionario senza chiavi duplicate (`AppText`).
+- Desktop resta net472 WinForms.
+- Player = `webapp/index.html`; editor = `webapp/classic.html`. Non fondere gameplay in `app.js` se non richiesto.
+- Android `www/` è copia: si edita `webapp/`.
+
+### Stop and ask (non decidere in autonomia)
+
+- Testo di versetti / accuratezza dottrinale
+- `ADMIN_SECRET`, login Cloudflare, token
+- 19ª storia non richiesta
+- Git distruttivo (`push --force`, `reset --hard`, `git clean -fd` senza dry-run)
+
+### Come chiudere la sessione (obbligo)
+
+Aggiornare questa KB:
+
+| Sezione | Cosa scrivere |
+|---------|----------------|
+| §10 log | 1 riga data + decisione + esito |
+| §13 troubles | Sintomo nuovo + soluzione se hai sbloccato un errore |
+| §16 | Solo se cambia generated vs source o ignore |
+| **§17 Stato corrente** (sotto) | Sostituire il blocco con lo stato **vero** a fine sessione |
+
+Commit se il tree deve tornare pulito (deploy Wrangler). Push solo se richiesto esplicitamente.
+
+### Stato corrente (handoff) — 2026-08-18
+
+- **Fatto:** `tools/sync_android_www.py` riscrive `www/.gitkeep` identico al tracked dopo `rmtree`, così `python tools/sync_all.py` non sporca git. Wrangler warning `uncommitted changes` non va silenziato con `--commit-dirty` se la causa è `.gitkeep` deleted.
+- **Deploy:** dal root `npx wrangler pages deploy webapp --project-name=jwquiz`. Produzione https://jwquiz.pages.dev/ . Output dir = `webapp`.
+- **Non fatto dall’agent (umano):** Android Studio su cartella `android/` dopo sync; `ADMIN_SECRET`; smoke APK.
+- **Non toccare a meno di richiesta:** `webapp/app.js` (editor), testi versetti, fusione modalità.
+- **Comandi root:** `python tools/sync_all.py` ; MSBuild `Jw_Quiz_Development.csproj` Debug ; deploy Wrangler come sopra (un comando per volta).
+- **Git:** branch `main`, remote `https://github.com/Pesach85/Jw_Quiz_Development.git`. Non committare `www/**` (eccetto `.gitkeep`), `.gradle`, `photo_masters/*.png`.

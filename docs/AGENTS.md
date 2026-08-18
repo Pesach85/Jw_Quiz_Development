@@ -11,7 +11,7 @@ Read `.github/KB.md` first. Then this file. Then `docs/ARCHITECTURE.md`.
 5. No JW.org copyrighted article/PDF/artwork dump. Original didactic content only.
 6. Desktop stays WinForms net472. Do not add net5+ APIs.
 7. Web immersive is the player UX; `classic.html` is editor/admin only.
-8. Android `assets/www` is generated. Edit `webapp/`, then `python tools/sync_all.py`.
+8. Android `assets/www` is generated. Edit `webapp/`, then `python tools/sync_all.py` **from repo root** (not `android/`). The sync must restore `www/.gitkeep` so git stays clean (otherwise Wrangler warns `--commit-dirty`).
 
 ## Where to change what
 
