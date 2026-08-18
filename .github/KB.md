@@ -13,11 +13,24 @@
 | Framework UI | Windows Forms (WinForms) |
 | Runtime | .NET Framework 4.7.2 |
 | csproj stile | **SDK-style** (`Microsoft.NET.Sdk.WindowsDesktop`, `net472`, `UseWindowsForms: true`) |
-| Build command | `.\build.bat` oppure `MSBuild Jw_Quiz_Development.csproj /p:Configuration=Debug` |
-| Output | `bin\Debug\Jw_Quiz_Development.exe` |
-| Controllo versione | Git ÔÇö branch `main` |
-| Lingua UI | Italiano + English (motore multilanguage desktop + web shared + immersive.html it/en) |
-| Web Immersive | `webapp/immersive.html` — Three.js 0.160 CDN (import map), fallback 2D, theater Q&A |
+| Build command | Sempre dal **root** `D:\Jw_Quiz_Development` — vedi tabella percorsi sotto |
+| Output desktop | `bin\Debug\Jw_Quiz_Development.exe` (MSBuild Debug) · `bin\Release\Jw_Quiz_Development.exe` (`.\build.bat`) |
+| Controllo versione | Git — branch `main` |
+| Lingua UI | Italiano + English (motore multilanguage desktop + web shared + `webapp/index.html` it/en) |
+| Web Immersive | `webapp/index.html` — Three.js 0.160 CDN, fallback CSS 2D, theater 3 modalità |
+
+### Percorsi di build / deploy (canonicali, solo dal root repo)
+
+| Superficie | Comando | Output / URL |
+|------------|---------|----------------|
+| Web preview | `cd webapp` poi `python -m http.server 8080` | http://127.0.0.1:8080/ player · `/classic.html` editor |
+| Web produzione | `npx wrangler pages deploy webapp --project-name=jwquiz` | https://jwquiz.pages.dev/ (`wrangler.toml` → `pages_build_output_dir = "webapp"`) |
+| Desktop Debug | `.\build.bat` è Release; Debug: MSBuild `Jw_Quiz_Development.csproj /p:Configuration=Debug` | `bin\Debug\Jw_Quiz_Development.exe` |
+| Desktop Release | `.\build.bat` | `bin\Release\Jw_Quiz_Development.exe` |
+| Pipeline asset + Android www | `python tools/sync_all.py` | `Resources/` + `webapp/assets/` (se masters) e `android/app/src/main/assets/www/` (gitignored) |
+| Android APK | Dopo sync: aprire cartella `android/` in Android Studio | `android/app/build/` (non committare) |
+
+Non lanciare `tools/*.py` da `android/`. Non concatenare due comandi Wrangler sulla stessa riga. Working tree pulito prima del deploy Pages.
 
 ---
 
@@ -293,6 +306,7 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-07-21 | **Cloudflare Agent Setup**: skills globali `cloudflare/skills` + MCP in `.cursor/mcp.json` (cloudflare, docs, bindings, builds, observability) | ✅ Configurato (richiede restart agent) |
 | 2026-08-18 | **Prodotto unico**: docs ARCHITECTURE/AGENTS; pipeline `tools/sync_all.py`; Android www e photo_masters gitignored; HUD progresso web; loop pedagogico curiosità→sfida→recupero→senso; ponte desktop→web; 3 modalità restano selezionabili | ✅ Implementato |
 | 2026-08-18 | **Fix Wrangler dirty tree**: `sync_android_www.py` riscrive `www/.gitkeep` dopo rmtree; 0 regressioni gameplay; KB troubles + cleanup + session handoff | ✅ Implementato |
+| 2026-08-18 | **Rebus board fit-to-viewport**: camera 3D si adatta alla tavola 4×2 (niente clip colonne); viewport occupa la riga `1fr` del theater; fallback CSS griglia fluida. Percorsi build unificati in KB §1. 0 regressioni modalità | ✅ Implementato |
 ---
 
 ## 11. Next Best Decisions (Proposte Attive)
@@ -301,7 +315,7 @@ Aggiornare questa sezione ad ogni sessione di lavoro.
 
 | Priorità | Area | Proposta |
 |---------|------|---------|
-| Alta | Web Immersive | ~~Landing 3D + theater Q&A episodi 1–18 (single HTML CDN)~~ ✅ **COMPLETATO** (`webapp/immersive.html`) |
+| Alta | Web Immersive | ~~Landing 3D + theater Q&A episodi 1–18 (single HTML CDN)~~ ✅ **COMPLETATO** (`webapp/index.html`) |
 | Alta | Multilanguage | Rifinire QA linguistico delle storie 1-12 ora renderizzate nel runtime dinamico |
 | Alta | Webapp | Configurare `ADMIN_SECRET` nelle env var di Cloudflare Pages → Settings → Environment Variables per attivare il pannello admin statistiche |
 | Alta | Immersive | ~~Pack fotorealistico rebus (concept→alias) + sync web/desktop/Android~~ ✅ **COMPLETATO** |
@@ -334,26 +348,35 @@ Un solo loop di apprendimento su tre superfici:
 - **Desktop** = rebus proiezione + menu “Apri JW Quiz Web”
 - **Android** = WebView del webapp (bundle generato)
 
-Comando unico: `python tools/sync_all.py`. Dettaglio: `docs/ARCHITECTURE.md`.
+Comando unico asset/Android: `python tools/sync_all.py`. Percorsi completi: §1 e `docs/ARCHITECTURE.md`.
 
+### Stato dell’arte (2026-08-18)
 
-### Obiettivo
-Offrire una landing SaaS immersiva (Three.js/WebGL) e un “theater” videogioco educativo Q&A ispirato a [Fai vivere il racconto!](https://www.jw.org/it/cosa-dice-la-Bibbia/ragazzi/fai-vivere-il-racconto/), senza regressioni sul rebus classico (web + WinForms).
+| Pezzo | Dove | Note |
+|-------|------|------|
+| Player | `webapp/index.html` | 3 modalità; theater grid `auto / 1fr / auto`; rebus board 4×2 fit-camera |
+| Editor | `webapp/classic.html` + `app.js` | Non fondere gameplay player qui |
+| Dati rebus | `webapp/stories.js` ↔ `StoryLibrary.cs` | PNG keys, no emoji |
+| Q&A immersivo | `STORIES` in `index.html` | Ancora duplicato vs stories.js (Next Best) |
+| Desktop | WinForms net472 | Stesso catalogo; menu apre jwquiz.pages.dev |
+| Android | `android/` WebView | Bundle generato, non source |
 
 ### Decisioni architetturali (valutate)
 
 | Opzione | Pro | Contro | Esito |
 |---------|-----|--------|-------|
-| A. Sostituire `index.html` con single-file 3D | Un solo entry | Rompe editor, API, rebus, analytics | ❌ Scartata (regressione) |
-| B. File additivo `immersive.html` CDN-only + link da rebus | Zero regressioni; deploy Cloudflare automatico (`pages_build_output_dir=webapp`) | Duplicazione contenuti Q&A vs `stories.js` | ✅ **Scelta** |
-| C. Modulo npm/bundler Three.js | Tree-shake, TS | Fuori dal vincolo “CDN only / single HTML” | ❌ Fuori scope richiesta |
+| A. Sostituire `index.html` con single-file 3D | Un solo entry | Rompeva editor | ❌ Superata: player **è** `index.html`, editor è `classic.html` |
+| B. File additivo `immersive.html` | Zero regressioni all’epoca | Due entry player | ↪️ `immersive.html` ora redirect a `/` |
+| C. Bundler npm Three.js | Tree-shake | Fuori vincolo CDN | ❌ Fuori scope |
+| D. Camera 3D magica (`z=6.4`, lastre su cilindro) | Lastre “grandi” | **Clip** colonne esterne nel riquadro | ❌ Sostituita da `fitRebusCamera` + board shallow 4×2 |
+| E. Allargare solo il CSS del riquadro | Rapido | Non scala su aspect ratio theater | ❌ Insufficiente da sola |
 
 ### Flusso utente (no spoiler sul rebus)
 1. Landing hero 3D (particelle + solidi fluttuanti, parallax mouse)
 2. Scroll reveal “Come funziona” + griglia episodi 1–18
-3. Theater: **Intro → Rebus 3D (reveal/hint/soluzione) → Quiz MCQ → Insegnamento morale**
-4. Rebus 3D carica chiavi PNG da `window.JW_STORIES` (`stories.js`) e texture da `assets/<key>.png`
-5. CTA “Apri rebus classico” → `index.html` (gameplay esistente invariato)
+3. Theater: **Intro → Rebus 3D (reveal/hint/soluzione) → Quiz MCQ → Insegnamento morale** (il path dipende dalla modalità)
+4. Rebus 3D carica chiavi PNG da `window.JW_STORIES` (`stories.js`) e texture da `assets/<key>.png`; tutte e 8 le lastre restano nel frustum
+5. CTA editor → `classic.html`
 6. Selettore lingua IT/EN (persistenza `localStorage` chiave `jwquiz_immersive_lang_v1`)
 
 ### Performance (target 60fps)
@@ -367,7 +390,7 @@ Offrire una landing SaaS immersiva (Three.js/WebGL) e un “theater” videogioc
 - EN = traduzione completa parallela nello stesso file
 - Rebus web: nuove chiavi `ImmersiveExperienceButton` / `ImmersiveExperienceTitle` in `story-i18n.js`
 
-### Customization map (commenti sezione in `immersive.html`)
+### Customization map (commenti sezione in `webapp/index.html`)
 1. Theme tokens CSS (`:root`)
 2. I18N `UI.it` / `UI.en`
 3. Story data `STORIES` (Q&A)
@@ -384,7 +407,7 @@ L’esperienza è **ispirata** allo stile didattico JW.org “Fai vivere il racc
 
 | Trouble | Sintomo | Soluzione / Guardrail |
 |---------|---------|------------------------|
-| Regressione rebus | Editor/API/slot break dopo landing 3D | **Mai** fondere gameplay in `immersive.html`; modifiche a `app.js` solo se esplicitamente richieste |
+| Regressione rebus | Editor/API/slot break dopo landing 3D | **Mai** fondere gameplay player in `index.html` con l’editor; modifiche a `app.js` solo se esplicitamente richieste |
 | WebGL crash mobile | Schermo nero / tab kill | `preferFallback()` + try/catch su `initThree()` → canvas 2D |
 | 60fps drop | Frame stutter su laptop integrati | Ridurre `COUNT` particelle; abbassare DPR; disabilitare solids su low-end (estensione futura) |
 | Import map CDN down | Console: failed to resolve `three` | Pin `three@0.160.0` su unpkg; **dynamic `import("three")`** dentro try/catch così theater/i18n restano usabili anche se CDN/WebGL falliscono |
@@ -397,6 +420,7 @@ L’esperienza è **ispirata** allo stile didattico JW.org “Fai vivere il racc
 | Rebus 3D senza texture | Plane bianchi / ❓ | Verificare `stories.js` caricato prima del module e PNG in `webapp/assets/`; onerror → `2753.png` |
 | Memory leak theater | Tab rallenta dopo molti episodi | `disposeRebus3D()` su close/prev/next fuori dal rebus: dispose geometry/material/map + cancel rAF |
 | Spoiler titolo in intro | Titolo storia prima del rebus | Intro mostra solo `guessStory` + tema; titolo appare in soluzione rebus e atto morale |
+| Indizi tagliati nel riquadro | Colonne sx/dx del rebus 3D tagliate dal bordo arrotondato | Non allargare a caso il CSS. Causa: FOV/camera z fissi + lastre su cilindro (z alto ai lati). Soluzione: `fitRebusCamera()` su AABB della tavola 4×2 + `ResizeObserver`; board shallow; `.rebus-viewport` riempie `theater-stage` `1fr`. Fallback: grid `minmax(0,1fr)` senza `min-height` fisso |
 | Wrangler `--commit-dirty` | `Warning: git repo has uncommitted changes` | Working tree **deve** essere pulito prima del deploy. Causa tipica: `sync_all.py` cancellava `android/.../www/.gitkeep`. Fix: lo script riscrive `.gitkeep` dopo il copy. **Non** usare `--commit-dirty=true` come scusa per lasciare sporco il repo |
 | `sync_all.py` File not found | lanciato da `android/` | Sempre dal root: `cd D:\Jw_Quiz_Development` poi `python tools/sync_all.py` |
 | `npx wrangler` Unknown arguments | due comandi incollati sulla stessa riga | Un comando per volta: `npx wrangler pages deploy webapp --project-name=jwquiz` |
@@ -491,6 +515,8 @@ Obiettivo: working tree pulito **senza** cancellare sorgenti e **senza** committ
 
 ### Checklist cleanup pre-deploy / pre-commit
 
+Comandi e path: **KB §1**. Dal root, classificare generated vs source come sopra.
+
 - [ ] `git status --short` vuoto, oppure solo file sorgente che stai per committare
 - [ ] Nessun `www/**` staged (solo `.gitkeep` se il testo è cambiato di proposito)
 - [ ] `python tools/sync_all.py` non ha lasciato `.gitkeep` deleted
@@ -542,9 +568,9 @@ Commit se il tree deve tornare pulito (deploy Wrangler). Push solo se richiesto 
 
 ### Stato corrente (handoff) — 2026-08-18
 
-- **Fatto:** `tools/sync_android_www.py` riscrive `www/.gitkeep` identico al tracked dopo `rmtree`, così `python tools/sync_all.py` non sporca git. Wrangler warning `uncommitted changes` non va silenziato con `--commit-dirty` se la causa è `.gitkeep` deleted.
-- **Deploy:** dal root `npx wrangler pages deploy webapp --project-name=jwquiz`. Produzione https://jwquiz.pages.dev/ . Output dir = `webapp`.
-- **Non fatto dall’agent (umano):** Android Studio su cartella `android/` dopo sync; `ADMIN_SECRET`; smoke APK.
-- **Non toccare a meno di richiesta:** `webapp/app.js` (editor), testi versetti, fusione modalità.
-- **Comandi root:** `python tools/sync_all.py` ; MSBuild `Jw_Quiz_Development.csproj` Debug ; deploy Wrangler come sopra (un comando per volta).
-- **Git:** branch `main`, remote `https://github.com/Pesach85/Jw_Quiz_Development.git`. Non committare `www/**` (eccetto `.gitkeep`), `.gradle`, `photo_masters/*.png`.
+- **Fatto:** Rebus 3D `fitRebusCamera()` — tutte e 8 le lastre visibili nel riquadro; viewport = spazio theater; Wrangler dirty-tree fix (`.gitkeep`); KB §1 percorsi build.
+- **Deploy:** dal root `npx wrangler pages deploy webapp --project-name=jwquiz` con tree pulito. Produzione https://jwquiz.pages.dev/
+- **Non fatto (umano):** Android Studio su `android/` dopo `python tools/sync_all.py`; `ADMIN_SECRET`; smoke APK; eventuale deploy Pages di questo fit-camera.
+- **Non toccare a meno di richiesta:** `webapp/app.js` (editor), testi versetti, fusione modalità, camera z magici (usare `REBUS_BOARD` + fit).
+- **Comandi root:** vedi KB §1. `python tools/sync_all.py` dopo cambi `webapp/`. MSBuild solo se C#. Wrangler un comando per volta.
+- **Git:** `main` → `https://github.com/Pesach85/Jw_Quiz_Development.git`. Non committare `www/**` (eccetto `.gitkeep`), `.gradle`, `photo_masters/*.png`.

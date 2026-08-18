@@ -38,12 +38,14 @@ Everything else: implement, build, update KB, commit.
 
 ## Validation
 
+From **repo root**:
+
 ```powershell
 & "C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\MSBuild.exe" Jw_Quiz_Development.csproj /p:Configuration=Debug /nologo /verbosity:quiet
 python tools/sync_all.py
 ```
 
-Desktop exit code must be 0 before commit.
+Desktop exit code must be 0 before commit if C# changed. After `webapp/` player changes, `python tools/sync_all.py` is enough (no MSBuild). Preview: `cd webapp` then `python -m http.server 8080`. Deploy: `npx wrangler pages deploy webapp --project-name=jwquiz` with a clean tree.
 
 ## Do not commit
 

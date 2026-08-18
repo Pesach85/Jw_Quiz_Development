@@ -49,8 +49,21 @@ python tools/sync_all.py
 - Scripture *references* and short quotes in TNM style already in-app may stay; do not paste JW.org article bodies.
 - Footer must keep the unofficial disclaimer + link to jw.org.
 
-## Deploy
+## Deploy & build (canonical, from repo root)
 
-- Cloudflare Pages: `wrangler.toml` `pages_build_output_dir = "webapp"`
-- Desktop: `.\build.bat` or MSBuild Debug/Release
-- Android: Android Studio on `android/` after sync
+All commands below assume cwd = repository root (`D:\Jw_Quiz_Development`). Do not run `tools/*.py` from `android/`.
+
+| Surface | Command | Result |
+|---------|---------|--------|
+| Web preview | `cd webapp` then `python -m http.server 8080` | Player `/` · editor `/classic.html` |
+| Web production | `npx wrangler pages deploy webapp --project-name=jwquiz` | [jwquiz.pages.dev](https://jwquiz.pages.dev/) — `wrangler.toml` `pages_build_output_dir = "webapp"` |
+| Desktop Debug | MSBuild `Jw_Quiz_Development.csproj /p:Configuration=Debug` | `bin\Debug\Jw_Quiz_Development.exe` |
+| Desktop Release | `.\build.bat` | `bin\Release\Jw_Quiz_Development.exe` |
+| Assets + Android www | `python tools/sync_all.py` | Apply photo masters if present; copy `webapp/` → `android/app/src/main/assets/www/` (gitignored; restores `.gitkeep`) |
+| Android APK | Open folder `android/` in Android Studio after sync | Gradle output under `android/app/build/` (do not commit) |
+
+Working tree must be clean before Wrangler deploy (no `--commit-dirty` as default).
+
+## Rebus stage (player)
+
+The theater middle row (`1fr`) owns the rounded viewport. Eight plates (5 visible + 2 hidden + 1 hint) are a **4×2 board**. WebGL camera distance is computed from the board AABB (`fitRebusCamera`) so plates are never clipped by the frame. CSS fallback uses a fluid 4×2 grid (2×4 under 560px). Do not restore magic `camera.z = 6.4` or a tall cylindrical layout.

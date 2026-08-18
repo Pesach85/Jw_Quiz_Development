@@ -4,13 +4,15 @@ WebView shell that packages the immersive web experience (Quiz / Rebus 3D / Avve
 
 ## Sync web assets into the APK
 
-From repo root:
+From **repo root** (not from `android/`):
 
 ```powershell
-python tools/sync_android_www.py
+python tools/sync_all.py
 ```
 
-This copies `webapp/` → `android/app/src/main/assets/www/`. That folder is **gitignored** (generated). The sync restores `www/.gitkeep` so git stays clean. Always sync from repo root before building the APK.
+That is the canonical pipeline (photo apply if masters exist + copy `webapp/` → `android/app/src/main/assets/www/`). Equivalent www-only step: `python tools/sync_android_www.py`.
+
+The `www/` folder is **gitignored** (generated). Sync restores `www/.gitkeep` so git stays clean. Always sync before building the APK.
 
 ## Build (Android Studio)
 
