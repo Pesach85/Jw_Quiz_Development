@@ -11,7 +11,7 @@ Read `.github/KB.md` first. Then this file. Then `docs/ARCHITECTURE.md`.
 5. No JW.org copyrighted article/PDF/artwork dump. Original didactic content only.
 6. Desktop stays WinForms net472. Do not add net5+ APIs.
 7. Web immersive is the player UX; `classic.html` is editor/admin only.
-8. Android `assets/www` is generated. Edit `webapp/`, then `python tools/sync_all.py`.
+8. Android `assets/www` is generated. Edit `webapp/`, then `python tools/sync_all.py` **from repo root** (not `android/`). The sync must restore `www/.gitkeep` so git stays clean (otherwise Wrangler warns `--commit-dirty`).
 
 ## Where to change what
 
@@ -38,12 +38,14 @@ Everything else: implement, build, update KB, commit.
 
 ## Validation
 
+From **repo root**:
+
 ```powershell
 & "C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\MSBuild.exe" Jw_Quiz_Development.csproj /p:Configuration=Debug /nologo /verbosity:quiet
 python tools/sync_all.py
 ```
 
-Desktop exit code must be 0 before commit.
+Desktop exit code must be 0 before commit if C# changed. After `webapp/` player changes, `python tools/sync_all.py` is enough (no MSBuild). Preview: `cd webapp` then `python -m http.server 8080`. Deploy: `npx wrangler pages deploy webapp --project-name=jwquiz` with a clean tree.
 
 ## Do not commit
 

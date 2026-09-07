@@ -1,4 +1,6 @@
 @echo off
+REM JW Quiz desktop Release build. Run from repo root (D:\Jw_Quiz_Development).
+REM Output: bin\Release\Jw_Quiz_Development.exe
 echo Building JW Quiz Development...
 
 REM Try to find MSBuild

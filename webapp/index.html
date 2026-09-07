@@ -234,16 +234,33 @@
     .how-item p { margin: 0; color: var(--muted); }
 
     /* ========== REBUS 3D STAGE ========== */
+    /* Board fills the theater 1fr row; camera (JS) fits all 8 plates. */
     .rebus-act {
-      width: min(960px, 100%);
+      width: min(1280px, 100%);
+      max-width: 100%;
+      height: 100%;
+      min-height: 0;
+      align-self: stretch;
       display: grid;
-      gap: 14px;
-      justify-items: center;
+      grid-template-rows: auto minmax(220px, 1fr) auto auto auto;
+      gap: 10px;
+      justify-items: stretch;
     }
+    .rebus-act > .act {
+      justify-self: center;
+      width: min(52rem, 100%);
+    }
+    .rebus-act > .act h2 {
+      font-size: clamp(1.15rem, 2.4vw, 1.75rem);
+      margin: 0 0 4px;
+    }
+    .rebus-act > .act .scripture,
+    .rebus-act > .act p { margin: 0; }
     .rebus-viewport {
       position: relative;
-      width: min(1100px, 100%);
-      height: min(74vh, 680px);
+      width: 100%;
+      height: 100%;
+      min-height: 220px;
       border-radius: 18px;
       border: 1px solid var(--line);
       overflow: hidden;
@@ -267,22 +284,34 @@
       inset: 0;
       width: 100%;
       height: 100%;
+      z-index: 1;
+    }
+    #rebusCanvas {
       display: block;
       touch-action: none;
-      z-index: 1;
     }
     #rebusFallback { display: none; }
     .rebus-act.is-fallback #rebusCanvas { display: none; }
     .rebus-act.is-fallback #rebusFallback { display: grid; }
     #rebusFallback {
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 14px;
-      padding: 18px;
-      place-content: center;
+      grid-template-rows: repeat(2, minmax(0, 1fr));
+      gap: clamp(8px, 1.2vw, 16px);
+      padding: clamp(10px, 1.8vw, 20px);
+      touch-action: manipulation;
+    }
+    @media (max-width: 560px) {
+      #rebusFallback {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-rows: repeat(4, minmax(0, 1fr));
+      }
     }
     .rebus-card {
-      aspect-ratio: 1;
-      border-radius: 16px;
+      min-width: 0;
+      min-height: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 14px;
       border: 1px solid var(--line);
       background: rgba(255,255,255,0.08);
       display: grid;
@@ -292,7 +321,6 @@
       transform-style: preserve-3d;
       animation: floatY 3s ease-in-out infinite;
       transition: transform 0.25s var(--ease), box-shadow 0.25s, border-color 0.25s;
-      min-height: 110px;
     }
     .rebus-card:hover { border-color: var(--brand); transform: translateY(-4px) scale(1.04); }
     .rebus-card img {
@@ -322,6 +350,7 @@
       flex-wrap: wrap;
       gap: 10px;
       justify-content: center;
+      justify-self: center;
     }
     .btn-reveal { border-color: rgba(61,143,209,0.55); color: #9fd0ff; }
     .btn-hint { border-color: rgba(240,195,106,0.55); color: var(--brand); }
@@ -332,9 +361,11 @@
       font-weight: 600;
       text-align: center;
       max-width: 52ch;
+      justify-self: center;
     }
     .rebus-solution {
       width: min(720px, 100%);
+      justify-self: center;
       text-align: left;
       padding: 14px 16px;
       border-radius: 12px;
@@ -387,9 +418,15 @@
     .theater-stage {
       position: relative;
       overflow: auto;
-      padding: 28px 18px 40px;
+      min-height: 0;
+      padding: 12px 14px 16px;
       display: grid;
-      place-items: center;
+      justify-items: center;
+      align-items: start;
+    }
+    .theater-stage.is-rebus {
+      overflow: hidden;
+      align-items: stretch;
     }
     .act {
       width: min(720px, 100%);
@@ -1741,6 +1778,7 @@
       btnTheaterNext.textContent = kind === "moral" ? t("finished") : t("continue");
       btnTheaterNext.title = kind === "rebus" && !state.rebus.solutionVisible ? t("needSolution") : "";
 
+      theaterStage.classList.toggle("is-rebus", kind === "rebus");
       if (kind !== "rebus") disposeRebus3D();
 
       if (kind === "intro") {
@@ -1897,8 +1935,58 @@
       boundClick: null,
       boundMove: null,
       boundResize: null,
+      resizeObs: null,
+      camZ: 7,
       hintPulseT: 0
     };
+
+    /* 4×2 photoreal plates. Shallow relief (not a cylinder) so outer columns stay in frustum. */
+    const REBUS_BOARD = Object.freeze({
+      cols: 4,
+      rows: 2,
+      plate: 1.62,
+      frame: 1.78,
+      pitch: 1.92,
+      floatAmp: 0.1,
+      fitMargin: 1.14
+    });
+
+    function rebusSlotPose(index) {
+      const col = index % REBUS_BOARD.cols;
+      const row = Math.floor(index / REBUS_BOARD.cols);
+      const x = (col - (REBUS_BOARD.cols - 1) / 2) * REBUS_BOARD.pitch;
+      const y = ((REBUS_BOARD.rows - 1) / 2 - row) * REBUS_BOARD.pitch;
+      const z = Math.cos((col - 1.5) * 0.22) * 0.12;
+      return { x, y, z };
+    }
+
+    function rebusBoardHalfExtents() {
+      const { cols, rows, frame, pitch, floatAmp, fitMargin } = REBUS_BOARD;
+      const halfW = ((cols - 1) / 2) * pitch + frame / 2;
+      const halfH = ((rows - 1) / 2) * pitch + frame / 2 + floatAmp;
+      return { halfW: halfW * fitMargin, halfH: halfH * fitMargin };
+    }
+
+    function fitRebusCamera() {
+      const viewport = document.getElementById("rebusViewport");
+      if (!rebus3d.running || !rebus3d.camera || !rebus3d.renderer || !viewport) return;
+      const ww = Math.max(1, viewport.clientWidth);
+      const hh = Math.max(1, viewport.clientHeight);
+      const camera = rebus3d.camera;
+      camera.aspect = ww / hh;
+      const { halfW, halfH } = rebusBoardHalfExtents();
+      const vFov = (camera.fov * Math.PI) / 180;
+      const tan = Math.tan(vFov / 2);
+      const distH = halfH / tan;
+      const distW = halfW / (tan * camera.aspect);
+      const dist = Math.max(distH, distW, 4.2);
+      rebus3d.camZ = dist;
+      camera.near = Math.max(0.05, dist / 40);
+      camera.far = dist * 8;
+      camera.position.z = dist;
+      camera.updateProjectionMatrix();
+      rebus3d.renderer.setSize(ww, hh, false);
+    }
 
     function slotKeysForRebus(rebus) {
       const visible = (rebus.visibleKeys || []).slice(0, 5);
@@ -1922,6 +2010,7 @@
     }
 
     function renderRebusAct(story) {
+      disposeRebus3D();
       const rebus = getRebusStory(story.id);
       if (!rebus) {
         theaterStage.innerHTML = `
@@ -2093,8 +2182,8 @@
       renderer.outputColorSpace = THREE.SRGBColorSpace;
 
       const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(40, w / h, 0.1, 100);
-      camera.position.set(0, 0.15, 6.4);
+      const camera = new THREE.PerspectiveCamera(36, Math.max(w / h, 0.01), 0.1, 100);
+      camera.position.set(0, 0.04, 7);
 
       const ambient = new THREE.AmbientLight(0xffffff, 0.85);
       const key = new THREE.DirectionalLight(0xffe1a8, 1.25);
@@ -2124,15 +2213,12 @@
       const loader = new THREE.TextureLoader();
       const slots = [];
       const maxAniso = renderer.capabilities.getMaxAnisotropy();
+      const plate = REBUS_BOARD.plate;
+      const frameSize = REBUS_BOARD.frame;
 
-      // 2 rows × 4 columns — larger photorealistic-style plates
       for (let i = 0; i < 8; i++) {
-        const col = i % 4;
-        const row = Math.floor(i / 4);
-        const x = (col - 1.5) * 2.05;
-        const y = (0.55 - row) * 2.05;
-        const z = Math.cos((col - 1.5) * 0.35) * 0.45;
-        const geo = new THREE.PlaneGeometry(1.85, 1.85, 1, 1);
+        const pose = rebusSlotPose(i);
+        const geo = new THREE.PlaneGeometry(plate, plate, 1, 1);
         const mat = new THREE.MeshPhysicalMaterial({
           color: 0xffffff,
           metalness: 0.08,
@@ -2143,10 +2229,10 @@
           side: THREE.DoubleSide
         });
         const mesh = new THREE.Mesh(geo, mat);
-        mesh.position.set(x, y, z);
+        mesh.position.set(pose.x, pose.y, pose.z);
         mesh.userData = { index: i, base: mesh.position.clone(), phase: i * 0.7, bump: 0, pop: 0, aniso: maxAniso };
         const frame = new THREE.Mesh(
-          new THREE.PlaneGeometry(2.02, 2.02),
+          new THREE.PlaneGeometry(frameSize, frameSize),
           new THREE.MeshBasicMaterial({ color: i === 7 ? 0xb56a00 : 0x3d8fd1, transparent: true, opacity: 0.4, side: THREE.DoubleSide })
         );
         frame.position.z = -0.03;
@@ -2165,6 +2251,8 @@
       rebus3d.particles = particles;
       rebus3d.raycaster = new THREE.Raycaster();
       rebus3d.hintPulseT = 0;
+      fitRebusCamera();
+      requestAnimationFrame(fitRebusCamera);
 
       await Promise.all(slots.map((slot, i) => loadSlotTexture(loader, slot, keys[i])));
 
@@ -2183,17 +2271,14 @@
         mouse.tx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
         mouse.ty = -((e.clientY - rect.top) / rect.height) * 2 + 1;
       };
-      rebus3d.boundResize = () => {
-        if (!rebus3d.running || !rebus3d.renderer) return;
-        const ww = viewport.clientWidth || 800;
-        const hh = viewport.clientHeight || 400;
-        camera.aspect = ww / hh;
-        camera.updateProjectionMatrix();
-        renderer.setSize(ww, hh, false);
-      };
+      rebus3d.boundResize = () => fitRebusCamera();
       canvas.addEventListener("pointerdown", rebus3d.boundClick);
       canvas.addEventListener("pointermove", rebus3d.boundMove, { passive: true });
       window.addEventListener("resize", rebus3d.boundResize, { passive: true });
+      if (typeof ResizeObserver !== "undefined") {
+        rebus3d.resizeObs = new ResizeObserver(() => fitRebusCamera());
+        rebus3d.resizeObs.observe(viewport);
+      }
 
       const animate = () => {
         if (!rebus3d.running) return;
@@ -2202,29 +2287,29 @@
         rebus3d.hintPulseT = tNow;
         mouse.x += (mouse.tx - mouse.x) * 0.08;
         mouse.y += (mouse.ty - mouse.y) * 0.08;
-        group.rotation.y = mouse.x * 0.18;
-        group.rotation.x = mouse.y * 0.1;
+        group.rotation.y = mouse.x * 0.07;
+        group.rotation.x = mouse.y * 0.04;
         if (particles) particles.rotation.y = tNow * 0.05;
         slots.forEach((slot) => {
           const m = slot.mesh;
           const b = m.userData.base;
-          const float = Math.sin(tNow * 1.2 + m.userData.phase) * 0.08;
+          const float = Math.sin(tNow * 1.2 + m.userData.phase) * REBUS_BOARD.floatAmp;
           if (m.userData.bump > 0) m.userData.bump *= 0.88;
           if (m.userData.pop > 0) m.userData.pop *= 0.9;
-          const popScale = 1 + m.userData.pop * 0.35 + m.userData.bump * 0.12;
-          m.position.x = b.x + mouse.x * 0.15;
-          m.position.y = b.y + float + mouse.y * 0.1;
+          const popScale = 1 + m.userData.pop * 0.28 + m.userData.bump * 0.1;
+          m.position.x = b.x + mouse.x * 0.06;
+          m.position.y = b.y + float + mouse.y * 0.04;
           m.position.z = b.z;
           m.scale.setScalar(popScale);
-          // hint pulse on slot 7
           if (m.userData.index === 7 && !state.rebus.hintRevealed && m.userData.frame) {
             const pulse = 0.25 + (Math.sin(tNow * 6) * 0.5 + 0.5) * 0.45;
             m.userData.frame.material.opacity = pulse;
             m.userData.frame.material.color.setHex(0xf0c36a);
           }
         });
-        camera.position.x += (mouse.x * 0.35 - camera.position.x) * 0.05;
-        camera.position.y += (0.2 + mouse.y * 0.2 - camera.position.y) * 0.05;
+        camera.position.x += (mouse.x * 0.12 - camera.position.x) * 0.05;
+        camera.position.y += (0.04 + mouse.y * 0.06 - camera.position.y) * 0.05;
+        camera.position.z = rebus3d.camZ;
         camera.lookAt(0, 0, 0);
         renderer.render(scene, camera);
       };
@@ -2301,6 +2386,10 @@
       if (canvas && rebus3d.boundClick) canvas.removeEventListener("pointerdown", rebus3d.boundClick);
       if (canvas && rebus3d.boundMove) canvas.removeEventListener("pointermove", rebus3d.boundMove);
       if (rebus3d.boundResize) window.removeEventListener("resize", rebus3d.boundResize);
+      if (rebus3d.resizeObs) {
+        try { rebus3d.resizeObs.disconnect(); } catch (_) { /* noop */ }
+        rebus3d.resizeObs = null;
+      }
       if (rebus3d.renderer) {
         try { rebus3d.renderer.dispose(); } catch (_) { /* noop */ }
       }
