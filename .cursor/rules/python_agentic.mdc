@@ -1,0 +1,25 @@
+---
+description: Python agentic conventions — typing, env isolation, async where apt.
+globs:
+  - "**/*.py"
+alwaysApply: false
+---
+
+# Python (agentic)
+
+## Types & structure
+- Annotate public functions and module boundaries; prefer `from __future__ import annotations`.
+- Keep CLI entry thin; put logic in importable modules.
+- Prefer pathlib over string path concat.
+
+## Env
+- Isolate deps (`venv` / project env); never commit `.env` or tokens.
+- Read config from env/settings files already used by the repo — do not invent a second settings tree.
+
+## Async
+- Use async for I/O-bound automation/agents/HTTP when the codebase already does; do not convert sync CLI monoliths without need.
+- Never block the event loop with long sync work without an executor.
+
+## Agents
+- Prefer evidence (exit code, JSON artifact) before claiming success.
+- Do not fight repo-specific Python rules (hub `python-hub.mdc`, SaaS rules) — those win on conflict.

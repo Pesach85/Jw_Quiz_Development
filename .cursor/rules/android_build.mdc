@@ -1,0 +1,23 @@
+---
+description: Android/Gradle conventions — version catalogs, isolated deps.
+globs:
+  - "**/*.gradle"
+  - "**/*.gradle.kts"
+  - "**/*.kt"
+alwaysApply: false
+---
+
+# Android / Gradle
+
+## Versions
+- Pin versions in the version catalog (`libs.versions.toml`) or a single root versions block.
+- Do not hardcode plugin/dependency versions scattered across modules.
+
+## Deps
+- Isolate app vs library modules; avoid circular module deps.
+- Prefer official AndroidX / Google artifacts; no mystery AARs without KB note.
+
+## Build hygiene
+- Keep `minSdk`/`targetSdk` aligned with project KB; do not bump casually.
+- Secrets only via local `local.properties` / CI secrets — never in `build.gradle*`.
+- After Gradle edits: sync + assembleDebug (or project smoke) before claiming done.
