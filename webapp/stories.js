@@ -1,5 +1,5 @@
 // AUTO-GENERATED — DO NOT EDIT — source: data/episodes.json
-// source-sha256: 4709f6a508106172d012d6b6c043d323d740e8df608280ab1c3ec036ae582237
+// source-sha256: 514e810093ef5fcbe776c81d8b149b85df37159ec86b31b4d16f4280c0761a4f
 window.JW_STORIES = [
   // ── Episodio 1: Il Giardino di Eden ─────────────────────────────────────────
   {
@@ -213,7 +213,7 @@ window.JW_STORIES = [
     engagementNote: "Illustra che Dio accoglie sempre i cuori sinceramente pentiti.",
     visibleKeys: ["038-boy-1", "75-750986_download_svg_download_png_old_woman_emoji_transparent", "1F37A", "1F416", "1F416"],
     hiddenKeys: ["1F4B0", "1F629"],
-    hintKey: "412-4121149_twins_clipart_emoji_dancing_girls_emoji_png_transparent",
+    hintKey: "1F3B6",
     imageCaptions: [
       "Il figlio minore",
       "Il padre anziano",
@@ -237,7 +237,7 @@ window.JW_STORIES = [
     scriptureQuote: "Il lupo risiederà temporaneamente con l'agnello... e un semplice ragazzino li condurrà. - Isaia 11:6 (TNM)",
     engagementNote: "Collega la profezia di Isaia al futuro paradiso terreno che Geova promette.",
     visibleKeys: ["1F932-1F3FC", "1F51A", "2935", "1F199", "1F451"],
-    hiddenKeys: ["1F451", "1F981"],
+    hiddenKeys: ["1F981", "1F5FA"],
     hintKey: "1F5FA",
     imageCaptions: [
       "Una donna in preghiera",
@@ -262,7 +262,7 @@ window.JW_STORIES = [
     scriptureQuote: "Noè fece secondo tutto ciò che Dio gli aveva comandato. Fece proprio così. - Genesi 6:22 (TNM)",
     engagementNote: "Noè è simbolo di salvezza attraverso l'obbedienza.",
     visibleKeys: ["1F6A2", "1F404", "1F413", "1F327", "1F308"],
-    hiddenKeys: ["1F404", "1F413"],
+    hiddenKeys: ["1F410", "1F411"],
     hintKey: "1F30A",
     imageCaptions: [
       "L'arca di salvezza",
@@ -287,8 +287,8 @@ window.JW_STORIES = [
     scriptureQuote: "Filippo... gli dichiarò la buona notizia intorno a Gesù. - Atti 8:35 (TNM)",
     engagementNote: "Mostra come Geova apre le porte per la predicazione e prepara cuori pronti.",
     visibleKeys: ["1F47C", "2753", "1F30A", "1F4D6", "Hackney-100"],
-    hiddenKeys: ["1F4D6", "Hackney_100"],
-    hintKey: "1F4AC",
+    hiddenKeys: ["203C", "1F4E3"],
+    hintKey: "203C",
     imageCaptions: [
       "Un angelo guida Filippo",
       "Una domanda: cosa significa?",

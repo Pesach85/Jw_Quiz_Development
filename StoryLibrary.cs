@@ -11,7 +11,7 @@ namespace Jw_Quiz_Development
             var list = new List<Story>
             {
             // AUTO-GENERATED — DO NOT EDIT — source: data/episodes.json
-            // source-sha256: 4709f6a508106172d012d6b6c043d323d740e8df608280ab1c3ec036ae582237
+            // source-sha256: 514e810093ef5fcbe776c81d8b149b85df37159ec86b31b4d16f4280c0761a4f
             new Story
             {
                 Id = 1,
@@ -242,7 +242,7 @@ namespace Jw_Quiz_Development
                 IsDynamic = false,
                 VisibleEmojis = new[] { "038-boy-1", "75-750986_download_svg_download_png_old_woman_emoji_transparent", "1F37A", "1F416", "1F416" },
                 HiddenEmojis = new[] { "1F4B0", "1F629" },
-                HintEmoji = "412-4121149_twins_clipart_emoji_dancing_girls_emoji_png_transparent",
+                HintEmoji = "1F3B6",
                 ImageCaptions = new[]
                 {
                     "Il figlio minore",
@@ -268,7 +268,7 @@ namespace Jw_Quiz_Development
                 ImageResourceName = "Isaiah",
                 IsDynamic = false,
                 VisibleEmojis = new[] { "1F932-1F3FC", "1F51A", "2935", "1F199", "1F451" },
-                HiddenEmojis = new[] { "1F451", "1F981" },
+                HiddenEmojis = new[] { "1F981", "1F5FA" },
                 HintEmoji = "1F5FA",
                 ImageCaptions = new[]
                 {
@@ -295,7 +295,7 @@ namespace Jw_Quiz_Development
                 ImageResourceName = "Noah",
                 IsDynamic = false,
                 VisibleEmojis = new[] { "1F6A2", "1F404", "1F413", "1F327", "1F308" },
-                HiddenEmojis = new[] { "1F404", "1F413" },
+                HiddenEmojis = new[] { "1F410", "1F411" },
                 HintEmoji = "1F30A",
                 ImageCaptions = new[]
                 {
@@ -322,8 +322,8 @@ namespace Jw_Quiz_Development
                 ImageResourceName = "Philip",
                 IsDynamic = false,
                 VisibleEmojis = new[] { "1F47C", "2753", "1F30A", "1F4D6", "Hackney-100" },
-                HiddenEmojis = new[] { "1F4D6", "Hackney_100" },
-                HintEmoji = "1F4AC",
+                HiddenEmojis = new[] { "203C", "1F4E3" },
+                HintEmoji = "203C",
                 ImageCaptions = new[]
                 {
                     "Un angelo guida Filippo",
