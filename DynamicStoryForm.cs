@@ -1,6 +1,5 @@
 using System;
 using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace Jw_Quiz_Development
@@ -8,7 +7,9 @@ namespace Jw_Quiz_Development
     public class DynamicStoryForm : Form
     {
         private readonly Story story;
-        private readonly bool[] revealed = new bool[3]; // 0/1 = hidden images, 2 = hint
+        /// <summary>0 = both hidden, 1 = slot5 revealed, 2 = slots 5+6 revealed.</summary>
+        private int revealState;
+        private bool hintRevealed;
         private StoryLocalizedText localizedText;
 
         private Label titleLabel;
@@ -206,9 +207,9 @@ namespace Jw_Quiz_Development
 
         private void HintPulseTimer_Tick(object sender, EventArgs e)
         {
-            if (revealed[2])
+            // Pulse only while the hint image is visible (attract attention to revealed clue).
+            if (!hintRevealed)
             {
-                hintPulseTimer.Stop();
                 picBoxes[7].BackColor = Color.FromArgb(34, 52, 77);
                 return;
             }
@@ -302,25 +303,28 @@ namespace Jw_Quiz_Development
             solutionLabel.Text = sb.ToString();
             solutionLabel.Height = string.IsNullOrWhiteSpace(localizedText.ScriptureQuote) ? 120 : 160;
 
-            revealButton.Text = revealed[0] || revealed[1] ? AppText.Get("HideImages") : AppText.Get("RevealImages");
-            hintButton.Text = revealed[2] ? AppText.Get("HideHint") : AppText.Get("ShowHint");
+            UpdateRevealUi();
+            UpdateHintUi();
             solutionButton.Text = solutionLabel.Visible ? AppText.Get("HideSolution") : AppText.Get("RevealSolution");
             nextButton.Text = AppText.Get("NextStory");
 
             UpdateXpLabel();
         }
 
+        private int HelpsUsed()
+        {
+            return revealState + (hintRevealed ? 1 : 0);
+        }
+
         private int CalculateXp()
         {
-            int used = revealed.Count(x => x);
-            int xp = 100 - (used * 20);
+            int xp = 100 - (HelpsUsed() * 20);
             return Math.Max(20, xp);
         }
 
         private int CalculateStars()
         {
-            int used = revealed.Count(x => x);
-            return Math.Max(1, 3 - used);
+            return Math.Max(1, 3 - HelpsUsed());
         }
 
         private void UpdateXpLabel()
@@ -335,36 +339,73 @@ namespace Jw_Quiz_Development
 
         private void RevealButton_Click(object sender, EventArgs e)
         {
-            if (!revealed[0])
+            if (revealState >= 2)
             {
-                var img = GetResourceImage(picBoxes[5].Tag as string);
-                if (img != null) picBoxes[5].Image = img;
-                revealed[0] = true;
-                revealButton.Text = AppText.Get("HideImages");
-                UpdateXpLabel();
+                revealState = 0;
             }
-            else if (!revealed[1])
+            else
             {
-                var img = GetResourceImage(picBoxes[6].Tag as string);
-                if (img != null) picBoxes[6].Image = img;
-                revealed[1] = true;
-                revealButton.Enabled = false;
-                revealButton.Text = AppText.Get("HideImages");
-                UpdateXpLabel();
+                revealState++;
             }
+
+            UpdateRevealUi();
+            UpdateXpLabel();
         }
 
         private void HintButton_Click(object sender, EventArgs e)
         {
-            if (!revealed[2])
+            hintRevealed = !hintRevealed;
+            UpdateHintUi();
+            UpdateXpLabel();
+        }
+
+        private void UpdateRevealUi()
+        {
+            var fallback = GetResourceImage(StoryResources.KeyUnknown);
+            if (revealState >= 1)
+            {
+                var img = GetResourceImage(picBoxes[5].Tag as string);
+                picBoxes[5].Image = img ?? fallback;
+            }
+            else
+            {
+                picBoxes[5].Image = fallback;
+            }
+
+            if (revealState >= 2)
+            {
+                var img = GetResourceImage(picBoxes[6].Tag as string);
+                picBoxes[6].Image = img ?? fallback;
+            }
+            else
+            {
+                picBoxes[6].Image = fallback;
+            }
+
+            revealButton.Enabled = true;
+            revealButton.Text = revealState >= 2
+                ? AppText.Get("HideImages")
+                : AppText.Get("RevealImages");
+        }
+
+        private void UpdateHintUi()
+        {
+            var fallback = GetResourceImage(StoryResources.KeyUnknown);
+            if (hintRevealed)
             {
                 var img = GetResourceImage(picBoxes[7].Tag as string);
-                if (img != null) picBoxes[7].Image = img;
-                revealed[2] = true;
-                hintButton.Enabled = false;
-                hintButton.Text = AppText.Get("HideHint");
-                UpdateXpLabel();
+                picBoxes[7].Image = img ?? fallback;
             }
+            else
+            {
+                picBoxes[7].Image = GetResourceImage(StoryResources.KeyHint) ?? fallback;
+                picBoxes[7].BackColor = Color.FromArgb(34, 52, 77);
+            }
+
+            hintButton.Enabled = true;
+            hintButton.Text = hintRevealed
+                ? AppText.Get("HideHint")
+                : AppText.Get("ShowHint");
         }
 
         private void SolutionButton_Click(object sender, EventArgs e)
