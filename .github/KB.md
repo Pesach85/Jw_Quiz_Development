@@ -370,6 +370,7 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-09-29 | **D-CLI Fase 2 — wrapper+JDK+build**: wrapper 8.7 + `local.properties` + `JAVA_HOME=D:\JDK_17`; aggiunto `android/gradle.properties` (`useAndroidX`); `assembleDebug` **FAIL** duplicate kotlin-stdlib (1.8.22 vs jdk7/8 1.6.21) — STOP prima di toccare `app/build.gradle` | ⛔ STOP fix pending OK |
 | 2026-09-29 | **D-CLI Fase 2-bis — fix kotlin + build + smoke**: constraints kotlin-stdlib-jdk7/8 → 1.8.22; `assembleDebug` OK → `app-debug.apk` (~147 MB); install `com.jwquiz.app` su Motorola edge 40 (`ZY22HFWMGV`); smoke parziale (UI+bundle; rebus Ep10–12 toggle stelle non automatizzato via adb/WebView) | ✅ build; smoke parziale |
 | 2026-09-29 | **D-CLI smoke Ep 10 adb-only**: reveal/hide + hint su `ZY22HFWMGV`; stelle peak ★1 dopo 2 reveal, invariate su hide/hint toggle (H4b/F3); hidden 1F981/1F5FA visibili | ✅ Verde |
+| 2026-09-29 | **Content — bozze episodi 19+**: `docs/NEW_STORIES_DRAFT.md` (Babel, Daniele, Saul→Paolo, Gerico, Marta/Maria); schema v1; citazioni solo ref+parafrasi pending OK; PNG esistenti | ⏳ review umana |
 ---
 
 ## 11. Next Best Decisions (Proposte Attive)
@@ -383,6 +384,7 @@ Aggiornare questa sezione ad ogni sessione di lavoro.
 | P0 Alta | Git | ~~Allineare `main` locale a `origin/main`~~ ✅ **COMPLETATO** (ff-only → `3758d8d`) — prima del deploy: commit/stash KB+report per tree pulito |
 | P0 Alta | Webapp | ~~Configurare `ADMIN_SECRET` nelle env var di Cloudflare Pages → Settings → Environment Variables per attivare il pannello admin statistiche~~ ✅ **COMPLETATO** (env Production + redeploy; smoke API 2026-09-29 verde) |
 | P0 Alta | Android | **D-CLI smoke Ep10 ✅** (adb-only, H4b/F3). Commit KB proposto. G3 chiudibile dopo OK commit |
+| P1 Alta | Content | **Bozze 19+ in review umana** — `docs/NEW_STORIES_DRAFT.md` (id 19–23). Non merge in `episodes.json` finché OK citazioni + temi + PNG. Schema v1 invariato |
 | P1 Alta | Immersive | ~~Unificare dataset Q&A immersivo (G1)~~ ✅ **COMPLETATO** (Steps 0–5: `episodes.json` + generator + sync_all + adapter + `verify_episode_parity.py`) |
 | P1 Alta | Multilanguage | Rifinire QA linguistico delle storie 1-12 ora renderizzate nel runtime dinamico |
 | Alta | Web Immersive | ~~Landing 3D + theater Q&A episodi 1–18 (single HTML CDN)~~ ✅ **COMPLETATO** (`webapp/index.html`) |
@@ -395,7 +397,7 @@ Aggiornare questa sezione ad ogni sessione di lavoro.
 | Media | Gamification | **Classifica sessione locale**: 2-8 partecipanti inseriscono nome, XP aggregati, classifica finale |
 | Media | Gamification | **Percorsi Tematici**: raccolte storie per tema (Fede/Amore/Coraggio) con barra progresso sbloccabile |
 | Media | UX | ProgressPanel: aggiungere grafico barre XP e lista storie completate |
-| Media | Content | Aggiungere storia ID 19+ (es. La Torre di Babele, Marta e Maria, Saul → Paolo) anche nel theater immersivo — **solo su richiesta umana** |
+| Media | Content | ~~Aggiungere storia ID 19+ (es. La Torre di Babele, Marta e Maria, Saul → Paolo)~~ → **bozze in** `docs/NEW_STORIES_DRAFT.md` (⏳ review); merge solo dopo OK umano |
 | Bassa | Gamification | **Timer di indovinamento**: 60s opzionale, bonus XP se risposta entro scadenza |
 | Bassa | Gamification | **Modalità Riflessione**: dopo soluzione, domanda aperta da leggere al gruppo |
 | Bassa | Gamification | **Storia del Giorno**: selezione automatica basata sulla data del calendario |
@@ -653,5 +655,6 @@ Commit se il tree deve tornare pulito (deploy Wrangler). Push solo se richiesto 
 - **APK:** `android/app/build/outputs/apk/debug/app-debug.apk` (non in git).
 - **Smoke Ep 10 (adb-only) ✅:** device `ZY22HFWMGV` Motorola edge 40. Reveal×2 ★3→★2→★1; Nascondi slot ma ★1 invariato; hint on/off ★1. Screenshot `.local/smoke/00`–`12` (gitignored). Bundle F2 Ep10/11/12 OK.
 - **Off-limits:** deploy; `www/**`; `local.properties`; APK; `.local/**`.
-- **Prossimo:** OK umano → commit `kb: android smoke Ep 10 device USB — toggle + stelle A OK`. Poi G3 chiuso.
+- **Prossimo:** OK umano → commit `kb: android smoke Ep 10…` (se ancora aperto) e/o `docs(content): bozze episodi 19+ (review)`. Poi review citazioni in `NEW_STORIES_DRAFT.md` prima di merge catalogo.
+- **Content 19+:** bozze in `docs/NEW_STORIES_DRAFT.md` — **non** in `episodes.json`.
 - **Dev server:** MIME `.js` → `:8081` o `npx serve`.
