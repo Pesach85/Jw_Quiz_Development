@@ -28,9 +28,49 @@
 | Desktop Debug | `.\build.bat` è Release; Debug: MSBuild `Jw_Quiz_Development.csproj /p:Configuration=Debug` | `bin\Debug\Jw_Quiz_Development.exe` |
 | Desktop Release | `.\build.bat` | `bin\Release\Jw_Quiz_Development.exe` |
 | Pipeline asset + Android www | `python tools/sync_all.py` | `Resources/` + `webapp/assets/` (se masters) e `android/app/src/main/assets/www/` (gitignored) |
-| Android APK | Dopo sync: aprire cartella `android/` in Android Studio | `android/app/build/` (non committare) |
+| Android APK | Dopo sync + toolchain host (sotto): CLI o Android Studio su `android/` | `android/app/build/` (non committare) |
 
 Non lanciare `tools/*.py` da `android/`. Non concatenare due comandi Wrangler sulla stessa riga. Working tree pulito prima del deploy Pages.
+
+### Android toolchain host (D-CLI Fase 0-bis — 2026-09-29) — **NON installare da zero**
+
+Il progetto sibling **I_Tuoi_Versetti** (account Cursor, stesso host) ha già SDK + Gradle Wrapper + JDK. JW Quiz **riusa** quell’ambiente; non scaricare Android SDK, cmdline-tools, né Gradle distribution da zero.
+
+| Voce | Path canonico (verificato) |
+|------|----------------------------|
+| Progetto riferimento | `D:\I_Tuoi_Versetti` |
+| `ANDROID_HOME` / `ANDROID_SDK_ROOT` / `sdk.dir` | `D:\Android\Sdk` |
+| `JAVA_HOME` (Gradle/AGP) | `D:\JDK_17` (Oracle 17.0.17) — default negli script Versetti |
+| Wrapper Gradle (sorgente da copiare) | `D:\I_Tuoi_Versetti\gradlew` + `gradlew.bat` + `gradle\wrapper\` |
+| Gradle (wrapper Versetti) | **8.7** (`gradle-8.7-bin.zip`) — smoke `.\gradlew.bat -v` OK con JDK 17 |
+| AGP riferimento Versetti | 8.6.0 · JW Quiz `android/build.gradle` = **8.5.2** (compatibile con Gradle 8.7; non alzare senza OK) |
+| `adb` | `D:\Android\Sdk\platform-tools\adb.exe` (1.0.41 / 36.0.0) |
+| `sdkmanager` | `D:\Android\Sdk\cmdline-tools\latest\bin\sdkmanager.bat` |
+| Emulator | `D:\Android\Sdk\emulator\emulator.exe` |
+| AVD installato | `Pixel_2_API_30` |
+| Platforms presenti | `android-29` … `android-35` |
+| Build-tools (es.) | `29.0.2`, `31.0.0`, `34.0.0`, `36.1.0-rc1` |
+
+**Gap JW Quiz `android/` (Fase 0):** manca `gradlew`/`gradlew.bat`/`gradle/wrapper/` e manca `local.properties`. Non è “SDK assente”.
+
+**Setup minimo (Fase 1, solo dopo OK umano — non eseguito in 0-bis):**
+
+```powershell
+# Env sessione (PowerShell)
+$env:JAVA_HOME = "D:\JDK_17"
+$env:ANDROID_HOME = "D:\Android\Sdk"
+$env:ANDROID_SDK_ROOT = "D:\Android\Sdk"
+$env:PATH = "$env:JAVA_HOME\bin;$env:ANDROID_HOME\platform-tools;$env:PATH"
+
+# local.properties (gitignored) — stesso sdk.dir di Versetti
+Set-Content -Path "D:\Jw_Quiz_Development\android\local.properties" -Encoding ascii -Value "sdk.dir=D:\\Android\\Sdk"
+
+# Wrapper: copiare da Versetti (NON gradle wrapper --gradle-version da internet se il jar Versetti basta)
+Copy-Item "D:\I_Tuoi_Versetti\gradlew","D:\I_Tuoi_Versetti\gradlew.bat" "D:\Jw_Quiz_Development\android\"
+Copy-Item -Recurse "D:\I_Tuoi_Versetti\gradle\wrapper" "D:\Jw_Quiz_Development\android\gradle\wrapper"
+```
+
+Poi dal root: `python tools/sync_all.py` → `cd android` → `.\gradlew.bat assembleDebug --no-daemon`. AVD smoke: `emulator -avd Pixel_2_API_30`.
 
 ---
 
@@ -322,8 +362,10 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-09-29 | **H3-bis F3C-A — toggle app.js classic flat**: `maxRevealUsed`/`hintEverUsed` (policy A stelle permanenti); reveal 0→1→2→hide; hint toggle; mai disabled; scope rebus flat &lt;40 righe; editor/API/i18n invariati | ✅ F3C-A |
 | 2026-09-29 | **Stars policy decision**: `docs/STARS_POLICY_DECISION.md` — raccomandazione **A (peak help)** cross-surface | ✅ Design |
 | 2026-09-29 | **H4a — stars policy A desktop**: `DynamicStoryForm` `maxRevealUsed`/`hintEverUsed`; `HelpsUsed()` peak; hide non ripristina stelle; MSBuild Debug 0 | ✅ H4a |
-| 2026-09-29 | **H4b — stars policy A immersive**: `state.rebus.maxRevealUsed`/`hintEverUsed`; `recomputeStars` peak; F3 toggle preservato | ⏳ commit proposto |
-| 2026-09-29 | **C-BUILD Step 4 — adapter**: `index.html` rimuove STORIES inline; `DECOR_SYMBOLS` + map `JW_STORIES`×`JW_IMMERSIVE`; smoke 18 tiles / quiz / rebus / i18n | ⏳ commit proposto |
+| 2026-09-29 | **H4b — stars policy A immersive**: `state.rebus.maxRevealUsed`/`hintEverUsed`; `recomputeStars` peak; F3 toggle preservato | ✅ H4b |
+| 2026-09-29 | **C-BUILD Step 4 — adapter**: `index.html` rimuove STORIES inline; `DECOR_SYMBOLS` + map `JW_STORIES`×`JW_IMMERSIVE`; smoke 18 tiles / quiz / rebus / i18n | ✅ Step 4 |
+| 2026-09-29 | **C-BUILD Step 5 — parity + G1 chiuso**: `tools/verify_episode_parity.py` (hash + JS/CS/adapter + structural/i18n/PNG); negativi stale/title/DECOR; AGENTS checklist | ⏳ commit proposto |
+| 2026-09-29 | **D-CLI Fase 0-bis — Android env**: NON installare SDK/Gradle da zero; riuso `D:\I_Tuoi_Versetti` + `D:\Android\Sdk` + `D:\JDK_17`; path in KB §1 + `docs/AGENTS.md` § Android environment + `android/README.md`; gap JW = solo wrapper + `local.properties` | ✅ Verificato + docs |
 ---
 
 ## 11. Next Best Decisions (Proposte Attive)
@@ -336,8 +378,8 @@ Aggiornare questa sezione ad ogni sessione di lavoro.
 |---------|------|---------|
 | P0 Alta | Git | ~~Allineare `main` locale a `origin/main`~~ ✅ **COMPLETATO** (ff-only → `3758d8d`) — prima del deploy: commit/stash KB+report per tree pulito |
 | P0 Alta | Webapp | ~~Configurare `ADMIN_SECRET` nelle env var di Cloudflare Pages → Settings → Environment Variables per attivare il pannello admin statistiche~~ ✅ **COMPLETATO** (env Production + redeploy; smoke API 2026-09-29 verde) |
-| P0 Alta | Android | Aprire `android/` in Android Studio **dopo** `python tools/sync_all.py`, generare Gradle Wrapper, smoke test APK |
-| P1 Alta | Immersive | Unificare dataset Q&A immersivo (G1) — **Step 0–4 fatti** (`episodes.json` + generator + sync_all + adapter `index.html`); **Step 5 pending** (parity test → G1 chiuso) |
+| P0 Alta | Android | **D-CLI**: Fase 0-bis ✅ (path in KB §1). Prossimo (OK umano): copia wrapper da `D:\I_Tuoi_Versetti` + `local.properties` `sdk.dir=D:\\Android\\Sdk` + `JAVA_HOME=D:\JDK_17` → `sync_all` → `assembleDebug` / AVD `Pixel_2_API_30`. **Non** installare SDK/Gradle da zero |
+| P1 Alta | Immersive | ~~Unificare dataset Q&A immersivo (G1)~~ ✅ **COMPLETATO** (Steps 0–5: `episodes.json` + generator + sync_all + adapter + `verify_episode_parity.py`) |
 | P1 Alta | Multilanguage | Rifinire QA linguistico delle storie 1-12 ora renderizzate nel runtime dinamico |
 | Alta | Web Immersive | ~~Landing 3D + theater Q&A episodi 1–18 (single HTML CDN)~~ ✅ **COMPLETATO** (`webapp/index.html`) |
 | Alta | Immersive | ~~Pack fotorealistico rebus (concept→alias) + sync web/desktop/Android~~ ✅ **COMPLETATO** |
@@ -432,7 +474,7 @@ L’esperienza è **ispirata** allo stile didattico JW.org “Fai vivere il racc
 | 60fps drop | Frame stutter su laptop integrati | Ridurre `COUNT` particelle; abbassare DPR; disabilitare solids su low-end (estensione futura) |
 | Import map CDN down | Console: failed to resolve `three` | Pin `three@0.160.0` su unpkg; **dynamic `import("three")`** dentro try/catch così theater/i18n restano usabili anche se CDN/WebGL falliscono |
 | Spoiler titoli in rebus | Titolo storia in dropdown | Immersive può mostrare titoli (modalità diversa); rebus resta anti-spoiler |
-| Drift contenuti 1–18 | Q&A immersivo ≠ testi rebus | Documentare in Next Best: unificare dataset; finché single-file, sync manuale ID/titolo/tema |
+| Drift contenuti 1–18 | Q&A immersivo ≠ testi rebus | **Chiuso G1:** canon `data/episodes.json` + generator + adapter; gate `verify_episode_parity.py` |
 | Encoding KB | Caratteri `ÔÇö` / mojibake in KB | Scrivere nuovi aggiornamenti in UTF-8 puro; evitare copy da terminal legacy |
 | i18n link rebus | Bottone “Esperienza 3D” non traduce | Usare `data-i18n` + chiavi in `WEB_TEXT` Italian/English |
 | Accessibilità motion | Vertigini / reduced motion | Media query `prefers-reduced-motion` + fallback 2D |
@@ -447,6 +489,7 @@ L’esperienza è **ispirata** allo stile didattico JW.org “Fai vivere il racc
 | Indizi tagliati nel riquadro | Colonne sx/dx del rebus 3D tagliate dal bordo arrotondato | Non allargare a caso il CSS. Causa: FOV/camera z fissi + lastre su cilindro (z alto ai lati). Soluzione: `fitRebusCamera()` su AABB della tavola 4×2 + `ResizeObserver`; board shallow; `.rebus-viewport` riempie `theater-stage` `1fr`. Fallback: grid `minmax(0,1fr)` senza `min-height` fisso |
 | Wrangler `--commit-dirty` | `Warning: git repo has uncommitted changes` | Working tree **deve** essere pulito prima del deploy. Causa tipica: `sync_all.py` cancellava `android/.../www/.gitkeep`. Fix: lo script riscrive `.gitkeep` dopo il copy. **Non** usare `--commit-dirty=true` come scusa per lasciare sporco il repo |
 | `sync_all.py` File not found | lanciato da `android/` | Sempre dal root: `cd D:\Jw_Quiz_Development` poi `python tools/sync_all.py` |
+| Android CLI “SDK / gradlew missing” | `android/` senza wrapper o senza `local.properties`; tentazione di installare SDK | **Non** installare da zero. Riusa host Versetti: §1 path canonici (`D:\Android\Sdk`, `D:\JDK_17`, wrapper da `D:\I_Tuoi_Versetti`). Solo copia wrapper + `sdk.dir` |
 | `npx wrangler` Unknown arguments | due comandi incollati sulla stessa riga | Un comando per volta: `npx wrangler pages deploy webapp --project-name=jwquiz` |
 | Wrangler “Unknown arguments: wrangler, pages…” | `npx wrangler` invocato dopo un wrangler già globale/ambiguo | Dal root repo, una sola invocazione; se persiste: `npx --yes wrangler@4.124.0 pages deploy webapp --project-name=jwquiz` |
 
@@ -510,14 +553,17 @@ Obiettivo: working tree pulito **senza** cancellare sorgenti e **senza** committ
 
 | Path | Ruolo |
 |------|--------|
-| `webapp/` | Player (`index.html`) + editor (`classic.html`) + PNG in `webapp/assets/` |
+| `data/episodes.json` | **SOURCE** — catalogo canonico episodi 1–18 |
+| `webapp/stories.js` | **GENERATED** (committato) — `JW_STORIES` + `JW_IMMERSIVE`; header `source-sha256` |
+| `StoryLibrary.cs` | **GENERATED** (committato) — desktop catalog; stesso hash |
+| `webapp/index.html` adapter | Runtime da `JW_*`; **STORIES inline RIMOSSO** |
+| `webapp/index.html` `DECOR_SYMBOLS` | **MANUAL** — 18 righe emoji intro (non in JSON) |
+| `webapp/` (resto) | Player + editor + PNG in `webapp/assets/` |
 | `Resources/` | PNG desktop WinForms (stesse chiavi del web) |
-| `data/episodes.json` | Catalogo canonico episodi 1–18 (Option B) |
-| `StoryLibrary.cs`, `webapp/stories.js` | **Generati** da `generate_story_artifacts.py` (committati; rigenerati via `sync_all.py`) |
 | `DynamicStoryForm.cs`, `AppText.cs` | Desktop (hand-written) |
 | `functions/` | Cloudflare Pages Functions |
 | `android/app/src/main/` eccetto `assets/www/**` | Shell WebView (Manifest, Activity, Gradle) |
-| `tools/*.py` | Pipeline sync / photo |
+| `tools/*.py` | Pipeline sync / photo / parity |
 | `.github/KB.md`, `docs/AGENTS.md`, `docs/ARCHITECTURE.md` | Protocollo agent |
 
 ### Generated / cache (non committare)
@@ -596,10 +642,11 @@ Commit se il tree deve tornare pulito (deploy Wrangler). Push solo se richiesto 
 
 ### Stato corrente (handoff) — 2026-09-29
 
-- **Git:** H4a su `main`. Working tree: `webapp/index.html` = **H4b + Step 4** (non ancora split in 2 commit) + KB.
-- **H4b:** immersive policy **A** peak-help; F3 toggle intatto; smoke Ep 1/12 OK.
-- **Step 4:** STORIES inline rimossi; adapter `JW_STORIES`×`JW_IMMERSIVE` + `DECOR_SYMBOLS` (opz. A); 18 tiles; quiz morale OK; i18n EN OK; classic regressione OK.
-- **Stelle cross-surface:** desktop A, classic A, immersive A.
-- **G1:** Step 0–4 fatti; **Step 5** (parity) apre G1 chiuso.
-- **Off-limits:** `app.js` salvo OK + rebus flat; `analytics.js`, `wrangler.toml`, deploy, `www/**`.
-- **Prossimo:** OK → commit H4b poi Step 4 (separati) → Step 5.
+- **Git:** H4a/H4b/Step 4 su `main`. Working tree: Step 5 (`verify_episode_parity.py` + AGENTS/README/KB) + KB D-CLI 0-bis non ancora committato.
+- **G1:** ✅ **COMPLETATO** (Steps 0–5). Canon = `data/episodes.json`; gate = `python tools/verify_episode_parity.py`.
+- **Stelle:** policy **A** cross-surface (desktop H4a, immersive H4b, classic F3C-A).
+- **Toggle reveal/hint:** simmetrico su 3 superfici.
+- **Off-limits:** `app.js` salvo OK esplicito + scope rebus flat; `analytics.js`, `wrangler.toml`, `functions/api/*`, deploy, `www/**`.
+- **D-CLI:** Fase **0-bis** ✅ — path Android in KB §1, `docs/AGENTS.md` § Android environment, `android/README.md`. **STOP** prima di copia wrapper / `assembleDebug` (Fase 1) finché non c’è OK umano. Nessun install SDK.
+- **Prossimo:** commit Step 5 + KB 0-bis (se richiesto) → D-CLI Fase 1 (wrapper + local.properties + smoke APK). Nessun deploy in questo gate.
+- **Dev server:** MIME `.js` → `:8081` o `npx serve` (vedi §13).
