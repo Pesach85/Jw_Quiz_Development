@@ -11,10 +11,14 @@ Run from **repo root** only (`D:\Jw_Quiz_Development`).
 | `validate_episodes.py` | Validate `data/episodes.json` (Option B schema; use `--full-catalog` for ids 1–18) |
 | `migrate_episodes_step1.py` | Regenerate `data/episodes.json` from STORIES + `stories.js` + `StoryLibrary.cs` (Step 1) |
 | `generate_story_artifacts.py` | Generate `webapp/stories.js` + `StoryLibrary.cs` from `data/episodes.json` (`--check`, `--dry-run`) |
+| `verify_episode_parity.py` | **Parity gate:** `episodes.json` ↔ `stories.js` / `StoryLibrary.cs` / adapter `index.html` + structural/i18n/PNG (`--skip-adapter`, `--skip-cs`, `--skip-hash`) |
 
 ```powershell
 python tools/sync_all.py
+python tools/verify_episode_parity.py
 ```
+
+After editing `data/episodes.json` or generators, parity must exit 0 before commit.
 
 Do not run these from `android/` (scripts resolve paths from `tools/` → repo root, but muscle memory `cd android` then `python tools/...` fails).
 
