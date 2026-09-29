@@ -10,6 +10,10 @@ namespace Jw_Quiz_Development
         /// <summary>0 = both hidden, 1 = slot5 revealed, 2 = slots 5+6 revealed.</summary>
         private int revealState;
         private bool hintRevealed;
+        /// <summary>Peak reveal helps this episode (policy A: hide does not restore stars).</summary>
+        private int maxRevealUsed;
+        /// <summary>Hint used at least once this episode (policy A).</summary>
+        private bool hintEverUsed;
         private StoryLocalizedText localizedText;
 
         private Label titleLabel;
@@ -313,7 +317,7 @@ namespace Jw_Quiz_Development
 
         private int HelpsUsed()
         {
-            return revealState + (hintRevealed ? 1 : 0);
+            return maxRevealUsed + (hintEverUsed ? 1 : 0);
         }
 
         private int CalculateXp()
@@ -346,6 +350,8 @@ namespace Jw_Quiz_Development
             else
             {
                 revealState++;
+                if (revealState > maxRevealUsed)
+                    maxRevealUsed = revealState;
             }
 
             UpdateRevealUi();
@@ -355,6 +361,8 @@ namespace Jw_Quiz_Development
         private void HintButton_Click(object sender, EventArgs e)
         {
             hintRevealed = !hintRevealed;
+            if (hintRevealed)
+                hintEverUsed = true;
             UpdateHintUi();
             UpdateXpLabel();
         }
