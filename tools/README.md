@@ -9,6 +9,7 @@ Run from **repo root** only (`D:\Jw_Quiz_Development`).
 | `sync_android_www.py` | Copy `webapp/` → Android WebView bundle (restores `www/.gitkeep`) |
 | `sync_all.py` | **Canonical:** apply (if masters exist) + Android sync |
 | `validate_episodes.py` | Validate `data/episodes.json` (Option B schema; use `--full-catalog` for ids 1–18) |
+| `migrate_episodes_step1.py` | Regenerate `data/episodes.json` from STORIES + `stories.js` + `StoryLibrary.cs` (Step 1) |
 
 ```powershell
 python tools/sync_all.py

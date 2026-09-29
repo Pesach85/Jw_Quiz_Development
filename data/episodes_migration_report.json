@@ -1,0 +1,166 @@
+{
+  "inventory": [
+    {
+      "id": 1,
+      "STORIES": true,
+      "stories.js": true,
+      "StoryLibrary.cs": true
+    },
+    {
+      "id": 2,
+      "STORIES": true,
+      "stories.js": true,
+      "StoryLibrary.cs": true
+    },
+    {
+      "id": 3,
+      "STORIES": true,
+      "stories.js": true,
+      "StoryLibrary.cs": true
+    },
+    {
+      "id": 4,
+      "STORIES": true,
+      "stories.js": true,
+      "StoryLibrary.cs": true
+    },
+    {
+      "id": 5,
+      "STORIES": true,
+      "stories.js": true,
+      "StoryLibrary.cs": true
+    },
+    {
+      "id": 6,
+      "STORIES": true,
+      "stories.js": true,
+      "StoryLibrary.cs": true
+    },
+    {
+      "id": 7,
+      "STORIES": true,
+      "stories.js": true,
+      "StoryLibrary.cs": true
+    },
+    {
+      "id": 8,
+      "STORIES": true,
+      "stories.js": true,
+      "StoryLibrary.cs": true
+    },
+    {
+      "id": 9,
+      "STORIES": true,
+      "stories.js": true,
+      "StoryLibrary.cs": true
+    },
+    {
+      "id": 10,
+      "STORIES": true,
+      "stories.js": true,
+      "StoryLibrary.cs": true
+    },
+    {
+      "id": 11,
+      "STORIES": true,
+      "stories.js": true,
+      "StoryLibrary.cs": true
+    },
+    {
+      "id": 12,
+      "STORIES": true,
+      "stories.js": true,
+      "StoryLibrary.cs": true
+    },
+    {
+      "id": 13,
+      "STORIES": true,
+      "stories.js": true,
+      "StoryLibrary.cs": true
+    },
+    {
+      "id": 14,
+      "STORIES": true,
+      "stories.js": true,
+      "StoryLibrary.cs": true
+    },
+    {
+      "id": 15,
+      "STORIES": true,
+      "stories.js": true,
+      "StoryLibrary.cs": true
+    },
+    {
+      "id": 16,
+      "STORIES": true,
+      "stories.js": true,
+      "StoryLibrary.cs": true
+    },
+    {
+      "id": 17,
+      "STORIES": true,
+      "stories.js": true,
+      "StoryLibrary.cs": true
+    },
+    {
+      "id": 18,
+      "STORIES": true,
+      "stories.js": true,
+      "StoryLibrary.cs": true
+    }
+  ],
+  "mergeNotes": [
+    "id 1 imageCaptionsIt: kept stories.js (C# differs)",
+    "id 1 rebus.solution: JS vs C# differ; kept stories.js (146 vs 147 chars)",
+    "id 1 rebus.scriptureQuote: JS vs C# differ; kept stories.js (186 vs 188 chars)",
+    "id 1 rebus.engagementNote: JS vs C# differ; kept stories.js (79 vs 80 chars)",
+    "id 2 rebus.keyword: JS vs C# differ; kept stories.js (7 vs 8 chars)",
+    "id 2 rebus.solution: JS vs C# differ; kept stories.js (157 vs 160 chars)",
+    "id 2 rebus.scriptureQuote: JS vs C# differ; kept stories.js (150 vs 151 chars)",
+    "id 3 imageCaptionsIt: kept stories.js (C# differs)",
+    "id 3 rebus.solution: JS vs C# differ; kept stories.js (117 vs 121 chars)",
+    "id 3 rebus.scriptureQuote: JS vs C# differ; kept stories.js (132 vs 133 chars)",
+    "id 4 rebus.solution: JS vs C# differ; kept stories.js (150 vs 154 chars)",
+    "id 4 rebus.scriptureQuote: JS vs C# differ; kept stories.js (155 vs 157 chars)",
+    "id 5 rebus.hint: JS vs C# differ; kept stories.js (79 vs 80 chars)",
+    "id 5 rebus.solution: JS vs C# differ; kept stories.js (110 vs 112 chars)",
+    "id 5 rebus.scriptureQuote: JS vs C# differ; kept stories.js (115 vs 116 chars)",
+    "id 6 rebus.title: JS vs C# differ; kept stories.js (17 vs 18 chars)",
+    "id 6 rebus.solution: JS vs C# differ; kept stories.js (138 vs 142 chars)",
+    "id 6 rebus.scriptureQuote: JS vs C# differ; kept stories.js (80 vs 82 chars)",
+    "id 6 rebus.engagementNote: JS vs C# differ; kept stories.js (113 vs 114 chars)",
+    "id 7 visibleKeys: kept stories.js (differs from C#)",
+    "id 7 rebus.solution: JS vs C# differ; kept stories.js (98 vs 100 chars)",
+    "id 7 rebus.scriptureQuote: JS vs C# differ; kept stories.js (44 vs 45 chars)",
+    "id 8 rebus.hint: JS vs C# differ; kept stories.js (74 vs 75 chars)",
+    "id 8 rebus.solution: JS vs C# differ; kept stories.js (109 vs 111 chars)",
+    "id 8 rebus.scriptureQuote: JS vs C# differ; kept stories.js (142 vs 143 chars)",
+    "id 9 visibleKeys: kept stories.js (differs from C#)",
+    "id 9 hintKey: kept stories.js ('412-4121149_twins_clipart_emoji_dancing_girls_emoji_png_transparent' vs C# '1F3B6')",
+    "id 9 rebus.solution: JS vs C# differ; kept stories.js (99 vs 101 chars)",
+    "id 9 rebus.scriptureQuote: JS vs C# differ; kept stories.js (102 vs 104 chars)",
+    "id 10 visibleKeys: stories.js has 4 — using StoryLibrary.cs (5 keys)",
+    "id 10 imageCaptionsIt: stories.js has 7 — using StoryLibrary.cs (8 captions)",
+    "id 10 rebus.solution: JS vs C# differ; kept stories.js (93 vs 94 chars)",
+    "id 10 rebus.scriptureQuote: JS vs C# differ; kept stories.js (106 vs 108 chars)",
+    "id 11 rebus.title: JS vs C# differ; kept stories.js (16 vs 17 chars)",
+    "id 11 rebus.solution: JS vs C# differ; kept stories.js (79 vs 82 chars)",
+    "id 11 rebus.scriptureQuote: JS vs C# differ; kept stories.js (94 vs 97 chars)",
+    "id 11 rebus.engagementNote: JS vs C# differ; kept stories.js (50 vs 52 chars)",
+    "id 12 visibleKeys: stories.js has 3 — using StoryLibrary.cs (5 keys)",
+    "id 12 hintKey: kept stories.js ('1F4AC' vs C# '203C')",
+    "id 12 imageCaptionsIt: stories.js has 6 — using StoryLibrary.cs (8 captions)",
+    "id 12 rebus.solution: JS vs C# differ; kept stories.js (134 vs 136 chars)",
+    "id 12 rebus.scriptureQuote: JS vs C# differ; kept stories.js (74 vs 76 chars)",
+    "id 13 rebus.solution: JS vs C# differ; kept stories.js (131 vs 132 chars)",
+    "id 13 rebus.scriptureQuote: JS vs C# differ; kept stories.js (188 vs 190 chars)",
+    "id 14 rebus.scriptureQuote: JS vs C# differ; kept stories.js (191 vs 193 chars)",
+    "id 15 rebus.scriptureQuote: JS vs C# differ; kept stories.js (164 vs 166 chars)",
+    "id 16 rebus.title: JS vs C# differ; kept stories.js (18 vs 19 chars)",
+    "id 16 rebus.scriptureQuote: JS vs C# differ; kept stories.js (217 vs 218 chars)",
+    "id 17 rebus.scriptureQuote: JS vs C# differ; kept stories.js (108 vs 110 chars)",
+    "id 18 rebus.solution: JS vs C# differ; kept stories.js (124 vs 125 chars)",
+    "id 18 rebus.scriptureQuote: JS vs C# differ; kept stories.js (72 vs 73 chars)"
+  ],
+  "crossCheckUnexpected": []
+}

@@ -314,6 +314,7 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-09-29 | **Audit regressione Immersive (Prompt H)**: pre-flight tree pulito @ `afdd6c3`, `app.js` invariato; preview `127.0.0.1:8080` — checklist §13 verde (warning attesi: heartbeat badge assente in locale senza Functions; UI rebus classic non automatizzata browser) | ✅ Nessun KO bloccante |
 | 2026-09-29 | **Prompt C (design G1)**: drift mappato STORIES vs `stories.js` vs `StoryLibrary.cs`; opzioni A/B/C valutate; **raccomandazione Option B** (`data/episodes.json` + generator Python → `stories.js` + `StoryLibrary.cs`); deliverable `docs/DATASET_UNIFICATION_DESIGN.md` — **build non avviato** | ✅ Design |
 | 2026-09-29 | **Prompt C build Step 0**: `data/episodes.schema.json`, `tools/validate_episodes.py`, fixture OK/broken; checkpoint validator exit 0/1; vincoli Q2 (no symbols in JSON), Q4 (theaterQuote vs scriptureQuoteIt) | ✅ Step 0 |
+| 2026-09-29 | **C-BUILD Step 1 — migrazione episodes.json (18 record)**: merge STORIES + `stories.js` + `StoryLibrary.cs`; validator `--full-catalog` verde; ep.8 titolo unificato; ep.10/12 keys+caption da C# (stories.js incompleto) | ✅ Step 1 |
 ---
 
 ## 11. Next Best Decisions (Proposte Attive)
@@ -582,8 +583,9 @@ Commit se il tree deve tornare pulito (deploy Wrangler). Push solo se richiesto 
 - **Git:** `main` allineato a `origin/main`, tree pulito (post push Prompt H).
 - **Fatto:** A, B, B2 (G2 chiuso), H (audit verde); **Prompt C fase design** — G1 analizzato, raccomandazione **Option B** (`data/episodes.json` + `tools/generate_story_artifacts.py`).
 - **Deliverable design:** `docs/DATASET_UNIFICATION_DESIGN.md` (drift, opzioni, rollout 6 step).
-- **Build G1 Step 0 fatto:** schema v1 + `python tools/validate_episodes.py` (fixture OK exit 0, broken exit 1). **Step 1–5 non avviati.**
-- **G1:** ancora **aperto** (chiusura solo dopo Step 5).
-- **Prossimo:** Step 1 migrazione → `data/episodes.json` (18 episodi, `--full-catalog`).
+- **Build G1:** Step 0 ✅ Step 1 ✅ — `data/episodes.json` (18 episodi), report `data/episodes_migration_report.json`, tool `tools/migrate_episodes_step1.py`. Validator full-catalog **exit 0**.
+- **G1:** ancora **aperto** (Step 2 generator → Step 5 parity).
+- **Nota merge Step 1:** ep.10/12 `visibleKeys`/caption da **StoryLibrary.cs** (stories.js aveva 4/3 visibili e caption incomplete); ep.9 `hintKey` resta stories.js (chiave lunga clipart). Apostrofi TNM: preferito **stories.js** su rebus (C# usa ASCII `'`).
+- **Prossimo:** Step 2 `generate_story_artifacts.py` (non avviare senza OK).
 - **Off-limits:** `app.js`, `analytics.js`, `wrangler.toml`, `functions/api/*`, `.local/**`, deploy.
 - **Commit proposto (non eseguito):** `docs(kb): design unificazione dataset` — `docs/DATASET_UNIFICATION_DESIGN.md` + `.github/KB.md`.
