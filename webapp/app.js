@@ -26,6 +26,10 @@ import {
     storyIndex: 0,
     revealCount: 0,
     hintRevealed: false,
+    /** Peak reveal helps this episode (policy A: hide does not restore stars). */
+    maxRevealUsed: 0,
+    /** Hint used at least once this episode (policy A). */
+    hintEverUsed: false,
     solutionVisible: false,
     totalXp: Number(localStorage.getItem("jwquiz_web_xp") || "0"),
     sharedStories: [],
@@ -388,7 +392,7 @@ import {
   }
 
   function calcExpectedXp() {
-    var used = state.revealCount + (state.hintRevealed ? 1 : 0);
+    var used = state.maxRevealUsed + (state.hintEverUsed ? 1 : 0);
     return Math.max(20, 100 - used * 20);
   }
 
@@ -484,8 +488,14 @@ import {
   }
 
   function renderButtons() {
-    revealBtn.disabled = state.revealCount >= 2;
-    hintBtn.disabled = state.hintRevealed;
+    revealBtn.disabled = false;
+    hintBtn.disabled = false;
+    revealBtn.textContent = state.revealCount >= 2
+      ? (state.currentLanguage === AppLanguages.English ? "Hide 2 images" : "Nascondi 2 immagini")
+      : getWebText(state.currentLanguage, "RevealTwoImagesButton");
+    hintBtn.textContent = state.hintRevealed
+      ? (state.currentLanguage === AppLanguages.English ? "Hide hint" : "Nascondi indizio")
+      : getWebText(state.currentLanguage, "ShowHintButton");
   }
 
   function render() {
@@ -550,6 +560,8 @@ import {
     state.storyIndex = Math.max(0, Math.min(index, stories.length - 1));
     state.revealCount = 0;
     state.hintRevealed = false;
+    state.maxRevealUsed = 0;
+    state.hintEverUsed = false;
     state.solutionVisible = false;
     resetCaption();
     render();
@@ -913,7 +925,7 @@ import {
 
   // ── Stars UI ─────────────────────────────────────────────────────────────
   function calcStars() {
-    var used = state.revealCount + (state.hintRevealed ? 1 : 0);
+    var used = state.maxRevealUsed + (state.hintEverUsed ? 1 : 0);
     return Math.max(1, 3 - used);
   }
   function updateStarsUi() {
@@ -1035,17 +1047,23 @@ import {
   });
 
   revealBtn.addEventListener("click", function () {
-    if (state.revealCount < 2) {
+    if (state.revealCount >= 2) {
+      state.revealCount = 0;
+    } else {
       state.revealCount += 1;
-      render();
+      if (state.revealCount > state.maxRevealUsed) {
+        state.maxRevealUsed = state.revealCount;
+      }
     }
+    render();
   });
 
   hintBtn.addEventListener("click", function () {
-    if (!state.hintRevealed) {
-      state.hintRevealed = true;
-      render();
+    state.hintRevealed = !state.hintRevealed;
+    if (state.hintRevealed) {
+      state.hintEverUsed = true;
     }
+    render();
   });
 
   solutionBtn.addEventListener("click", function () {
