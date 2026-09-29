@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "episodes": [
+    {
+      "id": 1,
+      "scriptureReference": "Genesi 2-3",
+      "rebus": {
+        "titleIt": "Il Giardino di Eden",
+        "keywordIt": "Obbedienza",
+        "hintIt": "Un serpente, un albero proibito e una scelta fatale.",
+        "solutionIt": "Adamo ed Eva disobbedirono a Geova mangiando il frutto proibito.",
+        "scriptureQuoteIt": "Geova Dio... comandò all'uomo: '...dell'albero della conoscenza del bene e del male non devi mangiare.' - Genesi 2:16-17 (TNM)",
+        "engagementNoteIt": "Sottolinea il valore dell'obbedienza.",
+        "visibleKeys": ["093-users", "1F333", "1F632", "1F457", "1F456"],
+        "hiddenKeys": ["1F34E", "1F480"],
+        "hintKey": "1F40D",
+        "imageCaptionsIt": [
+          "I primi due esseri umani",
+          "L'albero al centro del giardino",
+          "Lo shock della scoperta",
+          "Vestiti che coprono la vergogna",
+          "Scarpe che camminano lontano dal Creatore",
+          "Il frutto proibito",
+          "La morte entrò nel mondo",
+          "Il serpente ingannatore"
+        ]
+      },
+      "immersive": {
+        "titleEn": "The Garden of Eden",
+        "themeIt": "Obbedienza",
+        "themeEn": "Obedience",
+        "intro": {
+          "it": "Nel giardino tutto era perfetto.",
+          "en": "In the garden everything was perfect."
+        },
+        "questions": [
+          {
+            "prompt": {
+              "it": "Cosa comandò Geova?",
+              "en": "What did Jehovah command?"
+            },
+            "answers": [
+              { "it": "Di non mangiarne il frutto", "en": "Not to eat its fruit", "ok": true },
+              { "it": "Di piantarlo altrove", "en": "To plant it elsewhere", "ok": false },
+              { "it": "Di venderne i frutti", "en": "To sell its fruit", "ok": false }
+            ]
+          },
+          {
+            "prompt": {
+              "it": "Quale qualità mette alla prova?",
+              "en": "Which quality is tested?"
+            },
+            "answers": [
+              { "it": "L'obbedienza a Dio", "en": "Obedience to God", "ok": true },
+              { "it": "La velocità", "en": "Running speed", "ok": false },
+              { "it": "La ricchezza", "en": "Wealth", "ok": false }
+            ]
+          }
+        ],
+        "moral": {
+          "it": "L'obbedienza protegge.",
+          "en": "Obedience protects."
+        },
+        "theaterQuote": {
+          "it": "«Dell'albero… non devi mangiare.» — Genesi 2:17",
+          "en": "“As for the tree… you must not eat from it.” — Genesis 2:17"
+        }
+      }
+    }
+  ]
+}

@@ -8,6 +8,7 @@ Run from **repo root** only (`D:\Jw_Quiz_Development`).
 | `apply_photo_assets.py` | Copy masters → `Resources/` + `webapp/assets/` |
 | `sync_android_www.py` | Copy `webapp/` → Android WebView bundle (restores `www/.gitkeep`) |
 | `sync_all.py` | **Canonical:** apply (if masters exist) + Android sync |
+| `validate_episodes.py` | Validate `data/episodes.json` (Option B schema; use `--full-catalog` for ids 1–18) |
 
 ```powershell
 python tools/sync_all.py

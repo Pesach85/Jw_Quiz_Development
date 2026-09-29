@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "episodes": [
+    {
+      "id": 1,
+      "scriptureReference": "Genesi 2-3",
+      "rebus": {
+        "titleIt": "Il Giardino di Eden",
+        "keywordIt": "Obbedienza",
+        "hintIt": "hint",
+        "solutionIt": "solution",
+        "scriptureQuoteIt": "quote",
+        "engagementNoteIt": "note",
+        "visibleKeys": ["093-users", "1F333", "1F632", "1F457", "NOT_A_REAL_PNG_KEY"],
+        "hiddenKeys": ["1F34E", "1F480"],
+        "hintKey": "1F40D",
+        "imageCaptionsIt": ["a", "b", "c", "d", "e", "f", "g"]
+      },
+      "immersive": {
+        "titleEn": "The Garden of Eden",
+        "themeIt": "Obbedienza",
+        "themeEn": "Obedience",
+        "intro": { "it": "it", "en": "en" },
+        "questions": [
+          {
+            "prompt": { "it": "q1", "en": "q1" },
+            "answers": [
+              { "it": "a", "en": "a", "ok": true },
+              { "it": "b", "en": "b", "ok": false },
+              { "it": "c", "en": "c", "ok": false }
+            ]
+          }
+        ],
+        "moral": { "it": "m", "en": "m" },
+        "theaterQuote": { "it": "t", "en": "t" }
+      }
+    }
+  ]
+}

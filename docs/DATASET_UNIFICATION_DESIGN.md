@@ -120,11 +120,12 @@ StoryLibrary.cs ───────► desktop DynamicStoryForm (rebus fields)
     "intro": { "it": "...", "en": "..." },
     "questions": [ { "prompt": { "it", "en" }, "answers": [...] } ],
     "moral": { "it", "en" },
-    "theaterQuote": { "it", "en" },
-    "symbols": ["optional decorative — not PNG keys"]
+    "theaterQuote": { "it", "en" }
   }
 }
 ```
+
+**Schema v1 (2026-09-29):** `symbols` emoji are **not** in `episodes.json` (human Q2). Two citation tiers: `immersive.theaterQuote` (short) vs `rebus.scriptureQuoteIt` (long TNM). See `data/episodes.schema.json` + `tools/validate_episodes.py`.
 
 Generators (new `tools/generate_story_artifacts.py`):
 

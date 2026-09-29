@@ -1,0 +1,149 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "jwquiz-episodes-v1",
+  "title": "JW Quiz episode catalog (Option B)",
+  "description": "Canonical source for rebus + immersive theater. symbols emoji are NOT stored here (theater decor stays in index adapter only).",
+  "type": "object",
+  "required": ["schemaVersion", "episodes"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "episodes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/episode"
+      }
+    }
+  },
+  "$defs": {
+    "localizedPair": {
+      "type": "object",
+      "required": ["it", "en"],
+      "additionalProperties": false,
+      "properties": {
+        "it": { "type": "string", "minLength": 1 },
+        "en": { "type": "string", "minLength": 1 }
+      }
+    },
+    "answer": {
+      "type": "object",
+      "required": ["it", "en", "ok"],
+      "additionalProperties": false,
+      "properties": {
+        "it": { "type": "string", "minLength": 1 },
+        "en": { "type": "string", "minLength": 1 },
+        "ok": { "type": "boolean" }
+      }
+    },
+    "question": {
+      "type": "object",
+      "required": ["prompt", "answers"],
+      "additionalProperties": false,
+      "properties": {
+        "prompt": { "$ref": "#/$defs/localizedPair" },
+        "answers": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": { "$ref": "#/$defs/answer" }
+        }
+      }
+    },
+    "rebusBlock": {
+      "type": "object",
+      "required": [
+        "titleIt",
+        "keywordIt",
+        "hintIt",
+        "solutionIt",
+        "scriptureQuoteIt",
+        "engagementNoteIt",
+        "visibleKeys",
+        "hiddenKeys",
+        "hintKey",
+        "imageCaptionsIt"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "titleIt": { "type": "string", "minLength": 1 },
+        "keywordIt": { "type": "string", "minLength": 1 },
+        "hintIt": { "type": "string", "minLength": 1 },
+        "solutionIt": { "type": "string", "minLength": 1 },
+        "scriptureQuoteIt": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Long TNM quote for rebus/desktop (tier 2)."
+        },
+        "engagementNoteIt": { "type": "string", "minLength": 1 },
+        "visibleKeys": {
+          "type": "array",
+          "minItems": 5,
+          "maxItems": 5,
+          "items": { "$ref": "#/$defs/pngKey" }
+        },
+        "hiddenKeys": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": { "$ref": "#/$defs/pngKey" }
+        },
+        "hintKey": { "$ref": "#/$defs/pngKey" },
+        "imageCaptionsIt": {
+          "type": "array",
+          "minItems": 8,
+          "maxItems": 8,
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "immersiveBlock": {
+      "type": "object",
+      "required": [
+        "titleEn",
+        "themeIt",
+        "themeEn",
+        "intro",
+        "questions",
+        "moral",
+        "theaterQuote"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "titleEn": { "type": "string", "minLength": 1 },
+        "themeIt": { "type": "string", "minLength": 1 },
+        "themeEn": { "type": "string", "minLength": 1 },
+        "intro": { "$ref": "#/$defs/localizedPair" },
+        "questions": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": { "$ref": "#/$defs/question" }
+        },
+        "moral": { "$ref": "#/$defs/localizedPair" },
+        "theaterQuote": {
+          "$ref": "#/$defs/localizedPair",
+          "description": "Short theater citation (tier 1). Not merged with rebus.scriptureQuoteIt."
+        }
+      }
+    },
+    "pngKey": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(custom:[A-Za-z0-9._-]+|[A-Za-z0-9._\\-]+)$"
+    },
+    "episode": {
+      "type": "object",
+      "required": ["id", "scriptureReference", "rebus", "immersive"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "integer", "minimum": 1 },
+        "scriptureReference": { "type": "string", "minLength": 1 },
+        "rebus": { "$ref": "#/$defs/rebusBlock" },
+        "immersive": { "$ref": "#/$defs/immersiveBlock" }
+      }
+    }
+  }
+}
