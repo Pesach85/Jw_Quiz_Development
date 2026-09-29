@@ -28,4 +28,13 @@ android {
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.7.0'
+    // Align transitive kotlin-stdlib-jdk7/8 (1.6.21) with stdlib 1.8.22 from appcompat 1.7.0
+    constraints {
+        implementation('org.jetbrains.kotlin:kotlin-stdlib-jdk7') {
+            version { require '1.8.22' }
+        }
+        implementation('org.jetbrains.kotlin:kotlin-stdlib-jdk8') {
+            version { require '1.8.22' }
+        }
+    }
 }
