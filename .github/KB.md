@@ -311,6 +311,7 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-09-29 | **Prompt A**: `main` allineato a `origin/main` con `pull --ff-only` (d1646d0→3758d8d, no force); wrangler.toml verificato (KV/R2); checklist pre-deploy prodotta; **nessun deploy** in attesa conferma umana | ✅ Fatto |
 | 2026-09-29 | **Prompt B**: inventario env admin (`ADMIN_SECRET` unica env var per smoke admin; `JWQUIZ_DATA` = binding KV); istruzioni Pages + smoke documentati; **stato prod ADMIN_SECRET non verificabile** da agent (no login CF); smoke non eseguito; G2 resta P0 | ✅ Documentato (in attesa umano) |
 | 2026-09-29 | **Smoke admin post-config**: pre-flight `.local/` in `.gitignore`; prod `jwquiz.pages.dev` — OPTIONS 200, heartbeat OK, `admin_stats` OK (4 metriche), wrong/no secret → 403; secret non loggato; UI classic.html confermata dall’umano | ✅ Verde (API agent + umano) |
+| 2026-09-29 | **Audit regressione Immersive (Prompt H)**: pre-flight tree pulito @ `afdd6c3`, `app.js` invariato; preview `127.0.0.1:8080` — checklist §13 verde (warning attesi: heartbeat badge assente in locale senza Functions; UI rebus classic non automatizzata browser) | ✅ Nessun KO bloccante |
 ---
 
 ## 11. Next Best Decisions (Proposte Attive)
@@ -434,14 +435,15 @@ L’esperienza è **ispirata** allo stile didattico JW.org “Fai vivere il racc
 | Wrangler “Unknown arguments: wrangler, pages…” | `npx wrangler` invocato dopo un wrangler già globale/ambiguo | Dal root repo, una sola invocazione; se persiste: `npx --yes wrangler@4.124.0 pages deploy webapp --project-name=jwquiz` |
 
 ### Checklist regressione (sessione Immersive)
-- [ ] `webapp/app.js` invariato (o solo cambi deliberati)
-- [ ] Rebus classic in `classic.html`: reveal/hint/solution/stelle ancora OK
-- [ ] 3 modalità selezionabili e indipendenti (`quiz` / `rebus` / `journey`)
-- [ ] Theater apre episodi 1–18; Continua bloccato fino a risposta in quiz / soluzione in rebus
-- [ ] IT/EN switch aggiorna UI + testi storie
-- [ ] Mobile: body ha classe `fallback-3d` oppure WebGL stabile
-- [ ] Favicon presente (`favicon.svg`) — evita 404 `/favicon.ico`
-- [ ] KB sezioni 10/11/13/16/17 aggiornate
+- [x] `webapp/app.js` invariato (o solo cambi deliberati) — Prompt H 2026-09-29
+- [x] Rebus classic in `classic.html`: reveal/hint/solution/stelle ancora OK — markup + handler statici OK; click-path non automatizzato
+- [x] 3 modalità selezionabili e indipendenti (`quiz` / `rebus` / `journey`)
+- [x] Theater episodi 1–18; Continua bloccato fino a risposta quiz / soluzione rebus (logica `index.html`)
+- [x] IT/EN switch aggiorna UI + testi storie (`applyI18n` → grid + theater)
+- [x] Mobile/fallback: `preferFallback()` + `fallback-3d` presenti (test viewport browser manuale opzionale)
+- [x] Favicon presente (`favicon.svg`, `favicon.ico` 200 in preview locale)
+- [x] `fitRebusCamera` / `disposeRebus3D` presenti e wired nel rebus 3D
+- [x] KB sezioni 10/11/13/16/17 aggiornate (Prompt H)
 
 ---
 
@@ -575,9 +577,10 @@ Commit se il tree deve tornare pulito (deploy Wrangler). Push solo se richiesto 
 
 ### Stato corrente (handoff) — 2026-09-29
 
-- **Fatto:** Prompt A/B; **G2 chiuso** — `ADMIN_SECRET` in Pages Production (umano) + redeploy. Smoke agent su `https://jwquiz.pages.dev/api/analytics`: OPTIONS **200** (POST, OPTIONS); heartbeat **OK**; `admin_stats` **OK** (online/views/completions/sessions); secret errato e assente → **403** `"Non autorizzato."`; valore secret **non loggato** (lettura solo da `.local/.env` in memoria). Evidenza UI: smoke umano su `/classic.html` Login (4 metriche) — allineato ad API verde.
-- **Sicurezza locale:** `.local/` aggiunto a `.gitignore` (pre-flight: `.local/.env` ignorato; `git ls-files` / `git log` su `.local/` vuoti). Secret locale resta solo in `.local/.env` — **non committare**.
-- **Tree pending commit (non eseguito):** `M .gitignore` (`.local/`) + `M .github/KB.md` (smoke). Commit KB proposto separato: `kb: smoke admin post-config`. Commit `.gitignore` consigliato prima: `chore: gitignore .local for secrets`. **Non** `--commit-dirty`.
-- **Deploy:** nessun deploy in questa sessione. wrangler.toml / `app.js` / versetti non toccati.
-- **Non fatto (umano):** conferma commit; Android APK (P0); unificazione Q&A↔`stories.js` (P1).
-- **Next:** conferma commit(s) → Prompt H (regressione Immersive) o deploy se richiesto.
+- **Git:** `main` @ `afdd6c3`, **ahead 3** vs `origin/main` (tree pulito post-commit smoke/gitignore).
+- **Fatto:** Prompt A, B, B2 (G2 chiuso); **Prompt H** audit Immersive — **nessun KO bloccante**, nessun fix codice, nessun deploy.
+- **Prompt H esito:** preview `python -m http.server 8080` in `webapp/`; `/` + `/classic.html` 200; 18 episodi in `STORIES` + `stories.js`; gating Continua quiz/rebus verificato in sorgente; `fitRebusCamera`/`disposeRebus3D` presenti.
+- **Warning residui (non bloccanti):** badge online assente in locale (`/api/analytics` → 501 senza Pages Functions — atteso); classic reveal/hint/solution/stelle non testati con browser automatizzato; fallback mobile non emulato in agent.
+- **Prossimo P0/P1:** Android APK smoke; **Prompt C** (G1 unificazione Q&A ↔ `stories.js`).
+- **Non toccare senza richiesta:** `app.js`, `analytics.js`, `wrangler.toml`, versetti, fusione modalità.
+- **Commit proposto (non eseguito):** `kb: audit immersive` — solo `.github/KB.md`.
