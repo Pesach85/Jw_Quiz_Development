@@ -841,7 +841,9 @@
         finished: "Scena completata",
         pickAnswer: "Scegli una risposta per continuare.",
         revealTwo: "Rivela 2 immagini",
+        hideTwo: "Nascondi 2 immagini",
         showHint: "Mostra indizio",
+        hideHint: "Nascondi indizio",
         revealSolution: "Rivela soluzione",
         hideSolution: "Nascondi soluzione",
         captionDefault: "Tocca un’immagine fluttuante per un indizio breve",
@@ -899,7 +901,9 @@
         finished: "Scene complete",
         pickAnswer: "Choose an answer to continue.",
         revealTwo: "Reveal 2 images",
+        hideTwo: "Hide 2 images",
         showHint: "Show hint",
+        hideHint: "Hide hint",
         revealSolution: "Reveal solution",
         hideSolution: "Hide solution",
         captionDefault: "Tap a floating image for a short clue",
@@ -2034,8 +2038,8 @@
           </div>
           <p class="rebus-caption" id="rebusCaption">${caption}</p>
           <div class="rebus-toolbar">
-            <button type="button" class="btn btn-reveal" id="btnRebusReveal">${t("revealTwo")}</button>
-            <button type="button" class="btn btn-hint" id="btnRebusHint">${t("showHint")}</button>
+            <button type="button" class="btn btn-reveal" id="btnRebusReveal">${state.rebus.revealCount >= 2 ? t("hideTwo") : t("revealTwo")}</button>
+            <button type="button" class="btn btn-hint" id="btnRebusHint">${state.rebus.hintRevealed ? t("hideHint") : t("showHint")}</button>
             <button type="button" class="btn btn-solution" id="btnRebusSolution">${state.rebus.solutionVisible ? t("hideSolution") : t("revealSolution")}</button>
           </div>
           <div id="rebusSolutionBox" class="rebus-solution" ${state.rebus.solutionVisible ? "" : "hidden"}></div>
@@ -2052,12 +2056,15 @@
         `;
       }
 
-      document.getElementById("btnRebusReveal").disabled = state.rebus.revealCount >= 2;
       document.getElementById("btnRebusReveal").addEventListener("click", () => {
-        if (state.rebus.revealCount >= 2) return;
-        state.rebus.revealCount += 1;
+        if (state.rebus.revealCount >= 2) {
+          state.rebus.revealCount = 0;
+          audio.click();
+        } else {
+          state.rebus.revealCount += 1;
+          audio.reveal();
+        }
         recomputeStars();
-        audio.reveal();
         refreshRebusVisuals(story, true);
       });
       document.getElementById("btnRebusHint").addEventListener("click", () => {
@@ -2090,7 +2097,15 @@
       if (captionEl) captionEl.textContent = state.rebus.caption || t("captionDefault");
       scoreChip.textContent = `★ ${state.stars}`;
       const revealBtn = document.getElementById("btnRebusReveal");
-      if (revealBtn) revealBtn.disabled = state.rebus.revealCount >= 2;
+      if (revealBtn) {
+        revealBtn.disabled = false;
+        revealBtn.textContent = state.rebus.revealCount >= 2 ? t("hideTwo") : t("revealTwo");
+      }
+      const hintBtn = document.getElementById("btnRebusHint");
+      if (hintBtn) {
+        hintBtn.disabled = false;
+        hintBtn.textContent = state.rebus.hintRevealed ? t("hideHint") : t("showHint");
+      }
       btnTheaterNext.disabled = !state.rebus.solutionVisible;
       btnTheaterNext.title = state.rebus.solutionVisible ? "" : t("needSolution");
 
