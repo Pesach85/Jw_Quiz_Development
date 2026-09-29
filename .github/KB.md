@@ -317,6 +317,7 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-09-29 | **C-BUILD Step 1 — migrazione episodes.json (18 record)**: merge STORIES + `stories.js` + `StoryLibrary.cs`; validator `--full-catalog` verde; ep.8 titolo unificato; ep.10/12 keys+caption da C# (stories.js incompleto) | ✅ Step 1 |
 | 2026-09-29 | **C-BUILD Step 2 — generator stories.js + StoryLibrary.cs**: `tools/generate_story_artifacts.py` da `data/episodes.json`; `JW_STORIES` + `JW_IMMERSIVE`; idempotenza sha256; MSBuild Debug 0; ep.10/12 rebus keys fix in output | ✅ Step 2 |
 | 2026-09-29 | **C-BUILD Step 3 — hook sync_all.py**: pipeline apply photo → generate_story_artifacts → sync_android_www; fail-fast; opzionale `--skip-generate` | ✅ Step 3 |
+| 2026-09-29 | **H2 indagine Ep 12 reveal/hint**: report `docs/BUG_REBUS_EP12_REPORT.md` — (b) DynamicStoryForm Hide* senza hide + Enabled=false (pre-2026-04); (a) regressione dati Ep12/10 hidden/hint da merge Step1; fix NON applicato; Step 4 bloccato | ✅ Indagine |
 ---
 
 ## 11. Next Best Decisions (Proposte Attive)
@@ -588,8 +589,8 @@ Commit se il tree deve tornare pulito (deploy Wrangler). Push solo se richiesto 
 - **Git:** `main` allineato a `origin/main`, tree pulito (post push Prompt H).
 - **Fatto:** A, B, B2 (G2 chiuso), H (audit verde); **Prompt C fase design** — G1 analizzato, raccomandazione **Option B** (`data/episodes.json` + `tools/generate_story_artifacts.py`).
 - **Deliverable design:** `docs/DATASET_UNIFICATION_DESIGN.md` (drift, opzioni, rollout 6 step).
-- **Build G1:** Step 0–3 ✅ — `python tools/sync_all.py` esegue photo apply (se masters) → **generate_story_artifacts** → sync Android www. Flag `--skip-generate` opzionale.
-- **G1:** ancora **aperto** fino a Step 5. **Prima di Step 4:** smoke manuale rebus 3D (ep 1/7/9/10/12) + desktop Ep 10 (warning Step 2).
-- **Prossimo:** Step 4 adapter `index.html` — **solo dopo OK umano + smoke**.
+- **Build G1:** Step 0–3 ✅. **Step 4 BLOCCATO** da bug Ep 12 (indagine H2).
+- **Bug Ep 12:** vedi `docs/BUG_REBUS_EP12_REPORT.md`. Causa: (1) `DynamicStoryForm` label Nascondi* senza ramo hide + `Enabled=false` (tutti gli episodi); (2) regressione `episodes.json` Ep12/10 — hidden/hint da stories.js incompleto (`1F4D6` dup in visible+hidden). Fix proposto F1+F2 — **non applicato**.
+- **Prossimo:** approvazione fix F1 (`DynamicStoryForm`) + F2 (`episodes.json` Ep10/12) → regenerate → smoke → poi Step 4.
 - **Off-limits:** `app.js`, `analytics.js`, `wrangler.toml`, `functions/api/*`, `.local/**`, deploy.
 - **Commit proposto (non eseguito):** `docs(kb): design unificazione dataset` — `docs/DATASET_UNIFICATION_DESIGN.md` + `.github/KB.md`.
