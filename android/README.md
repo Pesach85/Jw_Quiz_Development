@@ -18,9 +18,10 @@ The `www/` folder is **gitignored** (generated). Sync restores `www/.gitkeep` so
 
 **Do not install Android SDK / Gradle from scratch.** Reuse host paths from sibling `D:\I_Tuoi_Versetti` — full checklist in `docs/AGENTS.md` § Android environment and `.github/KB.md` §1:
 
-- `sdk.dir=D:\\Android\\Sdk` → `android/local.properties`
-- Copy `gradlew` / `gradlew.bat` / `gradle/wrapper/` from `D:\I_Tuoi_Versetti`
-- Session: `JAVA_HOME=D:\JDK_17`
+- `sdk.dir=D:\\Android\\Sdk` → `android/local.properties` (gitignored)
+- Copy `gradlew` / `gradlew.bat` / `gradle/wrapper/` from `D:\I_Tuoi_Versetti` (Gradle 8.7)
+- Session: `JAVA_HOME=D:\JDK_17` (not Java 21 on PATH)
+- `android/gradle.properties` must set `android.useAndroidX=true` (required by appcompat)
 
 Android Studio: open `android/` after sync + `local.properties` / wrapper present.
 
@@ -33,7 +34,18 @@ cd android
 .\gradlew.bat assembleDebug --no-daemon
 ```
 
+APK: `android/app/build/outputs/apk/debug/app-debug.apk`  
+Package/activity: `com.jwquiz.app` / `com.jwquiz.app.MainActivity`  
 AVD smoke: `Pixel_2_API_30` under `D:\Android\Sdk`.
+
+```powershell
+adb install -r app\build\outputs\apk\debug\app-debug.apk
+adb shell am start -n com.jwquiz.app/com.jwquiz.app.MainActivity
+adb logcat -d | Select-String "chromium|console|jwquiz|WebView"
+```
+
+Known build note (resolved 2026-09-29): kotlin-stdlib constraints in `app/build.gradle`.  
+Smoke Ep 10 (2026-09-29, Motorola edge 40 `ZY22HFWMGV`, adb-only): reveal/hide + hint toggle OK; stelle policy A (peak ★1 invariato su Nascondi). Screenshot in `.local/smoke/` (gitignored).
 
 ## Notes
 

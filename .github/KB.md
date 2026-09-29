@@ -366,6 +366,10 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-09-29 | **C-BUILD Step 4 — adapter**: `index.html` rimuove STORIES inline; `DECOR_SYMBOLS` + map `JW_STORIES`×`JW_IMMERSIVE`; smoke 18 tiles / quiz / rebus / i18n | ✅ Step 4 |
 | 2026-09-29 | **C-BUILD Step 5 — parity + G1 chiuso**: `tools/verify_episode_parity.py` (hash + JS/CS/adapter + structural/i18n/PNG); negativi stale/title/DECOR; AGENTS checklist | ⏳ commit proposto |
 | 2026-09-29 | **D-CLI Fase 0-bis — Android env**: NON installare SDK/Gradle da zero; riuso `D:\I_Tuoi_Versetti` + `D:\Android\Sdk` + `D:\JDK_17`; path in KB §1 + `docs/AGENTS.md` § Android environment + `android/README.md`; gap JW = solo wrapper + `local.properties` | ✅ Verificato + docs |
+| 2026-09-29 | **D-CLI Fase 1 — sync**: `sync_all` OK; www `.gitkeep` tracked; `JW_STORIES`+`JW_IMMERSIVE` in www/stories.js; www/** pulito | ✅ |
+| 2026-09-29 | **D-CLI Fase 2 — wrapper+JDK+build**: wrapper 8.7 + `local.properties` + `JAVA_HOME=D:\JDK_17`; aggiunto `android/gradle.properties` (`useAndroidX`); `assembleDebug` **FAIL** duplicate kotlin-stdlib (1.8.22 vs jdk7/8 1.6.21) — STOP prima di toccare `app/build.gradle` | ⛔ STOP fix pending OK |
+| 2026-09-29 | **D-CLI Fase 2-bis — fix kotlin + build + smoke**: constraints kotlin-stdlib-jdk7/8 → 1.8.22; `assembleDebug` OK → `app-debug.apk` (~147 MB); install `com.jwquiz.app` su Motorola edge 40 (`ZY22HFWMGV`); smoke parziale (UI+bundle; rebus Ep10–12 toggle stelle non automatizzato via adb/WebView) | ✅ build; smoke parziale |
+| 2026-09-29 | **D-CLI smoke Ep 10 adb-only**: reveal/hide + hint su `ZY22HFWMGV`; stelle peak ★1 dopo 2 reveal, invariate su hide/hint toggle (H4b/F3); hidden 1F981/1F5FA visibili | ✅ Verde |
 ---
 
 ## 11. Next Best Decisions (Proposte Attive)
@@ -378,7 +382,7 @@ Aggiornare questa sezione ad ogni sessione di lavoro.
 |---------|------|---------|
 | P0 Alta | Git | ~~Allineare `main` locale a `origin/main`~~ ✅ **COMPLETATO** (ff-only → `3758d8d`) — prima del deploy: commit/stash KB+report per tree pulito |
 | P0 Alta | Webapp | ~~Configurare `ADMIN_SECRET` nelle env var di Cloudflare Pages → Settings → Environment Variables per attivare il pannello admin statistiche~~ ✅ **COMPLETATO** (env Production + redeploy; smoke API 2026-09-29 verde) |
-| P0 Alta | Android | **D-CLI**: Fase 0-bis ✅ (path in KB §1). Prossimo (OK umano): copia wrapper da `D:\I_Tuoi_Versetti` + `local.properties` `sdk.dir=D:\\Android\\Sdk` + `JAVA_HOME=D:\JDK_17` → `sync_all` → `assembleDebug` / AVD `Pixel_2_API_30`. **Non** installare SDK/Gradle da zero |
+| P0 Alta | Android | **D-CLI smoke Ep10 ✅** (adb-only, H4b/F3). Commit KB proposto. G3 chiudibile dopo OK commit |
 | P1 Alta | Immersive | ~~Unificare dataset Q&A immersivo (G1)~~ ✅ **COMPLETATO** (Steps 0–5: `episodes.json` + generator + sync_all + adapter + `verify_episode_parity.py`) |
 | P1 Alta | Multilanguage | Rifinire QA linguistico delle storie 1-12 ora renderizzate nel runtime dinamico |
 | Alta | Web Immersive | ~~Landing 3D + theater Q&A episodi 1–18 (single HTML CDN)~~ ✅ **COMPLETATO** (`webapp/index.html`) |
@@ -490,6 +494,9 @@ L’esperienza è **ispirata** allo stile didattico JW.org “Fai vivere il racc
 | Wrangler `--commit-dirty` | `Warning: git repo has uncommitted changes` | Working tree **deve** essere pulito prima del deploy. Causa tipica: `sync_all.py` cancellava `android/.../www/.gitkeep`. Fix: lo script riscrive `.gitkeep` dopo il copy. **Non** usare `--commit-dirty=true` come scusa per lasciare sporco il repo |
 | `sync_all.py` File not found | lanciato da `android/` | Sempre dal root: `cd D:\Jw_Quiz_Development` poi `python tools/sync_all.py` |
 | Android CLI “SDK / gradlew missing” | `android/` senza wrapper o senza `local.properties`; tentazione di installare SDK | **Non** installare da zero. Riusa host Versetti: §1 path canonici (`D:\Android\Sdk`, `D:\JDK_17`, wrapper da `D:\I_Tuoi_Versetti`). Solo copia wrapper + `sdk.dir` |
+| `assembleDebug` useAndroidX | `:app:checkDebugAarMetadata` — AndroidX deps senza flag | Aggiungere `android/gradle.properties` con `android.useAndroidX=true` (file mancava; non tocca Manifest) |
+| `assembleDebug` kotlin duplicate | `:app:checkDebugDuplicateClasses` — `kotlin-stdlib:1.8.22` vs `kotlin-stdlib-jdk7/8:1.6.21` (transitivo da appcompat 1.7.0) | **Fix:** constraints in `android/app/build.gradle` — `require '1.8.22'` su `kotlin-stdlib-jdk7` e `kotlin-stdlib-jdk8`. Root cause: appcompat 1.7.0 tira stdlib 1.8.22 mentre altre transitive tirano jdk7/jdk8 1.6.21 |
+| Android smoke Ep 10 — toggle + stelle A | Verifica F3/H4b su device USB (WebView) | **OK 2026-09-29** Motorola edge 40 `ZY22HFWMGV`, solo `adb shell input`. Ep10 Rebus: reveal×2 → ★3→★2→★1; Nascondi → slot ? ma ★1 invariato (H4b); hint on/off ★1 invariato (F3). Screenshot `.local/smoke/04`–`12` (gitignored) |
 | `npx wrangler` Unknown arguments | due comandi incollati sulla stessa riga | Un comando per volta: `npx wrangler pages deploy webapp --project-name=jwquiz` |
 | Wrangler “Unknown arguments: wrangler, pages…” | `npx wrangler` invocato dopo un wrangler già globale/ambiguo | Dal root repo, una sola invocazione; se persiste: `npx --yes wrangler@4.124.0 pages deploy webapp --project-name=jwquiz` |
 
@@ -642,11 +649,9 @@ Commit se il tree deve tornare pulito (deploy Wrangler). Push solo se richiesto 
 
 ### Stato corrente (handoff) — 2026-09-29
 
-- **Git:** H4a/H4b/Step 4 su `main`. Working tree: Step 5 (`verify_episode_parity.py` + AGENTS/README/KB) + KB D-CLI 0-bis non ancora committato.
-- **G1:** ✅ **COMPLETATO** (Steps 0–5). Canon = `data/episodes.json`; gate = `python tools/verify_episode_parity.py`.
-- **Stelle:** policy **A** cross-surface (desktop H4a, immersive H4b, classic F3C-A).
-- **Toggle reveal/hint:** simmetrico su 3 superfici.
-- **Off-limits:** `app.js` salvo OK esplicito + scope rebus flat; `analytics.js`, `wrangler.toml`, `functions/api/*`, deploy, `www/**`.
-- **D-CLI:** Fase **0-bis** ✅ — path Android in KB §1, `docs/AGENTS.md` § Android environment, `android/README.md`. **STOP** prima di copia wrapper / `assembleDebug` (Fase 1) finché non c’è OK umano. Nessun install SDK.
-- **Prossimo:** commit Step 5 + KB 0-bis (se richiesto) → D-CLI Fase 1 (wrapper + local.properties + smoke APK). Nessun deploy in questo gate.
-- **Dev server:** MIME `.js` → `:8081` o `npx serve` (vedi §13).
+- **Android env:** `D:\I_Tuoi_Versetti` · `sdk.dir=D:\Android\Sdk` · `JAVA_HOME=D:\JDK_17` · wrapper 8.7 · kotlin constraints in `app/build.gradle`.
+- **APK:** `android/app/build/outputs/apk/debug/app-debug.apk` (non in git).
+- **Smoke Ep 10 (adb-only) ✅:** device `ZY22HFWMGV` Motorola edge 40. Reveal×2 ★3→★2→★1; Nascondi slot ma ★1 invariato; hint on/off ★1. Screenshot `.local/smoke/00`–`12` (gitignored). Bundle F2 Ep10/11/12 OK.
+- **Off-limits:** deploy; `www/**`; `local.properties`; APK; `.local/**`.
+- **Prossimo:** OK umano → commit `kb: android smoke Ep 10 device USB — toggle + stelle A OK`. Poi G3 chiuso.
+- **Dev server:** MIME `.js` → `:8081` o `npx serve`.
