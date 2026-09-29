@@ -318,7 +318,8 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-09-29 | **C-BUILD Step 2 — generator stories.js + StoryLibrary.cs**: `tools/generate_story_artifacts.py` da `data/episodes.json`; `JW_STORIES` + `JW_IMMERSIVE`; idempotenza sha256; MSBuild Debug 0; ep.10/12 rebus keys fix in output | ✅ Step 2 |
 | 2026-09-29 | **C-BUILD Step 3 — hook sync_all.py**: pipeline apply photo → generate_story_artifacts → sync_android_www; fail-fast; opzionale `--skip-generate` | ✅ Step 3 |
 | 2026-09-29 | **H2 indagine Ep 12 reveal/hint**: report `docs/BUG_REBUS_EP12_REPORT.md` — (b) DynamicStoryForm Hide* senza hide + Enabled=false (pre-2026-04); (a) regressione dati Ep12/10 hidden/hint da merge Step1; fix NON applicato; Step 4 bloccato | ✅ Indagine |
-| 2026-09-29 | **H3-bis — F2/F1/F3**: F2 dati Ep 9 hint→`1F3B6`, Ep10 hid→`1F981/1F5FA`, Ep11 E11-A `1F410/1F411`, Ep12 hid→`203C/1F4E3` hint→`203C`; F1 toggle reveal/hint `DynamicStoryForm`; F3 toggle reveal immersive `index.html` (hint già toggle); classic `app.js` ancora one-way — OK esplicito richiesto | ⏳ commit proposti |
+| 2026-09-29 | **H3-bis — F2/F1/F3**: F2 dati Ep 9 hint→`1F3B6`, Ep10 hid→`1F981/1F5FA`, Ep11 E11-A `1F410/1F411`, Ep12 hid→`203C/1F4E3` hint→`203C`; F1 toggle reveal/hint `DynamicStoryForm`; F3 toggle reveal immersive `index.html` (hint già toggle); classic `app.js` ancora one-way — OK esplicito richiesto | ✅ F2/F1/F3 |
+| 2026-09-29 | **H3-bis F3C-A — toggle app.js classic flat**: `maxRevealUsed`/`hintEverUsed` (policy A stelle permanenti); reveal 0→1→2→hide; hint toggle; mai disabled; scope rebus flat &lt;40 righe; editor/API/i18n invariati | ⏳ commit proposto |
 ---
 
 ## 11. Next Best Decisions (Proposte Attive)
@@ -433,7 +434,8 @@ L’esperienza è **ispirata** allo stile didattico JW.org “Fai vivere il racc
 | Accessibilità motion | Vertigini / reduced motion | Media query `prefers-reduced-motion` + fallback 2D |
 | Deploy path | File non online | Deve stare sotto `webapp/` perché `wrangler.toml` → `pages_build_output_dir = "webapp"` |
 | Rebus 3D senza texture | Plane bianchi / ❓ | Verificare `stories.js` caricato prima del module e PNG in `webapp/assets/`; onerror → `2753.png` |
-| Ep 12 reveal/hide + hint pre-reveal | Desktop: “Nascondi” non nasconde; Indizio prima del reveal → UI percepita bloccata. Web classic: stesso one-way. | **Causa (a)** Step1→2: Ep10/12 (e hint Ep9) da `stories.js` incompleto; **(b)** `DynamicStoryForm` Hide* senza ramo hide + `Enabled=false` (2026-04); **(c)** Ep11 overlap pre-esistente in C#. **Fix H3-bis:** F2 dati Ep9/10/11(E11-A)/12; F1 toggle desktop; F3 toggle reveal immersive (`index.html`). Classic `app.js` deferred (OFF-LIMITS). |
+| Ep 12 reveal/hide + hint pre-reveal | Desktop: “Nascondi” non nasconde; Indizio prima del reveal → UI percepita bloccata. Web classic: stesso one-way. | **Causa (a)** Step1→2: Ep10/12 (e hint Ep9) da `stories.js` incompleto; **(b)** `DynamicStoryForm` Hide* senza ramo hide + `Enabled=false` (2026-04); **(c)** Ep11 overlap pre-esistente in C#. **Fix H3-bis:** F2 dati Ep9/10/11(E11-A)/12; F1 toggle desktop; F3 toggle reveal immersive (`index.html`); **F3C-A** toggle classic flat in `app.js` (policy A stelle). Editor/API invariati. Scope &lt; 40 righe. |
+| app.js scope | Tocco accidentale editor/API | **`app.js` off-limits salvo OK esplicito + scope limitato al blocco rebus flat** (F3C-A). Editor / `/api/*` / i18n / admin / presence: non toccare. |
 | Memory leak theater | Tab rallenta dopo molti episodi | `disposeRebus3D()` su close/prev/next fuori dal rebus: dispose geometry/material/map + cancel rAF |
 | Spoiler titolo in intro | Titolo storia prima del rebus | Intro mostra solo `guessStory` + tema; titolo appare in soluzione rebus e atto morale |
 | Indizi tagliati nel riquadro | Colonne sx/dx del rebus 3D tagliate dal bordo arrotondato | Non allargare a caso il CSS. Causa: FOV/camera z fissi + lastre su cilindro (z alto ai lati). Soluzione: `fitRebusCamera()` su AABB della tavola 4×2 + `ResizeObserver`; board shallow; `.rebus-viewport` riempie `theater-stage` `1fr`. Fallback: grid `minmax(0,1fr)` senza `min-height` fisso |
@@ -563,7 +565,7 @@ Protocollo per chiudere una sessione e far ripartire la successiva **senza regre
 - PNG keys, mai emoji Unicode nei dati storia.
 - Italiano source of truth; English dizionario senza chiavi duplicate (`AppText`).
 - Desktop resta net472 WinForms.
-- Player = `webapp/index.html`; editor = `webapp/classic.html`. Non fondere gameplay in `app.js` se non richiesto.
+- Player = `webapp/index.html`; editor = `webapp/classic.html`. Non fondere gameplay in `app.js` se non richiesto. **`app.js` off-limits salvo OK esplicito + scope limitato al blocco rebus flat.**
 - Android `www/` è copia: si edita `webapp/`.
 
 ### Stop and ask (non decidere in autonomia)
@@ -588,10 +590,9 @@ Commit se il tree deve tornare pulito (deploy Wrangler). Push solo se richiesto 
 
 ### Stato corrente (handoff) — 2026-09-29
 
-- **Git:** working tree con patch H3-bis **non ancora committate** (3 commit proposti: F2/F1/F3). Ultimo commit: `f0e883e` gitignore `.dat`.
-- **Fatto:** A/B/B2/H; G1 Step 0–3; H2 indagine; H3-bis implementato in working tree.
-- **H3-bis:** F2 dati Ep 9/10/11(E11-A)/12 + regenerate; F1 `DynamicStoryForm` toggle; F3 immersive reveal toggle. Classic `app.js` ancora one-way — serve OK esplicito.
-- **Build G1:** Step 4 ancora in attesa di **OK commit + smoke gate**.
-- **Smoke desktop:** MSBuild Debug 0; checklist A/B/C su Ep 1/9/10/11/12/13 da confermare umana.
-- **Off-limits:** `app.js`, `analytics.js`, `wrangler.toml`, `functions/api/*`, `.local/**`, deploy, `www/**`.
-- **Prossimo:** conferma 3 commit → smoke → Step 4 adapter `index.html` STORIES.
+- **Git:** F2/F1/F3 già su `main` (`6937ecf`/`f0a478a`/`05761d3` + kb `c474d49`). Working tree: solo `webapp/app.js` (+ KB) per **F3C-A** non ancora committato.
+- **F3C-A:** toggle reveal/hint classic flat; policy **A** (`maxRevealUsed`/`hintEverUsed`); smoke browser Ep 9–12 OK; immersive F3 intatto; editor apre/valida senza crash.
+- **Nota stelle:** F1 desktop / F3 immersive oggi ricalcolano (policy B); classic F3C-A usa policy A come richiesto. Allineamento cross-surface = follow-up opzionale.
+- **Build G1:** Step 4 sbloccabile dopo OK commit F3C-A + smoke gate.
+- **Off-limits:** `app.js` salvo OK esplicito + scope rebus flat; `analytics.js`, `wrangler.toml`, `functions/api/*`, `.local/**`, deploy, `www/**`.
+- **Prossimo:** conferma commit F3C-A → Step 4 adapter `index.html` STORIES.
