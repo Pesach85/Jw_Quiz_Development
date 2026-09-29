@@ -307,29 +307,35 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-08-18 | **Prodotto unico**: docs ARCHITECTURE/AGENTS; pipeline `tools/sync_all.py`; Android www e photo_masters gitignored; HUD progresso web; loop pedagogico curiosità→sfida→recupero→senso; ponte desktop→web; 3 modalità restano selezionabili | ✅ Implementato |
 | 2026-08-18 | **Fix Wrangler dirty tree**: `sync_android_www.py` riscrive `www/.gitkeep` dopo rmtree; 0 regressioni gameplay; KB troubles + cleanup + session handoff | ✅ Implementato |
 | 2026-08-18 | **Rebus board fit-to-viewport**: camera 3D si adatta alla tavola 4×2 (niente clip colonne); viewport occupa la riga `1fr` del theater; fallback CSS griglia fluida. Percorsi build unificati in KB §1. 0 regressioni modalità | ✅ Implementato |
+| 2026-09-29 | **Technical Review Report** per revisore: inventario FE/BE, gap G1–G8, NBD P0–P3, Next Best Prompts A–H (model Auto; Grok 4.7 solo se disponibile). Artefatti: `docs/TECHNICAL_REVIEW_REPORT.md` + canvas | ✅ Consegnato |
+| 2026-09-29 | **Prompt A**: `main` allineato a `origin/main` con `pull --ff-only` (d1646d0→3758d8d, no force); wrangler.toml verificato (KV/R2); checklist pre-deploy prodotta; **nessun deploy** in attesa conferma umana | ✅ Fatto |
+| 2026-09-29 | **Prompt B**: inventario env admin (`ADMIN_SECRET` unica env var per smoke admin; `JWQUIZ_DATA` = binding KV); istruzioni Pages + smoke documentati; **stato prod ADMIN_SECRET non verificabile** da agent (no login CF); smoke non eseguito; G2 resta P0 | ✅ Documentato (in attesa umano) |
 ---
 
 ## 11. Next Best Decisions (Proposte Attive)
 
 Aggiornare questa sezione ad ogni sessione di lavoro.
 
+> Report dettagliato + prompt copy-paste: `docs/TECHNICAL_REVIEW_REPORT.md` (2026-09-29). Policy modelli: **Auto** default; **Grok 4.7** solo se disponibile (design/audit qualitativo).
+
 | Priorità | Area | Proposta |
 |---------|------|---------|
+| P0 Alta | Git | ~~Allineare `main` locale a `origin/main`~~ ✅ **COMPLETATO** (ff-only → `3758d8d`) — prima del deploy: commit/stash KB+report per tree pulito |
+| P0 Alta | Webapp | Configurare `ADMIN_SECRET` nelle env var di Cloudflare Pages → Settings → Environment Variables per attivare il pannello admin statistiche — **istruzioni + smoke pronti (Prompt B 2026-09-29), in attesa config umana**; non spuntare finché smoke verde |
+| P0 Alta | Android | Aprire `android/` in Android Studio **dopo** `python tools/sync_all.py`, generare Gradle Wrapper, smoke test APK |
+| P1 Alta | Immersive | Unificare dataset Q&A immersivo con `stories.js` (source unica) — oggi Q&A vive in `webapp/index.html` |
+| P1 Alta | Multilanguage | Rifinire QA linguistico delle storie 1-12 ora renderizzate nel runtime dinamico |
 | Alta | Web Immersive | ~~Landing 3D + theater Q&A episodi 1–18 (single HTML CDN)~~ ✅ **COMPLETATO** (`webapp/index.html`) |
-| Alta | Multilanguage | Rifinire QA linguistico delle storie 1-12 ora renderizzate nel runtime dinamico |
-| Alta | Webapp | Configurare `ADMIN_SECRET` nelle env var di Cloudflare Pages → Settings → Environment Variables per attivare il pannello admin statistiche |
 | Alta | Immersive | ~~Pack fotorealistico rebus (concept→alias) + sync web/desktop/Android~~ ✅ **COMPLETATO** |
 | Alta | Docs | ~~Unificare documentazione human/agent + pipeline sync~~ ✅ **COMPLETATO** (`docs/`, `tools/sync_all.py`) |
-| Alta | Android | Aprire `android/` in Android Studio **dopo** `python tools/sync_all.py`, generare Gradle Wrapper, smoke test APK |
 | Alta | Cloudflare | Dopo restart agent: OAuth MCP Cloudflare al primo tool use; deploy Pages con wrangler |
-| Media | Immersive | Unificare dataset Q&A immersivo con `stories.js` (source unica) — oggi Q&A vive in `webapp/index.html` |
 | Media | Multilanguage | Rifinire il glossario rule-based it/en del motore shared web/desktop con review manuale delle traduzioni bibliche piu' lunghe |
 | Media | Immersive | Aggiungere FR/ES come terze lingue riusando lo stesso schema `{ it, en, … }` |
 | Media | Gamification | **Streak + Badge**: N storie consecutive senza hint = badge "Saggio/Profeta/Apostolo" |
 | Media | Gamification | **Classifica sessione locale**: 2-8 partecipanti inseriscono nome, XP aggregati, classifica finale |
 | Media | Gamification | **Percorsi Tematici**: raccolte storie per tema (Fede/Amore/Coraggio) con barra progresso sbloccabile |
 | Media | UX | ProgressPanel: aggiungere grafico barre XP e lista storie completate |
-| Media | Content | Aggiungere storia ID 19+ (es. La Torre di Babele, Marta e Maria, Saul → Paolo) anche nel theater immersivo |
+| Media | Content | Aggiungere storia ID 19+ (es. La Torre di Babele, Marta e Maria, Saul → Paolo) anche nel theater immersivo — **solo su richiesta umana** |
 | Bassa | Gamification | **Timer di indovinamento**: 60s opzionale, bonus XP se risposta entro scadenza |
 | Bassa | Gamification | **Modalità Riflessione**: dopo soluzione, domanda aperta da leggere al gruppo |
 | Bassa | Gamification | **Storia del Giorno**: selezione automatica basata sulla data del calendario |
@@ -566,11 +572,14 @@ Aggiornare questa KB:
 
 Commit se il tree deve tornare pulito (deploy Wrangler). Push solo se richiesto esplicitamente.
 
-### Stato corrente (handoff) — 2026-08-18
+### Stato corrente (handoff) — 2026-09-29
 
-- **Fatto:** Rebus 3D `fitRebusCamera()` — tutte e 8 le lastre visibili nel riquadro; viewport = spazio theater; Wrangler dirty-tree fix (`.gitkeep`); KB §1 percorsi build.
-- **Deploy:** dal root `npx wrangler pages deploy webapp --project-name=jwquiz` con tree pulito. Produzione https://jwquiz.pages.dev/
-- **Non fatto (umano):** Android Studio su `android/` dopo `python tools/sync_all.py`; `ADMIN_SECRET`; smoke APK; eventuale deploy Pages di questo fit-camera.
-- **Non toccare a meno di richiesta:** `webapp/app.js` (editor), testi versetti, fusione modalità, camera z magici (usare `REBUS_BOARD` + fit).
-- **Comandi root:** vedi KB §1. `python tools/sync_all.py` dopo cambi `webapp/`. MSBuild solo se C#. Wrangler un comando per volta.
-- **Git:** `main` → `https://github.com/Pesach85/Jw_Quiz_Development.git`. Non committare `www/**` (eccetto `.gitkeep`), `.gradle`, `photo_masters/*.png`.
+- **Fatto:** Technical Review Report; Prompt A (ff-only `3758d8d`); Prompt B — inventario admin: unica **env var** necessaria = `ADMIN_SECRET` (`functions/api/analytics.js` L66–68). `JWQUIZ_DATA` è binding KV (non env var). `app.js` non legge env server: invia `secret` dal form / `sessionStorage` `jwquiz_admin_session`. wrangler.toml non toccato. Nessun deploy. Nessun secret stampato.
+- **ADMIN_SECRET prod:** **non verificabile** da questo agent (richiede dashboard Cloudflare / login umano). Smoke admin **non eseguito**. G2 resta aperto.
+- **Checklist umana (config):** Dashboard → Workers & Pages → `jwquiz` → Settings → Environment Variables → Production → aggiungere `ADMIN_SECRET` (Encrypt) → salvare → **redeploy** Pages perché le Functions rileggano l’env. Mai in repo / wrangler.toml / log. Opzionale: stessa var su Preview.
+- **Smoke post-config (dopo conferma):** (1) OPTIONS `/api/analytics`; (2) POST heartbeat `{type:"heartbeat",clientId:"smoke_test_01"}`; (3) `/classic.html` → Login → metriche online/views/completions/sessions; (4) secret assente → 403, pannello senza dati; (5) secret errato → errore login, nessun leak del valore server.
+- **Tree locale non pulito (blocca deploy):** `M .github/KB.md` + `?? docs/TECHNICAL_REVIEW_REPORT.md` — unico commit proposto (non eseguito): `kb: verifica ADMIN_SECRET + report revisore`. **Non** `--commit-dirty`.
+- **Deploy:** solo dopo conferma umana e tree pulito: `npx wrangler pages deploy webapp --project-name=jwquiz`.
+- **Non fatto (umano):** config `ADMIN_SECRET` + smoke; conferma commit; conferma deploy; Android APK; unificazione Q&A↔`stories.js`.
+- **Non toccare a meno di richiesta:** `webapp/app.js`, testi versetti, fusione modalità, camera z magici.
+- **Next:** umano configura `ADMIN_SECRET` + redeploy → riferisce esito smoke → agent spunta §11; oppure conferma commit unico A+B; poi Prompt H.
