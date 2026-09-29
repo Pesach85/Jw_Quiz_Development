@@ -27,3 +27,7 @@ android/app/src/main/assets/www/**
 tools/photo_masters/*.png
 tools/__pycache__/
 __pycache__/
+
+# Local WinForms runtime state (never commit)
+UserProgress.dat
+UserStories.dat
