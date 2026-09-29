@@ -31,3 +31,7 @@ __pycache__/
 # Local WinForms runtime state (never commit)
 UserProgress.dat
 UserStories.dat
+
+# Agent session log (agentic_core progress.txt)
+progress.txt
+
