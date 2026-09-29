@@ -310,6 +310,7 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-09-29 | **Technical Review Report** per revisore: inventario FE/BE, gap G1–G8, NBD P0–P3, Next Best Prompts A–H (model Auto; Grok 4.7 solo se disponibile). Artefatti: `docs/TECHNICAL_REVIEW_REPORT.md` + canvas | ✅ Consegnato |
 | 2026-09-29 | **Prompt A**: `main` allineato a `origin/main` con `pull --ff-only` (d1646d0→3758d8d, no force); wrangler.toml verificato (KV/R2); checklist pre-deploy prodotta; **nessun deploy** in attesa conferma umana | ✅ Fatto |
 | 2026-09-29 | **Prompt B**: inventario env admin (`ADMIN_SECRET` unica env var per smoke admin; `JWQUIZ_DATA` = binding KV); istruzioni Pages + smoke documentati; **stato prod ADMIN_SECRET non verificabile** da agent (no login CF); smoke non eseguito; G2 resta P0 | ✅ Documentato (in attesa umano) |
+| 2026-09-29 | **Smoke admin post-config**: pre-flight `.local/` in `.gitignore`; prod `jwquiz.pages.dev` — OPTIONS 200, heartbeat OK, `admin_stats` OK (4 metriche), wrong/no secret → 403; secret non loggato; UI classic.html confermata dall’umano | ✅ Verde (API agent + umano) |
 ---
 
 ## 11. Next Best Decisions (Proposte Attive)
@@ -321,7 +322,7 @@ Aggiornare questa sezione ad ogni sessione di lavoro.
 | Priorità | Area | Proposta |
 |---------|------|---------|
 | P0 Alta | Git | ~~Allineare `main` locale a `origin/main`~~ ✅ **COMPLETATO** (ff-only → `3758d8d`) — prima del deploy: commit/stash KB+report per tree pulito |
-| P0 Alta | Webapp | Configurare `ADMIN_SECRET` nelle env var di Cloudflare Pages → Settings → Environment Variables per attivare il pannello admin statistiche — **istruzioni + smoke pronti (Prompt B 2026-09-29), in attesa config umana**; non spuntare finché smoke verde |
+| P0 Alta | Webapp | ~~Configurare `ADMIN_SECRET` nelle env var di Cloudflare Pages → Settings → Environment Variables per attivare il pannello admin statistiche~~ ✅ **COMPLETATO** (env Production + redeploy; smoke API 2026-09-29 verde) |
 | P0 Alta | Android | Aprire `android/` in Android Studio **dopo** `python tools/sync_all.py`, generare Gradle Wrapper, smoke test APK |
 | P1 Alta | Immersive | Unificare dataset Q&A immersivo con `stories.js` (source unica) — oggi Q&A vive in `webapp/index.html` |
 | P1 Alta | Multilanguage | Rifinire QA linguistico delle storie 1-12 ora renderizzate nel runtime dinamico |
@@ -507,7 +508,7 @@ Obiettivo: working tree pulito **senza** cancellare sorgenti e **senza** committ
 | `android/app/src/main/assets/www/.gitkeep` | **Unica** eccezione tracciata: tiene la cartella in git dopo `rmtree` |
 | `tools/photo_masters/*.png` | Master fotorealistici; copie applicate in `Resources/` + `webapp/assets/` |
 | `android/.gradle/`, `android/build/`, `android/app/build/` | Cache Gradle |
-| `bin/`, `obj/`, `.vs/`, `.vscode/`, `.wrangler/` | Build / IDE / Wrangler local |
+| `bin/`, `obj/`, `.vs/`, `.vscode/`, `.wrangler/`, `.local/` | Build / IDE / Wrangler local; `.local/` = secret locali (es. `ADMIN_SECRET` dev, mai in git) |
 
 ### Cosa fare (e non fare) quando il tree è sporco
 
@@ -574,12 +575,9 @@ Commit se il tree deve tornare pulito (deploy Wrangler). Push solo se richiesto 
 
 ### Stato corrente (handoff) — 2026-09-29
 
-- **Fatto:** Technical Review Report; Prompt A (ff-only `3758d8d`); Prompt B — inventario admin: unica **env var** necessaria = `ADMIN_SECRET` (`functions/api/analytics.js` L66–68). `JWQUIZ_DATA` è binding KV (non env var). `app.js` non legge env server: invia `secret` dal form / `sessionStorage` `jwquiz_admin_session`. wrangler.toml non toccato. Nessun deploy. Nessun secret stampato.
-- **ADMIN_SECRET prod:** **non verificabile** da questo agent (richiede dashboard Cloudflare / login umano). Smoke admin **non eseguito**. G2 resta aperto.
-- **Checklist umana (config):** Dashboard → Workers & Pages → `jwquiz` → Settings → Environment Variables → Production → aggiungere `ADMIN_SECRET` (Encrypt) → salvare → **redeploy** Pages perché le Functions rileggano l’env. Mai in repo / wrangler.toml / log. Opzionale: stessa var su Preview.
-- **Smoke post-config (dopo conferma):** (1) OPTIONS `/api/analytics`; (2) POST heartbeat `{type:"heartbeat",clientId:"smoke_test_01"}`; (3) `/classic.html` → Login → metriche online/views/completions/sessions; (4) secret assente → 403, pannello senza dati; (5) secret errato → errore login, nessun leak del valore server.
-- **Tree locale non pulito (blocca deploy):** `M .github/KB.md` + `?? docs/TECHNICAL_REVIEW_REPORT.md` — unico commit proposto (non eseguito): `kb: verifica ADMIN_SECRET + report revisore`. **Non** `--commit-dirty`.
-- **Deploy:** solo dopo conferma umana e tree pulito: `npx wrangler pages deploy webapp --project-name=jwquiz`.
-- **Non fatto (umano):** config `ADMIN_SECRET` + smoke; conferma commit; conferma deploy; Android APK; unificazione Q&A↔`stories.js`.
-- **Non toccare a meno di richiesta:** `webapp/app.js`, testi versetti, fusione modalità, camera z magici.
-- **Next:** umano configura `ADMIN_SECRET` + redeploy → riferisce esito smoke → agent spunta §11; oppure conferma commit unico A+B; poi Prompt H.
+- **Fatto:** Prompt A/B; **G2 chiuso** — `ADMIN_SECRET` in Pages Production (umano) + redeploy. Smoke agent su `https://jwquiz.pages.dev/api/analytics`: OPTIONS **200** (POST, OPTIONS); heartbeat **OK**; `admin_stats` **OK** (online/views/completions/sessions); secret errato e assente → **403** `"Non autorizzato."`; valore secret **non loggato** (lettura solo da `.local/.env` in memoria). Evidenza UI: smoke umano su `/classic.html` Login (4 metriche) — allineato ad API verde.
+- **Sicurezza locale:** `.local/` aggiunto a `.gitignore` (pre-flight: `.local/.env` ignorato; `git ls-files` / `git log` su `.local/` vuoti). Secret locale resta solo in `.local/.env` — **non committare**.
+- **Tree pending commit (non eseguito):** `M .gitignore` (`.local/`) + `M .github/KB.md` (smoke). Commit KB proposto separato: `kb: smoke admin post-config`. Commit `.gitignore` consigliato prima: `chore: gitignore .local for secrets`. **Non** `--commit-dirty`.
+- **Deploy:** nessun deploy in questa sessione. wrangler.toml / `app.js` / versetti non toccati.
+- **Non fatto (umano):** conferma commit; Android APK (P0); unificazione Q&A↔`stories.js` (P1).
+- **Next:** conferma commit(s) → Prompt H (regressione Immersive) o deploy se richiesto.
