@@ -321,7 +321,9 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-09-29 | **H3-bis — F2/F1/F3**: F2 dati Ep 9 hint→`1F3B6`, Ep10 hid→`1F981/1F5FA`, Ep11 E11-A `1F410/1F411`, Ep12 hid→`203C/1F4E3` hint→`203C`; F1 toggle reveal/hint `DynamicStoryForm`; F3 toggle reveal immersive `index.html` (hint già toggle); classic `app.js` ancora one-way — OK esplicito richiesto | ✅ F2/F1/F3 |
 | 2026-09-29 | **H3-bis F3C-A — toggle app.js classic flat**: `maxRevealUsed`/`hintEverUsed` (policy A stelle permanenti); reveal 0→1→2→hide; hint toggle; mai disabled; scope rebus flat &lt;40 righe; editor/API/i18n invariati | ✅ F3C-A |
 | 2026-09-29 | **Stars policy decision**: `docs/STARS_POLICY_DECISION.md` — raccomandazione **A (peak help)** cross-surface | ✅ Design |
-| 2026-09-29 | **H4a — stars policy A desktop**: `DynamicStoryForm` `maxRevealUsed`/`hintEverUsed`; `HelpsUsed()` peak; hide non ripristina stelle; MSBuild Debug 0 | ⏳ commit proposto |
+| 2026-09-29 | **H4a — stars policy A desktop**: `DynamicStoryForm` `maxRevealUsed`/`hintEverUsed`; `HelpsUsed()` peak; hide non ripristina stelle; MSBuild Debug 0 | ✅ H4a |
+| 2026-09-29 | **H4b — stars policy A immersive**: `state.rebus.maxRevealUsed`/`hintEverUsed`; `recomputeStars` peak; F3 toggle preservato | ⏳ commit proposto |
+| 2026-09-29 | **C-BUILD Step 4 — adapter**: `index.html` rimuove STORIES inline; `DECOR_SYMBOLS` + map `JW_STORIES`×`JW_IMMERSIVE`; smoke 18 tiles / quiz / rebus / i18n | ⏳ commit proposto |
 ---
 
 ## 11. Next Best Decisions (Proposte Attive)
@@ -335,7 +337,7 @@ Aggiornare questa sezione ad ogni sessione di lavoro.
 | P0 Alta | Git | ~~Allineare `main` locale a `origin/main`~~ ✅ **COMPLETATO** (ff-only → `3758d8d`) — prima del deploy: commit/stash KB+report per tree pulito |
 | P0 Alta | Webapp | ~~Configurare `ADMIN_SECRET` nelle env var di Cloudflare Pages → Settings → Environment Variables per attivare il pannello admin statistiche~~ ✅ **COMPLETATO** (env Production + redeploy; smoke API 2026-09-29 verde) |
 | P0 Alta | Android | Aprire `android/` in Android Studio **dopo** `python tools/sync_all.py`, generare Gradle Wrapper, smoke test APK |
-| P1 Alta | Immersive | Unificare dataset Q&A immersivo (G1) — **Step 0–2 fatti** (`episodes.json` + generator); **Step 3–5 pending** (sync_all hook, index adapter, parity test) |
+| P1 Alta | Immersive | Unificare dataset Q&A immersivo (G1) — **Step 0–4 fatti** (`episodes.json` + generator + sync_all + adapter `index.html`); **Step 5 pending** (parity test → G1 chiuso) |
 | P1 Alta | Multilanguage | Rifinire QA linguistico delle storie 1-12 ora renderizzate nel runtime dinamico |
 | Alta | Web Immersive | ~~Landing 3D + theater Q&A episodi 1–18 (single HTML CDN)~~ ✅ **COMPLETATO** (`webapp/index.html`) |
 | Alta | Immersive | ~~Pack fotorealistico rebus (concept→alias) + sync web/desktop/Android~~ ✅ **COMPLETATO** |
@@ -437,7 +439,8 @@ L’esperienza è **ispirata** allo stile didattico JW.org “Fai vivere il racc
 | Deploy path | File non online | Deve stare sotto `webapp/` perché `wrangler.toml` → `pages_build_output_dir = "webapp"` |
 | Rebus 3D senza texture | Plane bianchi / ❓ | Verificare `stories.js` caricato prima del module e PNG in `webapp/assets/`; onerror → `2753.png` |
 | Ep 12 reveal/hide + hint pre-reveal | Desktop: “Nascondi” non nasconde; Indizio prima del reveal → UI percepita bloccata. Web classic: stesso one-way. | **Causa (a)** Step1→2: Ep10/12 (e hint Ep9) da `stories.js` incompleto; **(b)** `DynamicStoryForm` Hide* senza ramo hide + `Enabled=false` (2026-04); **(c)** Ep11 overlap pre-esistente in C#. **Fix H3-bis:** F2 dati Ep9/10/11(E11-A)/12; F1 toggle desktop; F3 toggle reveal immersive (`index.html`); **F3C-A** toggle classic flat in `app.js` (policy A stelle). Editor/API invariati. Scope &lt; 40 righe. |
-| Stelle reveal/hint (policy) | Classic A vs desktop/immersive B (hide ripristina) | **Policy unica A (peak help)** — `docs/STARS_POLICY_DECISION.md`. **Desktop = A** (H4a: `maxRevealUsed`/`hintEverUsed`). Classic = A (F3C-A). Immersive → H4b. |
+| Stelle reveal/hint (policy) | Classic A vs desktop/immersive B (hide ripristina) | **Policy unica A (peak help)** — `docs/STARS_POLICY_DECISION.md`. **Desktop = A** (H4a). **Classic = A** (F3C-A). **Immersive = A** (H4b). Divergenza B chiusa. |
+| `python -m http.server` MIME `.js` | ES modules falliscono (`Content-type: text/plain` su Python 3.13) | Custom handler MIME `text/javascript`, oppure `npx serve`. Smoke locale preferire **:8081**. |
 | app.js scope | Tocco accidentale editor/API | **`app.js` off-limits salvo OK esplicito + scope limitato al blocco rebus flat** (F3C-A). Editor / `/api/*` / i18n / admin / presence: non toccare. |
 | Memory leak theater | Tab rallenta dopo molti episodi | `disposeRebus3D()` su close/prev/next fuori dal rebus: dispose geometry/material/map + cancel rAF |
 | Spoiler titolo in intro | Titolo storia prima del rebus | Intro mostra solo `guessStory` + tema; titolo appare in soluzione rebus e atto morale |
@@ -593,9 +596,10 @@ Commit se il tree deve tornare pulito (deploy Wrangler). Push solo se richiesto 
 
 ### Stato corrente (handoff) — 2026-09-29
 
-- **Git:** H3-bis + F3C-A + `docs/STARS_POLICY_DECISION.md` su `main`. Working tree: **H4a** `DynamicStoryForm.cs` (+ KB) non ancora committato.
-- **H4a:** desktop policy **A** peak-help (`maxRevealUsed`/`hintEverUsed`); hide non ripristina stelle. MSBuild Debug 0.
-- **Stelle:** classic = A; desktop = A (H4a); immersive ancora B → **H4b**.
-- **Build G1:** Step 4 dopo H4a commit (+ preferibile H4b prima/insieme se si tocca `index.html`).
-- **Off-limits:** `app.js` salvo OK + scope rebus flat; `analytics.js`, `wrangler.toml`, deploy, `www/**`.
-- **Prossimo:** OK commit H4a → H4b immersive peak-help → Step 4 adapter STORIES.
+- **Git:** H4a su `main`. Working tree: `webapp/index.html` = **H4b + Step 4** (non ancora split in 2 commit) + KB.
+- **H4b:** immersive policy **A** peak-help; F3 toggle intatto; smoke Ep 1/12 OK.
+- **Step 4:** STORIES inline rimossi; adapter `JW_STORIES`×`JW_IMMERSIVE` + `DECOR_SYMBOLS` (opz. A); 18 tiles; quiz morale OK; i18n EN OK; classic regressione OK.
+- **Stelle cross-surface:** desktop A, classic A, immersive A.
+- **G1:** Step 0–4 fatti; **Step 5** (parity) apre G1 chiuso.
+- **Off-limits:** `app.js` salvo OK + rebus flat; `analytics.js`, `wrangler.toml`, deploy, `www/**`.
+- **Prossimo:** OK → commit H4b poi Step 4 (separati) → Step 5.
