@@ -15,6 +15,7 @@ publish.htm
 app.publish/
 .wrangler/
 .dev.vars
+.local/
 .DS_Store
 android/.gradle/
 android/build/
