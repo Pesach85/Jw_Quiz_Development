@@ -319,7 +319,9 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-09-29 | **C-BUILD Step 3 — hook sync_all.py**: pipeline apply photo → generate_story_artifacts → sync_android_www; fail-fast; opzionale `--skip-generate` | ✅ Step 3 |
 | 2026-09-29 | **H2 indagine Ep 12 reveal/hint**: report `docs/BUG_REBUS_EP12_REPORT.md` — (b) DynamicStoryForm Hide* senza hide + Enabled=false (pre-2026-04); (a) regressione dati Ep12/10 hidden/hint da merge Step1; fix NON applicato; Step 4 bloccato | ✅ Indagine |
 | 2026-09-29 | **H3-bis — F2/F1/F3**: F2 dati Ep 9 hint→`1F3B6`, Ep10 hid→`1F981/1F5FA`, Ep11 E11-A `1F410/1F411`, Ep12 hid→`203C/1F4E3` hint→`203C`; F1 toggle reveal/hint `DynamicStoryForm`; F3 toggle reveal immersive `index.html` (hint già toggle); classic `app.js` ancora one-way — OK esplicito richiesto | ✅ F2/F1/F3 |
-| 2026-09-29 | **H3-bis F3C-A — toggle app.js classic flat**: `maxRevealUsed`/`hintEverUsed` (policy A stelle permanenti); reveal 0→1→2→hide; hint toggle; mai disabled; scope rebus flat &lt;40 righe; editor/API/i18n invariati | ⏳ commit proposto |
+| 2026-09-29 | **H3-bis F3C-A — toggle app.js classic flat**: `maxRevealUsed`/`hintEverUsed` (policy A stelle permanenti); reveal 0→1→2→hide; hint toggle; mai disabled; scope rebus flat &lt;40 righe; editor/API/i18n invariati | ✅ F3C-A |
+| 2026-09-29 | **Stars policy decision**: `docs/STARS_POLICY_DECISION.md` — raccomandazione **A (peak help)** cross-surface | ✅ Design |
+| 2026-09-29 | **H4a — stars policy A desktop**: `DynamicStoryForm` `maxRevealUsed`/`hintEverUsed`; `HelpsUsed()` peak; hide non ripristina stelle; MSBuild Debug 0 | ⏳ commit proposto |
 ---
 
 ## 11. Next Best Decisions (Proposte Attive)
@@ -435,6 +437,7 @@ L’esperienza è **ispirata** allo stile didattico JW.org “Fai vivere il racc
 | Deploy path | File non online | Deve stare sotto `webapp/` perché `wrangler.toml` → `pages_build_output_dir = "webapp"` |
 | Rebus 3D senza texture | Plane bianchi / ❓ | Verificare `stories.js` caricato prima del module e PNG in `webapp/assets/`; onerror → `2753.png` |
 | Ep 12 reveal/hide + hint pre-reveal | Desktop: “Nascondi” non nasconde; Indizio prima del reveal → UI percepita bloccata. Web classic: stesso one-way. | **Causa (a)** Step1→2: Ep10/12 (e hint Ep9) da `stories.js` incompleto; **(b)** `DynamicStoryForm` Hide* senza ramo hide + `Enabled=false` (2026-04); **(c)** Ep11 overlap pre-esistente in C#. **Fix H3-bis:** F2 dati Ep9/10/11(E11-A)/12; F1 toggle desktop; F3 toggle reveal immersive (`index.html`); **F3C-A** toggle classic flat in `app.js` (policy A stelle). Editor/API invariati. Scope &lt; 40 righe. |
+| Stelle reveal/hint (policy) | Classic A vs desktop/immersive B (hide ripristina) | **Policy unica A (peak help)** — `docs/STARS_POLICY_DECISION.md`. **Desktop = A** (H4a: `maxRevealUsed`/`hintEverUsed`). Classic = A (F3C-A). Immersive → H4b. |
 | app.js scope | Tocco accidentale editor/API | **`app.js` off-limits salvo OK esplicito + scope limitato al blocco rebus flat** (F3C-A). Editor / `/api/*` / i18n / admin / presence: non toccare. |
 | Memory leak theater | Tab rallenta dopo molti episodi | `disposeRebus3D()` su close/prev/next fuori dal rebus: dispose geometry/material/map + cancel rAF |
 | Spoiler titolo in intro | Titolo storia prima del rebus | Intro mostra solo `guessStory` + tema; titolo appare in soluzione rebus e atto morale |
@@ -590,9 +593,9 @@ Commit se il tree deve tornare pulito (deploy Wrangler). Push solo se richiesto 
 
 ### Stato corrente (handoff) — 2026-09-29
 
-- **Git:** F2/F1/F3 già su `main` (`6937ecf`/`f0a478a`/`05761d3` + kb `c474d49`). Working tree: solo `webapp/app.js` (+ KB) per **F3C-A** non ancora committato.
-- **F3C-A:** toggle reveal/hint classic flat; policy **A** (`maxRevealUsed`/`hintEverUsed`); smoke browser Ep 9–12 OK; immersive F3 intatto; editor apre/valida senza crash.
-- **Nota stelle:** F1 desktop / F3 immersive oggi ricalcolano (policy B); classic F3C-A usa policy A come richiesto. Allineamento cross-surface = follow-up opzionale.
-- **Build G1:** Step 4 sbloccabile dopo OK commit F3C-A + smoke gate.
-- **Off-limits:** `app.js` salvo OK esplicito + scope rebus flat; `analytics.js`, `wrangler.toml`, `functions/api/*`, `.local/**`, deploy, `www/**`.
-- **Prossimo:** conferma commit F3C-A → Step 4 adapter `index.html` STORIES.
+- **Git:** H3-bis + F3C-A + `docs/STARS_POLICY_DECISION.md` su `main`. Working tree: **H4a** `DynamicStoryForm.cs` (+ KB) non ancora committato.
+- **H4a:** desktop policy **A** peak-help (`maxRevealUsed`/`hintEverUsed`); hide non ripristina stelle. MSBuild Debug 0.
+- **Stelle:** classic = A; desktop = A (H4a); immersive ancora B → **H4b**.
+- **Build G1:** Step 4 dopo H4a commit (+ preferibile H4b prima/insieme se si tocca `index.html`).
+- **Off-limits:** `app.js` salvo OK + scope rebus flat; `analytics.js`, `wrangler.toml`, deploy, `www/**`.
+- **Prossimo:** OK commit H4a → H4b immersive peak-help → Step 4 adapter STORIES.
