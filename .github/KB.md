@@ -312,6 +312,7 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-09-29 | **Prompt B**: inventario env admin (`ADMIN_SECRET` unica env var per smoke admin; `JWQUIZ_DATA` = binding KV); istruzioni Pages + smoke documentati; **stato prod ADMIN_SECRET non verificabile** da agent (no login CF); smoke non eseguito; G2 resta P0 | ✅ Documentato (in attesa umano) |
 | 2026-09-29 | **Smoke admin post-config**: pre-flight `.local/` in `.gitignore`; prod `jwquiz.pages.dev` — OPTIONS 200, heartbeat OK, `admin_stats` OK (4 metriche), wrong/no secret → 403; secret non loggato; UI classic.html confermata dall’umano | ✅ Verde (API agent + umano) |
 | 2026-09-29 | **Audit regressione Immersive (Prompt H)**: pre-flight tree pulito @ `afdd6c3`, `app.js` invariato; preview `127.0.0.1:8080` — checklist §13 verde (warning attesi: heartbeat badge assente in locale senza Functions; UI rebus classic non automatizzata browser) | ✅ Nessun KO bloccante |
+| 2026-09-29 | **Prompt C (design G1)**: drift mappato STORIES vs `stories.js` vs `StoryLibrary.cs`; opzioni A/B/C valutate; **raccomandazione Option B** (`data/episodes.json` + generator Python → `stories.js` + `StoryLibrary.cs`); deliverable `docs/DATASET_UNIFICATION_DESIGN.md` — **build non avviato** | ✅ Design |
 ---
 
 ## 11. Next Best Decisions (Proposte Attive)
@@ -325,7 +326,7 @@ Aggiornare questa sezione ad ogni sessione di lavoro.
 | P0 Alta | Git | ~~Allineare `main` locale a `origin/main`~~ ✅ **COMPLETATO** (ff-only → `3758d8d`) — prima del deploy: commit/stash KB+report per tree pulito |
 | P0 Alta | Webapp | ~~Configurare `ADMIN_SECRET` nelle env var di Cloudflare Pages → Settings → Environment Variables per attivare il pannello admin statistiche~~ ✅ **COMPLETATO** (env Production + redeploy; smoke API 2026-09-29 verde) |
 | P0 Alta | Android | Aprire `android/` in Android Studio **dopo** `python tools/sync_all.py`, generare Gradle Wrapper, smoke test APK |
-| P1 Alta | Immersive | Unificare dataset Q&A immersivo con `stories.js` (source unica) — oggi Q&A vive in `webapp/index.html` |
+| P1 Alta | Immersive | Unificare dataset Q&A immersivo con `stories.js` / `StoryLibrary.cs` (G1) — **design pronto** in `docs/DATASET_UNIFICATION_DESIGN.md` (Option B JSON + generator); **implementazione in attesa OK umano** |
 | P1 Alta | Multilanguage | Rifinire QA linguistico delle storie 1-12 ora renderizzate nel runtime dinamico |
 | Alta | Web Immersive | ~~Landing 3D + theater Q&A episodi 1–18 (single HTML CDN)~~ ✅ **COMPLETATO** (`webapp/index.html`) |
 | Alta | Immersive | ~~Pack fotorealistico rebus (concept→alias) + sync web/desktop/Android~~ ✅ **COMPLETATO** |
@@ -577,10 +578,10 @@ Commit se il tree deve tornare pulito (deploy Wrangler). Push solo se richiesto 
 
 ### Stato corrente (handoff) — 2026-09-29
 
-- **Git:** `main` @ `afdd6c3`, **ahead 3** vs `origin/main` (tree pulito post-commit smoke/gitignore).
-- **Fatto:** Prompt A, B, B2 (G2 chiuso); **Prompt H** audit Immersive — **nessun KO bloccante**, nessun fix codice, nessun deploy.
-- **Prompt H esito:** preview `python -m http.server 8080` in `webapp/`; `/` + `/classic.html` 200; 18 episodi in `STORIES` + `stories.js`; gating Continua quiz/rebus verificato in sorgente; `fitRebusCamera`/`disposeRebus3D` presenti.
-- **Warning residui (non bloccanti):** badge online assente in locale (`/api/analytics` → 501 senza Pages Functions — atteso); classic reveal/hint/solution/stelle non testati con browser automatizzato; fallback mobile non emulato in agent.
-- **Prossimo P0/P1:** Android APK smoke; **Prompt C** (G1 unificazione Q&A ↔ `stories.js`).
-- **Non toccare senza richiesta:** `app.js`, `analytics.js`, `wrangler.toml`, versetti, fusione modalità.
-- **Commit proposto (non eseguito):** `kb: audit immersive` — solo `.github/KB.md`.
+- **Git:** `main` allineato a `origin/main`, tree pulito (post push Prompt H).
+- **Fatto:** A, B, B2 (G2 chiuso), H (audit verde); **Prompt C fase design** — G1 analizzato, raccomandazione **Option B** (`data/episodes.json` + `tools/generate_story_artifacts.py`).
+- **Deliverable design:** `docs/DATASET_UNIFICATION_DESIGN.md` (drift, opzioni, rollout 6 step). **Nessuna modifica a `webapp/` in design.**
+- **G1:** ancora **aperto** fino a build approvata; drift campione: ep.8 titolo, Q&A solo in `index.html`, EN immersive assente in `stories.js`/C#.
+- **Prossimo P0:** Android APK smoke. **Prossimo P1:** build Prompt C dopo OK esplicito su Option B.
+- **Off-limits:** `app.js`, `analytics.js`, `wrangler.toml`, `functions/api/*`, `.local/**`, deploy.
+- **Commit proposto (non eseguito):** `docs(kb): design unificazione dataset` — `docs/DATASET_UNIFICATION_DESIGN.md` + `.github/KB.md`.
