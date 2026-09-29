@@ -316,6 +316,7 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-09-29 | **Prompt C build Step 0**: `data/episodes.schema.json`, `tools/validate_episodes.py`, fixture OK/broken; checkpoint validator exit 0/1; vincoli Q2 (no symbols in JSON), Q4 (theaterQuote vs scriptureQuoteIt) | ✅ Step 0 |
 | 2026-09-29 | **C-BUILD Step 1 — migrazione episodes.json (18 record)**: merge STORIES + `stories.js` + `StoryLibrary.cs`; validator `--full-catalog` verde; ep.8 titolo unificato; ep.10/12 keys+caption da C# (stories.js incompleto) | ✅ Step 1 |
 | 2026-09-29 | **C-BUILD Step 2 — generator stories.js + StoryLibrary.cs**: `tools/generate_story_artifacts.py` da `data/episodes.json`; `JW_STORIES` + `JW_IMMERSIVE`; idempotenza sha256; MSBuild Debug 0; ep.10/12 rebus keys fix in output | ✅ Step 2 |
+| 2026-09-29 | **C-BUILD Step 3 — hook sync_all.py**: pipeline apply photo → generate_story_artifacts → sync_android_www; fail-fast; opzionale `--skip-generate` | ✅ Step 3 |
 ---
 
 ## 11. Next Best Decisions (Proposte Attive)
@@ -501,7 +502,9 @@ Obiettivo: working tree pulito **senza** cancellare sorgenti e **senza** committ
 |------|--------|
 | `webapp/` | Player (`index.html`) + editor (`classic.html`) + PNG in `webapp/assets/` |
 | `Resources/` | PNG desktop WinForms (stesse chiavi del web) |
-| `StoryLibrary.cs`, `DynamicStoryForm.cs`, `AppText.cs` | Desktop |
+| `data/episodes.json` | Catalogo canonico episodi 1–18 (Option B) |
+| `StoryLibrary.cs`, `webapp/stories.js` | **Generati** da `generate_story_artifacts.py` (committati; rigenerati via `sync_all.py`) |
+| `DynamicStoryForm.cs`, `AppText.cs` | Desktop (hand-written) |
 | `functions/` | Cloudflare Pages Functions |
 | `android/app/src/main/` eccetto `assets/www/**` | Shell WebView (Manifest, Activity, Gradle) |
 | `tools/*.py` | Pipeline sync / photo |
@@ -585,9 +588,8 @@ Commit se il tree deve tornare pulito (deploy Wrangler). Push solo se richiesto 
 - **Git:** `main` allineato a `origin/main`, tree pulito (post push Prompt H).
 - **Fatto:** A, B, B2 (G2 chiuso), H (audit verde); **Prompt C fase design** — G1 analizzato, raccomandazione **Option B** (`data/episodes.json` + `tools/generate_story_artifacts.py`).
 - **Deliverable design:** `docs/DATASET_UNIFICATION_DESIGN.md` (drift, opzioni, rollout 6 step).
-- **Build G1:** Step 0–2 ✅ — `data/episodes.json`, `tools/generate_story_artifacts.py` → `webapp/stories.js` (`JW_STORIES` + `JW_IMMERSIVE`) + `StoryLibrary.cs` generato. MSBuild Debug **0**. Idempotenza generator **OK** (`--check`).
-- **G1:** ancora **aperto** fino a Step 5 (index adapter + parity). `index.html` usa ancora STORIES inline; rebus legge **nuovo** `stories.js` via `<script>`.
-- **Desktop meta:** `ImageResourceName` / `IsDynamic` preservati in `DESKTOP_META` dentro generator (non in JSON).
-- **Prossimo:** Step 3 hook `sync_all.py` — **non avviare senza OK umano**.
+- **Build G1:** Step 0–3 ✅ — `python tools/sync_all.py` esegue photo apply (se masters) → **generate_story_artifacts** → sync Android www. Flag `--skip-generate` opzionale.
+- **G1:** ancora **aperto** fino a Step 5. **Prima di Step 4:** smoke manuale rebus 3D (ep 1/7/9/10/12) + desktop Ep 10 (warning Step 2).
+- **Prossimo:** Step 4 adapter `index.html` — **solo dopo OK umano + smoke**.
 - **Off-limits:** `app.js`, `analytics.js`, `wrangler.toml`, `functions/api/*`, `.local/**`, deploy.
 - **Commit proposto (non eseguito):** `docs(kb): design unificazione dataset` — `docs/DATASET_UNIFICATION_DESIGN.md` + `.github/KB.md`.
