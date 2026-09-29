@@ -315,6 +315,7 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-09-29 | **Prompt C (design G1)**: drift mappato STORIES vs `stories.js` vs `StoryLibrary.cs`; opzioni A/B/C valutate; **raccomandazione Option B** (`data/episodes.json` + generator Python → `stories.js` + `StoryLibrary.cs`); deliverable `docs/DATASET_UNIFICATION_DESIGN.md` — **build non avviato** | ✅ Design |
 | 2026-09-29 | **Prompt C build Step 0**: `data/episodes.schema.json`, `tools/validate_episodes.py`, fixture OK/broken; checkpoint validator exit 0/1; vincoli Q2 (no symbols in JSON), Q4 (theaterQuote vs scriptureQuoteIt) | ✅ Step 0 |
 | 2026-09-29 | **C-BUILD Step 1 — migrazione episodes.json (18 record)**: merge STORIES + `stories.js` + `StoryLibrary.cs`; validator `--full-catalog` verde; ep.8 titolo unificato; ep.10/12 keys+caption da C# (stories.js incompleto) | ✅ Step 1 |
+| 2026-09-29 | **C-BUILD Step 2 — generator stories.js + StoryLibrary.cs**: `tools/generate_story_artifacts.py` da `data/episodes.json`; `JW_STORIES` + `JW_IMMERSIVE`; idempotenza sha256; MSBuild Debug 0; ep.10/12 rebus keys fix in output | ✅ Step 2 |
 ---
 
 ## 11. Next Best Decisions (Proposte Attive)
@@ -328,7 +329,7 @@ Aggiornare questa sezione ad ogni sessione di lavoro.
 | P0 Alta | Git | ~~Allineare `main` locale a `origin/main`~~ ✅ **COMPLETATO** (ff-only → `3758d8d`) — prima del deploy: commit/stash KB+report per tree pulito |
 | P0 Alta | Webapp | ~~Configurare `ADMIN_SECRET` nelle env var di Cloudflare Pages → Settings → Environment Variables per attivare il pannello admin statistiche~~ ✅ **COMPLETATO** (env Production + redeploy; smoke API 2026-09-29 verde) |
 | P0 Alta | Android | Aprire `android/` in Android Studio **dopo** `python tools/sync_all.py`, generare Gradle Wrapper, smoke test APK |
-| P1 Alta | Immersive | Unificare dataset Q&A immersivo con `stories.js` / `StoryLibrary.cs` (G1) — **design pronto** in `docs/DATASET_UNIFICATION_DESIGN.md` (Option B JSON + generator); **implementazione in attesa OK umano** |
+| P1 Alta | Immersive | Unificare dataset Q&A immersivo (G1) — **Step 0–2 fatti** (`episodes.json` + generator); **Step 3–5 pending** (sync_all hook, index adapter, parity test) |
 | P1 Alta | Multilanguage | Rifinire QA linguistico delle storie 1-12 ora renderizzate nel runtime dinamico |
 | Alta | Web Immersive | ~~Landing 3D + theater Q&A episodi 1–18 (single HTML CDN)~~ ✅ **COMPLETATO** (`webapp/index.html`) |
 | Alta | Immersive | ~~Pack fotorealistico rebus (concept→alias) + sync web/desktop/Android~~ ✅ **COMPLETATO** |
@@ -429,6 +430,7 @@ L’esperienza è **ispirata** allo stile didattico JW.org “Fai vivere il racc
 | Accessibilità motion | Vertigini / reduced motion | Media query `prefers-reduced-motion` + fallback 2D |
 | Deploy path | File non online | Deve stare sotto `webapp/` perché `wrangler.toml` → `pages_build_output_dir = "webapp"` |
 | Rebus 3D senza texture | Plane bianchi / ❓ | Verificare `stories.js` caricato prima del module e PNG in `webapp/assets/`; onerror → `2753.png` |
+| stories.js ep.10/12 slot incompleti | Solo 4/3 visibleKeys in vecchio `stories.js` | **Fix Step 2 generator**: allinea a `episodes.json` (5+2+1). Rigenerare con `python tools/generate_story_artifacts.py` |
 | Memory leak theater | Tab rallenta dopo molti episodi | `disposeRebus3D()` su close/prev/next fuori dal rebus: dispose geometry/material/map + cancel rAF |
 | Spoiler titolo in intro | Titolo storia prima del rebus | Intro mostra solo `guessStory` + tema; titolo appare in soluzione rebus e atto morale |
 | Indizi tagliati nel riquadro | Colonne sx/dx del rebus 3D tagliate dal bordo arrotondato | Non allargare a caso il CSS. Causa: FOV/camera z fissi + lastre su cilindro (z alto ai lati). Soluzione: `fitRebusCamera()` su AABB della tavola 4×2 + `ResizeObserver`; board shallow; `.rebus-viewport` riempie `theater-stage` `1fr`. Fallback: grid `minmax(0,1fr)` senza `min-height` fisso |
@@ -583,9 +585,9 @@ Commit se il tree deve tornare pulito (deploy Wrangler). Push solo se richiesto 
 - **Git:** `main` allineato a `origin/main`, tree pulito (post push Prompt H).
 - **Fatto:** A, B, B2 (G2 chiuso), H (audit verde); **Prompt C fase design** — G1 analizzato, raccomandazione **Option B** (`data/episodes.json` + `tools/generate_story_artifacts.py`).
 - **Deliverable design:** `docs/DATASET_UNIFICATION_DESIGN.md` (drift, opzioni, rollout 6 step).
-- **Build G1:** Step 0 ✅ Step 1 ✅ — `data/episodes.json` (18 episodi), report `data/episodes_migration_report.json`, tool `tools/migrate_episodes_step1.py`. Validator full-catalog **exit 0**.
-- **G1:** ancora **aperto** (Step 2 generator → Step 5 parity).
-- **Nota merge Step 1:** ep.10/12 `visibleKeys`/caption da **StoryLibrary.cs** (stories.js aveva 4/3 visibili e caption incomplete); ep.9 `hintKey` resta stories.js (chiave lunga clipart). Apostrofi TNM: preferito **stories.js** su rebus (C# usa ASCII `'`).
-- **Prossimo:** Step 2 `generate_story_artifacts.py` (non avviare senza OK).
+- **Build G1:** Step 0–2 ✅ — `data/episodes.json`, `tools/generate_story_artifacts.py` → `webapp/stories.js` (`JW_STORIES` + `JW_IMMERSIVE`) + `StoryLibrary.cs` generato. MSBuild Debug **0**. Idempotenza generator **OK** (`--check`).
+- **G1:** ancora **aperto** fino a Step 5 (index adapter + parity). `index.html` usa ancora STORIES inline; rebus legge **nuovo** `stories.js` via `<script>`.
+- **Desktop meta:** `ImageResourceName` / `IsDynamic` preservati in `DESKTOP_META` dentro generator (non in JSON).
+- **Prossimo:** Step 3 hook `sync_all.py` — **non avviare senza OK umano**.
 - **Off-limits:** `app.js`, `analytics.js`, `wrangler.toml`, `functions/api/*`, `.local/**`, deploy.
 - **Commit proposto (non eseguito):** `docs(kb): design unificazione dataset` — `docs/DATASET_UNIFICATION_DESIGN.md` + `.github/KB.md`.
