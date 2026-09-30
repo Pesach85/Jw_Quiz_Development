@@ -712,6 +712,92 @@
     .onb-stars { letter-spacing: 0.12em; color: #f0c36a; margin: 8px 0; font-size: 1.1rem; }
     .onb-tut-toolbar { display: flex; flex-wrap: wrap; gap: 8px; }
 
+    /* ========== CHALLENGE (Sfida locale) ========== */
+    .ch-overlay {
+      position: fixed; inset: 0; z-index: 55;
+      display: none; align-items: flex-start; justify-content: center;
+      padding: 72px 16px 24px;
+      background: rgba(8, 12, 22, 0.88);
+      backdrop-filter: blur(10px);
+      overflow-y: auto;
+    }
+    .ch-overlay.is-open { display: flex; }
+    .ch-panel {
+      width: min(920px, 100%);
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 22px 24px 28px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.45);
+    }
+    .ch-panel h2 {
+      font-family: var(--font-display);
+      margin: 0 0 8px;
+      font-size: clamp(1.6rem, 3vw, 2.1rem);
+      color: var(--brand);
+    }
+    .ch-lead { color: var(--muted); margin: 0 0 18px; }
+    .ch-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 10px 0; }
+    .ch-players { display: grid; gap: 8px; margin: 12px 0 18px; }
+    .ch-player-row {
+      display: grid; grid-template-columns: 88px 1fr; gap: 8px; align-items: center;
+    }
+    .ch-player-row label { color: var(--muted); font-size: 0.9rem; }
+    .ch-player-row input, .ch-select, .ch-timer-input {
+      width: 100%; padding: 10px 12px; border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(0,0,0,0.28); color: var(--ink);
+    }
+    .ch-seq { display: flex; flex-wrap: wrap; gap: 10px; margin: 8px 0 14px; }
+    .ch-seq label {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 12px; border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(0,0,0,0.2); cursor: pointer;
+    }
+    .ch-seq label.is-active { border-color: var(--brand); color: var(--brand); }
+    .ch-timers {
+      display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0 16px;
+    }
+    .ch-timer-chip {
+      min-width: 110px; padding: 10px 12px; border-radius: 12px;
+      background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.14);
+      text-align: center;
+    }
+    .ch-timer-chip .ch-t-name { display: block; font-size: 0.85rem; color: var(--muted); }
+    .ch-timer-chip .ch-t-sec {
+      font-family: var(--font-display); font-size: 1.6rem; color: var(--brand);
+    }
+    .ch-timer-chip.is-done { opacity: 0.55; }
+    .ch-timer-chip.is-ok { border-color: var(--ok); }
+    .ch-timer-chip.is-bad { border-color: var(--bad); }
+    .ch-q { margin: 12px 0; font-size: 1.15rem; }
+    .ch-answers { display: grid; gap: 8px; margin: 12px 0; }
+    .ch-answers button {
+      text-align: left; padding: 12px 14px; border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(0,0,0,0.25); color: var(--ink); cursor: pointer;
+    }
+    .ch-answers button:hover { border-color: var(--brand); }
+    .ch-answers button:disabled { opacity: 0.5; cursor: default; }
+    .ch-rebus-board {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 12px 0;
+    }
+    .ch-rebus-slot {
+      aspect-ratio: 1; border-radius: 10px; overflow: hidden;
+      background: rgba(255,255,255,0.06); border: 1px dashed rgba(255,255,255,0.22);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .ch-rebus-slot img { width: 100%; height: 100%; object-fit: cover; }
+    .ch-rebus-slot.is-empty::after { content: "?"; opacity: 0.4; font-size: 1.4rem; }
+    .ch-board { margin: 12px 0; }
+    .ch-board ol { margin: 0; padding-left: 1.2rem; }
+    .ch-board li { margin: 6px 0; }
+    .ch-board .ch-me { color: var(--brand); }
+    .mode-btn.ch-toggle { margin-left: 6px; }
+    .mode-btn.ch-toggle.is-active { background: rgba(240,195,106,0.22); }
+    .mode-btn.ch-toggle:disabled { opacity: 0.35; cursor: not-allowed; }
+
   </style>
 </head>
 <body>
@@ -831,6 +917,71 @@
     <div class="onb-card" id="onbCard"></div>
   </div>
 
+  <!-- ========== CHALLENGE (Sfida locale 2–8) ========== -->
+  <div id="challenge-lobby" class="ch-overlay" role="dialog" aria-modal="true" aria-labelledby="chLobbyTitle" hidden>
+    <div class="ch-panel">
+      <h2 id="chLobbyTitle" data-i18n="ch_lobbyTitle">Sfida locale</h2>
+      <p class="ch-lead" data-i18n="ch_lobbyLead">2–8 giocatori sullo stesso dispositivo. Nessun titolo spoiler in lobby.</p>
+      <div id="chPlayerSlots" class="ch-players"></div>
+      <div class="ch-row">
+        <label for="chTimerSec"><span data-i18n="ch_timer">Timer (s)</span></label>
+        <input id="chTimerSec" class="ch-timer-input" type="number" min="10" max="30" value="15" style="width:88px" />
+      </div>
+      <p data-i18n="ch_seqLabel">Sequenza episodi</p>
+      <div class="ch-seq" id="chSeqRadios" role="radiogroup">
+        <label class="is-active"><input type="radio" name="chSeq" value="preset" checked /> <span data-i18n="ch_seqPreset">Preset 1–2–3</span></label>
+        <label><input type="radio" name="chSeq" value="mixed" /> <span data-i18n="ch_seqMixed">Misto (3 random)</span></label>
+        <label><input type="radio" name="chSeq" value="single" /> <span data-i18n="ch_seqSingle">Singolo</span></label>
+      </div>
+      <div class="ch-row" id="chSingleWrap" hidden>
+        <label for="chSingleEp" data-i18n="ch_pickEpisode">Episodio</label>
+        <select id="chSingleEp" class="ch-select"></select>
+      </div>
+      <div class="ch-row">
+        <button id="chBtnStart" class="btn btn-primary" type="button" data-i18n="ch_start">Avvia sfida</button>
+        <button id="chBtnExitLobby" class="btn" type="button" data-i18n="ch_exit">Esci</button>
+      </div>
+      <p id="chLobbyErr" class="ch-lead" style="color:var(--bad)" hidden></p>
+    </div>
+  </div>
+
+  <div id="challenge-round" class="ch-overlay" role="dialog" aria-modal="true" aria-labelledby="chRoundTitle" hidden>
+    <div class="ch-panel">
+      <h2 id="chRoundTitle">—</h2>
+      <p id="chRoundMeta" class="ch-lead"></p>
+      <div id="chTimers" class="ch-timers" aria-live="polite"></div>
+      <div id="chRebusTools" class="ch-row" hidden>
+        <button id="chBtnReveal" class="btn" type="button" data-i18n="revealTwo">Rivela 2 immagini</button>
+        <button id="chBtnHint" class="btn" type="button" data-i18n="showHint">Mostra indizio</button>
+      </div>
+      <div id="chRebusBoard" class="ch-rebus-board" hidden></div>
+      <p id="chHintLine" class="ch-lead" hidden></p>
+      <p id="chQuestion" class="ch-q"></p>
+      <div class="ch-row">
+        <label for="chActivePlayer" data-i18n="ch_answering">Sta rispondendo</label>
+        <select id="chActivePlayer" class="ch-select" style="max-width:220px"></select>
+      </div>
+      <div id="chAnswers" class="ch-answers"></div>
+      <div class="ch-row">
+        <button id="chBtnForceClose" class="btn" type="button" data-i18n="ch_skipWait">Chiudi round</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="challenge-leaderboard" class="ch-overlay" role="dialog" aria-modal="true" aria-labelledby="chBoardTitle" hidden>
+    <div class="ch-panel">
+      <h2 id="chBoardTitle" data-i18n="ch_leaderboard">Classifica</h2>
+      <p id="chBoardMeta" class="ch-lead"></p>
+      <div id="chSolutionBox" class="ch-lead"></div>
+      <div id="chBoardList" class="ch-board"></div>
+      <div class="ch-row">
+        <button id="chBtnNextRound" class="btn btn-primary" type="button" data-i18n="ch_nextRound">Round successivo</button>
+        <button id="chBtnNew" class="btn" type="button" data-i18n="ch_new">Nuova sfida</button>
+        <button id="chBtnExitBoard" class="btn" type="button" data-i18n="ch_exit">Esci</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Rebus PNG keys from shared catalog (same as classic webapp) -->
   <script src="stories.js"></script>
 
@@ -941,7 +1092,36 @@
         onb_resetConfirm: "Cancellare progressi, nome e preferenze locali? (la sessione admin non viene toccata)",
         onb_resetDone: "Dati locali cancellati. Ricarica per rivedere l’introduzione.",
         onb_tutHintCaption: "Un indizio generico: osserva i dettagli nascosti.",
-        reducedMotionNote: "Modalità leggera attiva (mobile / risparmio)."
+        reducedMotionNote: "Modalità leggera attiva (mobile / risparmio).",
+
+        ch_toggle: "Sfida",
+        ch_lobbyTitle: "Sfida locale",
+        ch_lobbyLead: "2–8 giocatori sullo stesso dispositivo. Nessun titolo spoiler in lobby.",
+        ch_timer: "Timer (s)",
+        ch_seqLabel: "Sequenza episodi",
+        ch_seqPreset: "Preset 1–2–3",
+        ch_seqMixed: "Misto (3 random)",
+        ch_seqSingle: "Singolo",
+        ch_pickEpisode: "Episodio",
+        ch_start: "Avvia sfida",
+        ch_exit: "Esci",
+        ch_player: "Giocatore",
+        ch_host: "Host",
+        ch_needPlayers: "Servono almeno 2 nomi validi.",
+        ch_answering: "Sta rispondendo",
+        ch_skipWait: "Chiudi round",
+        ch_leaderboard: "Classifica",
+        ch_nextRound: "Round successivo",
+        ch_new: "Nuova sfida",
+        ch_first: "Primo!",
+        ch_streak: "Streak",
+        ch_roundOf: "Round {n} di {total}",
+        ch_xp: "XP",
+        ch_solution: "Soluzione",
+        ch_moral: "Morale",
+        ch_final: "Classifica finale",
+        ch_timeout: "Tempo scaduto",
+        ch_done: "Risposto"
       },
       en: {
         brand: "JW Quiz Immersive",
@@ -1032,7 +1212,36 @@
         onb_resetConfirm: "Clear local progress, name and preferences? (admin session is not touched)",
         onb_resetDone: "Local data cleared. Reload to see the introduction again.",
         onb_tutHintCaption: "A generic hint: look at the hidden details.",
-        reducedMotionNote: "Lite mode active (mobile / power save)."
+        reducedMotionNote: "Lite mode active (mobile / power save).",
+
+        ch_toggle: "Challenge",
+        ch_lobbyTitle: "Local challenge",
+        ch_lobbyLead: "2–8 players on the same device. No title spoilers in the lobby.",
+        ch_timer: "Timer (s)",
+        ch_seqLabel: "Episode sequence",
+        ch_seqPreset: "Preset 1–2–3",
+        ch_seqMixed: "Mixed (3 random)",
+        ch_seqSingle: "Single",
+        ch_pickEpisode: "Episode",
+        ch_start: "Start challenge",
+        ch_exit: "Exit",
+        ch_player: "Player",
+        ch_host: "Host",
+        ch_needPlayers: "Need at least 2 valid names.",
+        ch_answering: "Answering",
+        ch_skipWait: "Close round",
+        ch_leaderboard: "Leaderboard",
+        ch_nextRound: "Next round",
+        ch_new: "New challenge",
+        ch_first: "First!",
+        ch_streak: "Streak",
+        ch_roundOf: "Round {n} of {total}",
+        ch_xp: "XP",
+        ch_solution: "Solution",
+        ch_moral: "Moral",
+        ch_final: "Final standings",
+        ch_timeout: "Time up",
+        ch_done: "Answered"
       }
     };
 
@@ -1126,6 +1335,13 @@
         caption: "",
         captionSlot: -1
       }
+    };
+
+    const CHALLENGE_KEY = "jwquiz_challenge_v1";
+    const challenge = {
+      enabled: false,
+      session: null,
+      runtime: null
     };
 
     /* ========================================================================
@@ -1269,14 +1485,21 @@
     function renderModeSwitch() {
       const labels = { quiz: t("modeQuiz"), rebus: t("modeRebus"), journey: t("modeJourney") };
       const helps = { quiz: t("modeHelpQuiz"), rebus: t("modeHelpRebus"), journey: t("modeHelpJourney") };
+      const journey = state.mode === "journey";
+      const chOn = challenge.enabled && !journey;
       ["modeSwitchNav", "modeSwitchHero"].forEach((id) => {
         const host = document.getElementById(id);
         if (!host) return;
         host.innerHTML = MODES.map((m) => `
           <button type="button" class="mode-btn${state.mode === m ? " is-active" : ""}" data-mode="${m}" role="radio" aria-checked="${state.mode === m}">${labels[m]}</button>
-        `).join("");
+        `).join("") + `
+          <button type="button" class="mode-btn ch-toggle${chOn ? " is-active" : ""}" id="${id}_chToggle" data-ch-toggle="1"
+            ${journey ? "disabled" : ""} aria-pressed="${chOn}" title="${t("ch_toggle")}">${t("ch_toggle")}</button>`;
         host.querySelectorAll("[data-mode]").forEach((btn) => {
           btn.addEventListener("click", () => setMode(btn.getAttribute("data-mode")));
+        });
+        host.querySelectorAll("[data-ch-toggle]").forEach((btn) => {
+          btn.addEventListener("click", () => challengeToggle());
         });
       });
       const help = document.getElementById("modeHelp");
@@ -1288,7 +1511,11 @@
       state.mode = mode;
       localStorage.setItem(MODE_STORAGE_KEY, mode);
       audio.click();
-      renderModeSwitch();
+      if (mode === "journey" && challenge.enabled) {
+        challengeExit(false);
+      } else {
+        renderModeSwitch();
+      }
     }
 
     function updateSoundButton() {
@@ -2629,6 +2856,692 @@
     }
 
     /* ========================================================================
+     * SECTION: CHALLENGE — local multiplayer 2–8 (layer on quiz/rebus)
+     * Storage: jwquiz_challenge_v1 only. player_name read-only.
+     * ======================================================================== */
+    function challengeUid() {
+      return `c_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
+    }
+
+    function challengeHostName() {
+      const raw = localStorage.getItem(PLAYER_NAME_KEY) || "";
+      return sanitizePlayerName(raw) || t("onb_guest");
+    }
+
+    function challengeSave() {
+      if (!challenge.session) return;
+      localStorage.setItem(CHALLENGE_KEY, JSON.stringify(challenge.session));
+    }
+
+    function challengeLoad() {
+      try {
+        const raw = JSON.parse(localStorage.getItem(CHALLENGE_KEY) || "null");
+        if (!raw || raw.version !== 1) return null;
+        return raw;
+      } catch {
+        return null;
+      }
+    }
+
+    function challengeClearStorage() {
+      localStorage.removeItem(CHALLENGE_KEY);
+    }
+
+    function challengeHideAll() {
+      ["challenge-lobby", "challenge-round", "challenge-leaderboard"].forEach((id) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.hidden = true;
+        el.classList.remove("is-open");
+      });
+    }
+
+    function challengeShow(id) {
+      challengeHideAll();
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.hidden = false;
+      el.classList.add("is-open");
+    }
+
+    function challengeStopTimers() {
+      if (challenge.runtime && challenge.runtime.intervalId) {
+        clearInterval(challenge.runtime.intervalId);
+        challenge.runtime.intervalId = null;
+      }
+    }
+
+    function challengeExit(clearStorage) {
+      challengeStopTimers();
+      challenge.enabled = false;
+      challenge.runtime = null;
+      if (clearStorage !== false) {
+        challenge.session = null;
+        challengeClearStorage();
+      } else if (challenge.session && !challenge.session.completed) {
+        challenge.session.phase = "lobby";
+        challengeSave();
+      } else {
+        challenge.session = null;
+      }
+      challengeHideAll();
+      renderModeSwitch();
+    }
+
+    function challengeToggle() {
+      if (state.mode === "journey") return;
+      if (challenge.enabled) {
+        challengeExit(true);
+        return;
+      }
+      challenge.enabled = true;
+      const existing = challengeLoad();
+      if (existing && !existing.completed) {
+        challenge.session = existing;
+        challenge.enabled = true;
+        renderModeSwitch();
+        challengeResume();
+        return;
+      }
+      challenge.session = null;
+      renderModeSwitch();
+      challengeOpenLobby();
+    }
+
+    function challengeSyncModeUI() {
+      if (state.mode === "journey" && challenge.enabled) challengeExit(false);
+      renderModeSwitch();
+    }
+
+    function challengeBuildSequence(seqMode, singleId) {
+      if (seqMode === "preset") return [1, 2, 3];
+      if (seqMode === "single") {
+        const id = Number(singleId) || 1;
+        return [Math.min(23, Math.max(1, id))];
+      }
+      // mixed: 3 distinct random 1..23
+      const pool = Array.from({ length: 23 }, (_, i) => i + 1);
+      for (let i = pool.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const tmp = pool[i];
+        pool[i] = pool[j];
+        pool[j] = tmp;
+      }
+      return pool.slice(0, 3);
+    }
+
+    function challengeStoryById(epId) {
+      return STORIES.find((s) => s.id === epId) || null;
+    }
+
+    function challengeAntiSpoilerLabel(epId) {
+      const s = challengeStoryById(epId);
+      const theme = s ? tl(s.theme) : "";
+      return `${t("episode")} ${epId}${theme ? ` · ${t("theme")}: ${theme}` : ""}`;
+    }
+
+    function challengeFillSingleSelect() {
+      const sel = document.getElementById("chSingleEp");
+      if (!sel) return;
+      sel.innerHTML = STORIES.map((s) =>
+        `<option value="${s.id}">${t("episode")} ${s.id} · ${t("theme")}: ${tl(s.theme)}</option>`
+      ).join("");
+    }
+
+    function challengeRenderLobbySlots() {
+      const host = challengeHostName();
+      const wrap = document.getElementById("chPlayerSlots");
+      if (!wrap) return;
+      const names = (challenge.session && challenge.session.players)
+        ? challenge.session.players.map((p) => p.name)
+        : [host, "", ""];
+      while (names.length < 2) names.push("");
+      while (names.length < 8) names.push("");
+      wrap.innerHTML = names.map((n, i) => `
+        <div class="ch-player-row">
+          <label>${i === 0 ? t("ch_host") : `${t("ch_player")} ${i + 1}`}</label>
+          <input type="text" maxlength="20" data-ch-slot="${i}" value="${i === 0 ? host : (n || "")}" ${i === 0 ? "readonly" : ""} placeholder="${t("ch_player")} ${i + 1}" />
+        </div>`).join("");
+    }
+
+    function challengeOpenLobby() {
+      challengeFillSingleSelect();
+      challengeRenderLobbySlots();
+      const err = document.getElementById("chLobbyErr");
+      if (err) { err.hidden = true; err.textContent = ""; }
+      const timer = document.getElementById("chTimerSec");
+      if (timer) timer.value = String((challenge.session && challenge.session.timerSec) || 15);
+      const mode = (challenge.session && challenge.session.sequenceMode) || "preset";
+      document.querySelectorAll('input[name="chSeq"]').forEach((r) => {
+        r.checked = r.value === mode;
+        r.closest("label")?.classList.toggle("is-active", r.checked);
+      });
+      const singleWrap = document.getElementById("chSingleWrap");
+      if (singleWrap) singleWrap.hidden = mode !== "single";
+      if (challenge.session) {
+        challenge.session.phase = "lobby";
+        challengeSave();
+      }
+      challengeShow("challenge-lobby");
+    }
+
+    function challengeCollectLobbyPlayers() {
+      const inputs = [...document.querySelectorAll("#chPlayerSlots [data-ch-slot]")];
+      const players = [];
+      inputs.forEach((inp, i) => {
+        const name = i === 0 ? challengeHostName() : sanitizePlayerName(inp.value);
+        if (!name) return;
+        players.push({
+          id: `p${players.length + 1}`,
+          name,
+          xp: 0,
+          correct: 0,
+          streak: 0,
+          avgTimeMs: 0,
+          timesSumMs: 0,
+          answered: 0
+        });
+      });
+      return players;
+    }
+
+    function challengeStartFromLobby() {
+      if (state.mode === "journey") return;
+      const players = challengeCollectLobbyPlayers();
+      const err = document.getElementById("chLobbyErr");
+      if (players.length < 2) {
+        if (err) { err.hidden = false; err.textContent = t("ch_needPlayers"); }
+        return;
+      }
+      let timerSec = Number(document.getElementById("chTimerSec")?.value || 15);
+      timerSec = Math.min(30, Math.max(10, timerSec || 15));
+      const seqMode = document.querySelector('input[name="chSeq"]:checked')?.value || "preset";
+      const singleId = document.getElementById("chSingleEp")?.value || "1";
+      const sequenceEpisodes = challengeBuildSequence(seqMode, singleId);
+      challenge.session = {
+        version: 1,
+        sessionId: challengeUid(),
+        createdAt: new Date().toISOString(),
+        mode: state.mode === "rebus" ? "rebus" : "quiz",
+        timerSec,
+        sequenceMode: seqMode,
+        sequenceEpisodes,
+        completed: false,
+        phase: "round",
+        roundIndex: 0,
+        players,
+        rounds: []
+      };
+      challenge.enabled = true;
+      challengeSave();
+      challengeBeginRound();
+    }
+
+    function challengeShuffle(arr) {
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const t0 = a[i];
+        a[i] = a[j];
+        a[j] = t0;
+      }
+      return a;
+    }
+
+    function challengeBuildChoices(story) {
+      if (challenge.session.mode === "quiz") {
+        const q = (story.questions && story.questions[0]) || null;
+        if (!q) return { prompt: "—", choices: [] };
+        return {
+          prompt: lang === "en" ? q.prompt.en : q.prompt.it,
+          choices: q.answers.map((a, i) => ({
+            label: lang === "en" ? a.en : a.it,
+            ok: !!a.ok,
+            key: `a${i}`
+          }))
+        };
+      }
+      // rebus: guess title among decoys (titles only in answer list, not header)
+      const correct = tl(story.title);
+      const decoys = challengeShuffle(
+        STORIES.filter((s) => s.id !== story.id).map((s) => tl(s.title))
+      ).slice(0, 3);
+      const choices = challengeShuffle([
+        { label: correct, ok: true, key: "ok" },
+        ...decoys.map((d, i) => ({ label: d, ok: false, key: `d${i}` }))
+      ]);
+      return { prompt: t("guessStory"), choices };
+    }
+
+    function challengeBeginRound() {
+      challengeStopTimers();
+      const sess = challenge.session;
+      if (!sess) return;
+      const epId = sess.sequenceEpisodes[sess.roundIndex];
+      const story = challengeStoryById(epId);
+      if (!story) return;
+      const pack = challengeBuildChoices(story);
+      const round = {
+        episodeId: epId,
+        mode: sess.mode,
+        hintUsedBy: {},
+        answers: {}
+      };
+      // replace if re-entering same index
+      if (sess.rounds[sess.roundIndex]) sess.rounds[sess.roundIndex] = round;
+      else sess.rounds.push(round);
+      sess.phase = "round";
+      challengeSave();
+
+      const T = sess.timerSec * 1000;
+      challenge.runtime = {
+        startedAt: performance.now(),
+        deadline: {},
+        remainingMs: {},
+        intervalId: null,
+        pack,
+        story,
+        revealCount: 0,
+        hintVisible: false,
+        firstCorrectPid: null,
+        closed: false
+      };
+      sess.players.forEach((p) => {
+        challenge.runtime.remainingMs[p.id] = T;
+        challenge.runtime.deadline[p.id] = challenge.runtime.startedAt + T;
+      });
+
+      document.getElementById("chRoundTitle").textContent = challengeAntiSpoilerLabel(epId);
+      const total = sess.sequenceEpisodes.length;
+      const n = sess.roundIndex + 1;
+      document.getElementById("chRoundMeta").textContent =
+        t("ch_roundOf").replace("{n}", String(n)).replace("{total}", String(total))
+        + ` · ${sess.mode === "rebus" ? t("modeRebus") : t("modeQuiz")}`;
+
+      const isRebus = sess.mode === "rebus";
+      document.getElementById("chRebusTools").hidden = !isRebus;
+      document.getElementById("chRebusBoard").hidden = !isRebus;
+      document.getElementById("chHintLine").hidden = true;
+      document.getElementById("chHintLine").textContent = "";
+      if (isRebus) challengeRenderRebusBoard(story);
+      document.getElementById("chQuestion").textContent = pack.prompt;
+      challengeRenderTimers();
+      challengeRenderActiveSelect();
+      challengeRenderAnswers();
+      challengeShow("challenge-round");
+
+      challenge.runtime.intervalId = setInterval(challengeTickTimers, 200);
+    }
+
+    function challengeRenderRebusBoard(story) {
+      const rebus = getRebusStory(story.id);
+      const board = document.getElementById("chRebusBoard");
+      if (!board) return;
+      const keys = rebus
+        ? [...(rebus.visibleKeys || []).slice(0, 1), ...(rebus.hiddenKeys || []).slice(0, 2)]
+        : [];
+      const showN = challenge.runtime.revealCount;
+      board.innerHTML = [0, 1, 2].map((i) => {
+        const key = keys[i];
+        if (i < showN && key) {
+          return `<div class="ch-rebus-slot"><img src="${assetUrl(key)}" alt="" /></div>`;
+        }
+        return `<div class="ch-rebus-slot is-empty"></div>`;
+      }).join("");
+    }
+
+    function challengeMarkHint(pid) {
+      if (!challenge.session || !challenge.runtime) return;
+      const round = challenge.session.rounds[challenge.session.roundIndex];
+      if (!round) return;
+      // policy A: once used for a player (or shared board), mark ever-used
+      const target = pid || document.getElementById("chActivePlayer")?.value;
+      if (target) round.hintUsedBy[target] = true;
+      // also mark all still-playing if shared board reveal/hint
+      challenge.session.players.forEach((p) => {
+        if (!round.answers[p.id]) round.hintUsedBy[p.id] = true;
+      });
+      challengeSave();
+    }
+
+    function challengeRenderTimers() {
+      const box = document.getElementById("chTimers");
+      if (!box || !challenge.session || !challenge.runtime) return;
+      const round = challenge.session.rounds[challenge.session.roundIndex] || { answers: {} };
+      box.innerHTML = challenge.session.players.map((p) => {
+        const ans = round.answers[p.id];
+        const ms = challenge.runtime.remainingMs[p.id] ?? 0;
+        const sec = Math.max(0, Math.ceil(ms / 1000));
+        let cls = "ch-timer-chip";
+        if (ans) cls += ans.ok ? " is-done is-ok" : " is-done is-bad";
+        else if (sec <= 0) cls += " is-done is-bad";
+        const label = ans
+          ? (ans.ok ? `${ans.xpDelta} XP` : t("ch_done"))
+          : (sec <= 0 ? t("ch_timeout") : `${sec}s`);
+        return `<div class="${cls}" data-pid="${p.id}"><span class="ch-t-name">${p.name}</span><span class="ch-t-sec">${label}</span></div>`;
+      }).join("");
+    }
+
+    function challengeRenderActiveSelect() {
+      const sel = document.getElementById("chActivePlayer");
+      if (!sel || !challenge.session) return;
+      const round = challenge.session.rounds[challenge.session.roundIndex] || { answers: {} };
+      const open = challenge.session.players.filter((p) => !round.answers[p.id]);
+      sel.innerHTML = open.map((p) => `<option value="${p.id}">${p.name}</option>`).join("");
+      sel.disabled = open.length === 0;
+    }
+
+    function challengeRenderAnswers() {
+      const box = document.getElementById("chAnswers");
+      if (!box || !challenge.runtime) return;
+      const pack = challenge.runtime.pack;
+      box.innerHTML = (pack.choices || []).map((c) =>
+        `<button type="button" data-ch-choice="${c.key}" data-ok="${c.ok ? "1" : "0"}">${c.label}</button>`
+      ).join("");
+      box.querySelectorAll("[data-ch-choice]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const pid = document.getElementById("chActivePlayer")?.value;
+          if (!pid) return;
+          challengeSubmitAnswer(pid, btn.getAttribute("data-ok") === "1");
+        });
+      });
+    }
+
+    function challengeTickTimers() {
+      if (!challenge.runtime || challenge.runtime.closed) return;
+      const now = performance.now();
+      const sess = challenge.session;
+      const round = sess.rounds[sess.roundIndex];
+      let dirty = false;
+      sess.players.forEach((p) => {
+        if (round.answers[p.id]) {
+          challenge.runtime.remainingMs[p.id] = 0;
+          return;
+        }
+        const left = Math.max(0, challenge.runtime.deadline[p.id] - now);
+        challenge.runtime.remainingMs[p.id] = left;
+        if (left <= 0) {
+          challengeRecordAnswer(p.id, false, sess.timerSec * 1000, true);
+          dirty = true;
+        }
+      });
+      challengeRenderTimers();
+      if (dirty) {
+        challengeRenderActiveSelect();
+        challengeCheckRoundComplete();
+      }
+    }
+
+    function challengeSpeedBonus(timeMs, timerSec) {
+      const T = timerSec * 1000;
+      if (T <= 0) return 0;
+      const ratio = Math.max(0, Math.min(1, 1 - (timeMs / T)));
+      return Math.round(50 * ratio);
+    }
+
+    function challengeRecordAnswer(pid, ok, timeMs, isTimeout) {
+      const sess = challenge.session;
+      if (!sess || !challenge.runtime || challenge.runtime.closed) return;
+      const round = sess.rounds[sess.roundIndex];
+      if (!round || round.answers[pid]) return;
+      const player = sess.players.find((p) => p.id === pid);
+      if (!player) return;
+
+      let xpDelta = 0;
+      let first = false;
+      if (ok) {
+        xpDelta = 100;
+        xpDelta += challengeSpeedBonus(timeMs, sess.timerSec);
+        if (!challenge.runtime.firstCorrectPid) {
+          challenge.runtime.firstCorrectPid = pid;
+          first = true;
+          xpDelta += 50;
+        }
+        if (sess.mode === "rebus" && !round.hintUsedBy[pid]) {
+          xpDelta += 20;
+        }
+        const streakBonus = Math.min(50, player.streak * 10);
+        // streak counts previous consecutive corrects; award based on current streak before increment
+        // Spec: +10 per consecutive correct round, cap +50
+        // After previous correct rounds, streak is N → this round gets min(50, N*10) then streak becomes N+1
+        xpDelta += streakBonus;
+        player.streak += 1;
+        player.correct += 1;
+      } else {
+        player.streak = 0;
+      }
+      player.answered += 1;
+      player.timesSumMs += timeMs;
+      player.avgTimeMs = Math.round(player.timesSumMs / player.answered);
+      player.xp += xpDelta;
+
+      round.answers[pid] = {
+        ok: !!ok,
+        timeMs,
+        first,
+        xpDelta,
+        timeout: !!isTimeout
+      };
+      challengeSave();
+      challengeRenderTimers();
+      challengeRenderActiveSelect();
+      challengeCheckRoundComplete();
+    }
+
+    function challengeSubmitAnswer(pid, ok) {
+      if (!challenge.runtime) return;
+      const now = performance.now();
+      const timeMs = Math.min(
+        challenge.session.timerSec * 1000,
+        Math.max(0, Math.round(now - challenge.runtime.startedAt))
+      );
+      // also clamp to that player's remaining
+      const used = challenge.session.timerSec * 1000 - (challenge.runtime.remainingMs[pid] || 0);
+      const tMs = Math.max(timeMs, Math.round(used));
+      challengeRecordAnswer(pid, ok, Math.min(tMs, challenge.session.timerSec * 1000), false);
+    }
+
+    function challengeCheckRoundComplete() {
+      const sess = challenge.session;
+      if (!sess || !challenge.runtime || challenge.runtime.closed) return;
+      const round = sess.rounds[sess.roundIndex];
+      const allDone = sess.players.every((p) => !!round.answers[p.id]);
+      if (!allDone) return;
+      challenge.runtime.closed = true;
+      challengeStopTimers();
+      sess.phase = "between";
+      challengeSave();
+      const more = sess.roundIndex + 1 < sess.sequenceEpisodes.length;
+      challengeShowLeaderboard(!more);
+    }
+
+    function challengeRankedPlayers() {
+      return challenge.session.players.slice().sort((a, b) => {
+        if (b.xp !== a.xp) return b.xp - a.xp;
+        if (b.correct !== a.correct) return b.correct - a.correct;
+        return a.avgTimeMs - b.avgTimeMs;
+      });
+    }
+
+    function challengeShowLeaderboard(isFinal) {
+      const sess = challenge.session;
+      const epId = sess.sequenceEpisodes[sess.roundIndex];
+      const story = challengeStoryById(epId);
+      const title = document.getElementById("chBoardTitle");
+      title.textContent = isFinal ? t("ch_final") : t("ch_leaderboard");
+      document.getElementById("chBoardMeta").textContent = challengeAntiSpoilerLabel(epId);
+
+      const sol = document.getElementById("chSolutionBox");
+      if (story && !isFinal) {
+        sol.innerHTML = `<strong>${t("ch_solution")}:</strong> ${tl(story.title)}<br/><strong>${t("ch_moral")}:</strong> ${tl(story.moral)}`;
+      } else if (isFinal) {
+        sol.textContent = "";
+      }
+
+      const ranked = challengeRankedPlayers();
+      const list = document.getElementById("chBoardList");
+      list.innerHTML = `<ol>${ranked.map((p, i) => {
+        const streak = p.streak > 0 ? ` · ${t("ch_streak")} ${p.streak}` : "";
+        return `<li class="${i === 0 ? "ch-me" : ""}"><strong>${p.name}</strong> — ${p.xp} ${t("ch_xp")} · ✓${p.correct}${streak}</li>`;
+      }).join("")}</ol>`;
+
+      const more = sess.roundIndex + 1 < sess.sequenceEpisodes.length;
+      const btnNext = document.getElementById("chBtnNextRound");
+      btnNext.hidden = isFinal || !more;
+      if (isFinal) {
+        sess.completed = true;
+        sess.phase = "done";
+        challengeSave();
+      }
+      challengeShow("challenge-leaderboard");
+    }
+
+    function challengeNextRound() {
+      const sess = challenge.session;
+      if (!sess) return;
+      if (sess.roundIndex + 1 >= sess.sequenceEpisodes.length) {
+        challengeShowLeaderboard(true);
+        return;
+      }
+      sess.roundIndex += 1;
+      challengeSave();
+      challengeBeginRound();
+    }
+
+    function challengeNew() {
+      challengeStopTimers();
+      challenge.session = null;
+      challenge.runtime = null;
+      challengeClearStorage();
+      challenge.enabled = true;
+      challengeOpenLobby();
+      renderModeSwitch();
+    }
+
+    function challengeResume() {
+      const sess = challenge.session;
+      if (!sess || sess.completed) {
+        challengeOpenLobby();
+        return;
+      }
+      if (sess.phase === "round") {
+        // restart current round fresh timers if incomplete answers
+        const round = sess.rounds[sess.roundIndex];
+        const incomplete = !round || sess.players.some((p) => !round.answers[p.id]);
+        if (incomplete) {
+          // drop partial round answers for clean resume
+          if (round) sess.rounds[sess.roundIndex] = {
+            episodeId: sess.sequenceEpisodes[sess.roundIndex],
+            mode: sess.mode,
+            hintUsedBy: {},
+            answers: {}
+          };
+          challengeBeginRound();
+        } else {
+          challengeShowLeaderboard(false);
+        }
+        return;
+      }
+      if (sess.phase === "between") {
+        challengeShowLeaderboard(false);
+        return;
+      }
+      if (sess.phase === "done") {
+        challengeShowLeaderboard(true);
+        return;
+      }
+      challengeOpenLobby();
+    }
+
+    function challengeWire() {
+      document.getElementById("chBtnStart")?.addEventListener("click", challengeStartFromLobby);
+      document.getElementById("chBtnExitLobby")?.addEventListener("click", () => challengeExit(true));
+      document.getElementById("chBtnExitBoard")?.addEventListener("click", () => challengeExit(true));
+      document.getElementById("chBtnNew")?.addEventListener("click", challengeNew);
+      document.getElementById("chBtnNextRound")?.addEventListener("click", challengeNextRound);
+      document.getElementById("chBtnForceClose")?.addEventListener("click", () => {
+        if (!challenge.session || !challenge.runtime) return;
+        const round = challenge.session.rounds[challenge.session.roundIndex];
+        challenge.session.players.forEach((p) => {
+          if (!round.answers[p.id]) {
+            const left = challenge.runtime.remainingMs[p.id] || 0;
+            const used = challenge.session.timerSec * 1000 - left;
+            challengeRecordAnswer(p.id, false, used, true);
+          }
+        });
+      });
+      document.getElementById("chBtnReveal")?.addEventListener("click", () => {
+        if (!challenge.runtime) return;
+        challenge.runtime.revealCount = Math.min(3, challenge.runtime.revealCount + 2);
+        challengeMarkHint(null);
+        challengeRenderRebusBoard(challenge.runtime.story);
+      });
+      document.getElementById("chBtnHint")?.addEventListener("click", () => {
+        if (!challenge.runtime) return;
+        challenge.runtime.hintVisible = !challenge.runtime.hintVisible;
+        const line = document.getElementById("chHintLine");
+        const rebus = getRebusStory(challenge.runtime.story.id);
+        if (challenge.runtime.hintVisible) {
+          challengeMarkHint(null);
+          line.hidden = false;
+          line.textContent = rebus ? rebus.hint : t("captionDefault");
+          document.getElementById("chBtnHint").textContent = t("hideHint");
+        } else {
+          line.hidden = true;
+          document.getElementById("chBtnHint").textContent = t("showHint");
+        }
+      });
+      document.querySelectorAll('input[name="chSeq"]').forEach((r) => {
+        r.addEventListener("change", () => {
+          document.querySelectorAll('input[name="chSeq"]').forEach((x) => {
+            x.closest("label")?.classList.toggle("is-active", x.checked);
+          });
+          const wrap = document.getElementById("chSingleWrap");
+          if (wrap) wrap.hidden = r.value !== "single" || !r.checked
+            ? (document.querySelector('input[name="chSeq"]:checked')?.value !== "single")
+            : false;
+          const checked = document.querySelector('input[name="chSeq"]:checked')?.value;
+          if (wrap) wrap.hidden = checked !== "single";
+        });
+      });
+    }
+
+    function challengeInit() {
+      challengeWire();
+      const existing = challengeLoad();
+      if (existing && !existing.completed && state.mode !== "journey") {
+        challenge.session = existing;
+        challenge.enabled = true;
+        renderModeSwitch();
+        // defer UI until after first paint / onboarding
+        setTimeout(() => {
+          if (challenge.enabled && challenge.session && !challenge.session.completed) {
+            challengeResume();
+          }
+        }, 0);
+      }
+      // Deterministic smoke / DevTools dump (no write to protected keys)
+      window.__JWQ_CH = {
+        getSession: () => challenge.session,
+        isEnabled: () => challenge.enabled,
+        submitTimed: (pid, ok, timeMs) => challengeRecordAnswer(pid, !!ok, Number(timeMs) || 0, false),
+        forceTimeout: (pid) => {
+          if (!challenge.session) return;
+          challengeRecordAnswer(pid, false, challenge.session.timerSec * 1000, true);
+        },
+        dumpLS: () => {
+          const out = {};
+          for (let i = 0; i < localStorage.length; i++) {
+            const k = localStorage.key(i);
+            out[k] = localStorage.getItem(k);
+          }
+          out.__admin_session = sessionStorage.getItem("jwquiz_admin_session");
+          return out;
+        }
+      };
+    }
+
+    /* ========================================================================
      * SECTION: WIRE UI EVENTS
      * ======================================================================== */
     const langSelect = document.getElementById("langSelect");
@@ -2665,6 +3578,7 @@
     applyI18n();
     observeReveals();
     initHero();
+    challengeInit();
     openOnboarding(false);
   </script>
 </body>

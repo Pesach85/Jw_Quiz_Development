@@ -356,7 +356,7 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-09-29 | **Prompt A**: `main` allineato a `origin/main` con `pull --ff-only` (d1646d0→3758d8d, no force); wrangler.toml verificato (KV/R2); checklist pre-deploy prodotta; **nessun deploy** in attesa conferma umana | ✅ Fatto |
 | 2026-09-29 | **Prompt B**: inventario env admin (`ADMIN_SECRET` unica env var per smoke admin; `JWQUIZ_DATA` = binding KV); istruzioni Pages + smoke documentati; **stato prod ADMIN_SECRET non verificabile** da agent (no login CF); smoke non eseguito; G2 resta P0 | ✅ Documentato (in attesa umano) |
 | 2026-09-29 | **Smoke admin post-config**: pre-flight `.local/` in `.gitignore`; prod `jwquiz.pages.dev` — OPTIONS 200, heartbeat OK, `admin_stats` OK (4 metriche), wrong/no secret → 403; secret non loggato; UI classic.html confermata dall’umano | ✅ Verde (API agent + umano) |
-| 2026-09-29 | **Audit regressione Immersive (Prompt H)**: pre-flight tree pulito @ `afdd6c3`, `app.js` invariato; preview `127.0.0.1:8080` — checklist §13 verde (warning attesi: heartbeat badge assente in locale senza Functions; UI rebus classic non automatizzata browser) | ✅ Nessun KO bloccante |
+| 2026-09-30 | **J — multiplayer MVP (Sfida 2-8, timer per-player, sequenze)** — layer su Quiz/Rebus (no journey); storage `jwquiz_challenge_v1` `version:1`; HITL D-J1…D-J4 | ✅ Implementato |
 | 2026-09-29 | **Prompt C (design G1)**: drift mappato STORIES vs `stories.js` vs `StoryLibrary.cs`; opzioni A/B/C valutate; **raccomandazione Option B** (`data/episodes.json` + generator Python → `stories.js` + `StoryLibrary.cs`); deliverable `docs/DATASET_UNIFICATION_DESIGN.md` — **build non avviato** | ✅ Design |
 | 2026-09-29 | **Prompt C build Step 0**: `data/episodes.schema.json`, `tools/validate_episodes.py`, fixture OK/broken; checkpoint validator exit 0/1; vincoli Q2 (no symbols in JSON), Q4 (theaterQuote vs scriptureQuoteIt) | ✅ Step 0 |
 | 2026-09-29 | **C-BUILD Step 1 — migrazione episodes.json (18 record)**: merge STORIES + `stories.js` + `StoryLibrary.cs`; validator `--full-catalog` verde; ep.8 titolo unificato; ep.10/12 keys+caption da C# (stories.js incompleto) | ✅ Step 1 |
@@ -417,7 +417,7 @@ Aggiornare questa sezione ad ogni sessione di lavoro.
 | Media | Multilanguage | Rifinire glossario rule-based it/en (vedi decisioni aperte in I18N_QA_REPORT) |
 | Media | Immersive | Aggiungere FR/ES come terze lingue riusando lo stesso schema `{ it, en, … }` |
 | Media | Gamification | **Streak + Badge**: N storie consecutive senza hint = badge "Saggio/Profeta/Apostolo" |
-| Media | Gamification | **Classifica sessione locale**: 2-8 partecipanti inseriscono nome, XP aggregati, classifica finale |
+| Media | Gamification | ~~**Classifica sessione locale**: 2-8 partecipanti~~ ✅ **COMPLETATO** (Prompt J — Sfida layer, timer per-player, sequenceMode) |
 | Media | Gamification | **Percorsi Tematici**: raccolte storie per tema (Fede/Amore/Coraggio) con barra progresso sbloccabile |
 | Media | UX | ProgressPanel: aggiungere grafico barre XP e lista storie completate |
 | Media | Content | ~~Aggiungere storia ID 19+~~ ✅ mergiate in catalogo (K2) |
@@ -526,6 +526,8 @@ L’esperienza è **ispirata** allo stile didattico JW.org “Fai vivere il racc
 | Android smoke Ep 10 — toggle + stelle A | Verifica F3/H4b su device USB (WebView) | **OK 2026-09-29** Motorola edge 40 `ZY22HFWMGV`, solo `adb shell input`. Ep10 Rebus: reveal×2 → ★3→★2→★1; Nascondi → slot ? ma ★1 invariato (H4b); hint on/off ★1 invariato (F3). Screenshot `.local/smoke/04`–`12` (gitignored) |
 | `npx wrangler` Unknown arguments | due comandi incollati sulla stessa riga | Un comando per volta: `npx wrangler pages deploy webapp --project-name=jwquiz` |
 | Wrangler “Unknown arguments: wrangler, pages…” | `npx wrangler` invocato dopo un wrangler già globale/ambiguo | Dal root repo, una sola invocazione; se persiste: `npx --yes wrangler@4.124.0 pages deploy webapp --project-name=jwquiz` |
+| Challenge timer per-player UI | N countdown affiancati; race first-correct wall-clock | `#chTimers` chip per player; `challengeRecordAnswer` + speed bonus su timerSec del player; primo `ok` → +50 |
+| Challenge sequenceMode | Host deve scegliere preset/mixed/single | Lobby radios + dropdown anti-spoiler (`Episodio id · tema`); `sequenceEpisodes` persistito in `jwquiz_challenge_v1` |
 
 ### Checklist regressione (sessione Immersive)
 - [x] `webapp/app.js` invariato (o solo cambi deliberati) — Prompt H 2026-09-29
@@ -674,14 +676,12 @@ Aggiornare questa KB:
 
 Commit se il tree deve tornare pulito (deploy Wrangler). Push solo se richiesto esplicitamente.
 
-### Stato corrente (handoff) — 2026-09-30
+### Stato corrente (handoff) — 2026-09-30 (post J)
 
-- **STEP I CHIUSO.**
-- **Commits:** `540a57c` K2 tooling · `4cea475` docs I+E · `ebf63ed` feat(onboarding).
-- **Verify post-I:** C1–C3, C5–C5b exit 0; **C4 retry** exit 0 (`exe` 2026-09-30T09:27:04) dopo kill PID lock; tree pulito; `stories.js`/`StoryLibrary.cs` diff 0.
-- **Web:** W1–W8 verdi; tutorial F3 `0→1→2→0` + policy A.
-- **Desktop:** D1–D6 verificato empiricamente dall'utente 2026-09-30.
-- **Storage:** `jwquiz_onboarding_v1`, `jwquiz_player_name_v1`, `jwquiz_audio_v1`, `jwquiz_motion_v1`; desktop `UserOnboarding.dat` (gitignored).
-- **Aperti:** 3 bug desktop (menu 19–23, layout menu, centratura immagini) — report in corso.
-- **Prossimo:** OK indagine bug → fix D1/D2/D3; poi J multiplayer MVP.
-- **Dev server:** `:8081` / fallback `:8082`/`:8083`.
+- **STEP J CHIUSO** — multiplayer MVP locale (Sfida 2–8).
+- **Spec:** `docs/MULTIPLAYER_MVP_SPEC.md` (HITL D-J1 A, D-J2 D, D-J2b 3, D-J3 B per-player, D-J4 version:1).
+- **Code:** `webapp/index.html` only (`#challenge-lobby|round|leaderboard`, toggle Sfida, `jwquiz_challenge_v1`).
+- **Evidence:** M1–M16 + streak table + storage cross OK; journey → Sfida disabled (`.local/smoke/j_journey_disabled.png`); X1–X6/X5=0; Ep13 V[4] preflight pixel_dist≠0; `app.js` intatto.
+- **Storage separation:** solo `jwquiz_challenge_v1` write/delete; onboarding/player/audio/motion/admin intatti.
+- **Aperti / prossimo:** **L** design online rooms; D1 + D4–D10 defer; no deploy.
+- **Dev server:** `:8083` (MIME `.js` = text/plain da `http.server` — ok in Chromium per questo smoke).
