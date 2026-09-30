@@ -71,6 +71,11 @@ CONCEPTS = {
         "Photorealistic goat standing on rocky hillside, natural daylight, no text no logo, square",
         ["1F413"],
     ),
+    "ep11-goat-photo": (
+        "ep11-goat-photo",
+        "Photorealistic adult goat standing calmly on a grassy hill, warm golden late-afternoon light, biblical pastoral landscape, soft natural shadows, square composition, no text, no people, no icons, no flat illustration, photographic realism",
+        ["1F410"],
+    ),
     "pig": (
         "pig",
         "Photorealistic pig in farmyard soft natural light, no text no logo, square",
