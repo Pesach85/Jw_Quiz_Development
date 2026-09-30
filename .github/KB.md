@@ -361,6 +361,7 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-09-30 | **I2 — onboarding back/forward** + tastiera; **Brand — identity applicata (B1–B8)** system stack + favicon JQ + tono + Form1 palette | ✅ Apply |
 | 2026-09-30 | **SEMANTIC — Ep 11** (3 caption + 1 regen photoreal `1F410`) **+ Ep 12/18** placeholder `2753` → key photo (`1F5FA` / `1F932-1F3FC`) | ✅ Applicato |
 | 2026-09-30 | **HITL D4–D10 final pack** — `docs/HITL_D4_D10_FINAL_2026-09-30.md` (decision-ready; no apply) | ✅ Doc |
+| 2026-09-30 | **E2 chiuso** — D4–D10 HITL confermati keep / no-op (`D4A…D9A D10B`); nessun APPLY dati | ✅ Chiuso |
 | 2026-09-29 | **Prompt C (design G1)**: drift mappato STORIES vs `stories.js` vs `StoryLibrary.cs`; opzioni A/B/C valutate; **raccomandazione Option B** (`data/episodes.json` + generator Python → `stories.js` + `StoryLibrary.cs`); deliverable `docs/DATASET_UNIFICATION_DESIGN.md` — **build non avviato** | ✅ Design |
 | 2026-09-29 | **Prompt C build Step 0**: `data/episodes.schema.json`, `tools/validate_episodes.py`, fixture OK/broken; checkpoint validator exit 0/1; vincoli Q2 (no symbols in JSON), Q4 (theaterQuote vs scriptureQuoteIt) | ✅ Step 0 |
 | 2026-09-29 | **C-BUILD Step 1 — migrazione episodes.json (18 record)**: merge STORIES + `stories.js` + `StoryLibrary.cs`; validator `--full-catalog` verde; ep.8 titolo unificato; ep.10/12 keys+caption da C# (stories.js incompleto) | ✅ Step 1 |
@@ -411,7 +412,11 @@ Aggiornare questa sezione ad ogni sessione di lavoro.
 | P1 Alta | Content | ~~Bozze 19+ / K2~~ ✅ **COMPLETATO** — catalogo **23** (`cc92e8e`). Nota: leftover uncommitted `validate`/`generate`/`index.html` DECOR→23 |
 | P1 Alta | Design | **Classic flat — keep (M)** — `docs/CLASSIC_REBUS_DEPRECATION.md`. Nessun tocco `app.js` |
 | P1 Alta | Immersive | ~~Unificare dataset Q&A immersivo (G1)~~ ✅ **COMPLETATO** |
-| P1 Alta | Multilanguage | **HITL residui:** D4–D10 → pack `docs/HITL_D4_D10_FINAL_2026-09-30.md` (attende one-line). **D1** pending dedicated session (I_tuoi_versetti / wol.jw.org). EP12/18 placeholder ✅ semantic fix |
+| P1 Alta | Multilanguage | ~~**E2 QA i18n**~~ ✅ **COMPLETATO 100%** — W1–W26 + D2/D3 applicati; D4–D10 keep/no-op (`D4A D5A D6A D7A D8A D9A D10B`). **D1** pending dedicated session (I_tuoi_versetti / wol.jw.org) |
+| P1 Alta | Content | ~~Semantic fix Ep 11/12/18~~ ✅ **COMPLETATO** |
+| Alta | UX | ~~**I2 — Onboarding**~~ ✅ **COMPLETATO**; ~~**Brand B1–B8**~~ ✅ **APPLICATO** |
+| Media | Gamification | ~~**Classifica sessione locale**~~ ✅ **COMPLETATO** (Prompt J); **Streak + Badge (F)** → spec `docs/STREAK_BADGE_SPEC.md` (HITL F1–F5) |
+| Media | Design | **Online rooms DO+WS** — `docs/ONLINE_ROOMS_DESIGN.md` — design only |
 | Alta | UX | ~~**I — Onboarding**~~ ✅ **COMPLETATO** (web W1–W8 + desktop D1–D6 empirico utente + C1–C5b incl. C4 retry) |
 | P1 Alta | Desktop | ~~Bug1+Bug3~~ ✅ `1390bd3`. ~~Bug2 fasce~~ ✅ `e95747e` |
 | Alta | Web Immersive | ~~Landing 3D + theater Q&A~~ ✅ **COMPLETATO** (`webapp/index.html`) |
@@ -420,7 +425,7 @@ Aggiornare questa sezione ad ogni sessione di lavoro.
 | Alta | Cloudflare | Dopo restart agent: OAuth MCP Cloudflare al primo tool use; deploy Pages con wrangler |
 | Media | Multilanguage | Rifinire glossario rule-based it/en (vedi decisioni aperte in I18N_QA_REPORT) |
 | Media | Immersive | Aggiungere FR/ES come terze lingue riusando lo stesso schema `{ it, en, … }` |
-| Media | Gamification | **Streak + Badge**: N storie consecutive senza hint = badge "Saggio/Profeta/Apostolo" |
+| Media | Gamification | ~~**Streak + Badge** (Saggio/Profeta/Apostolo)~~ → **F spec** `docs/STREAK_BADGE_SPEC.md` (nomi Attento/Diligente/Esperto — HITL F1–F5) |
 | Media | Gamification | ~~**Classifica sessione locale**: 2-8 partecipanti~~ ✅ **COMPLETATO** (Prompt J — Sfida layer, timer per-player, sequenceMode) |
 | Media | Design | ~~**Brand identity**~~ ✅ **APPLICATO** (B1–B8: system fonts, favicon JQ, tono, Form1 palette; no theme key) |
 | Media | Design | **Online rooms DO+WS** — `docs/ONLINE_ROOMS_DESIGN.md` — design only; dopo brand HITL |
@@ -689,10 +694,10 @@ Aggiornare questa KB:
 
 Commit se il tree deve tornare pulito (deploy Wrangler). Push solo se richiesto esplicitamente.
 
-### Stato corrente (handoff) — 2026-09-30 (post HITL D4–D10 pack)
+### Stato corrente (handoff) — 2026-09-30 (E2 chiuso; F spec)
 
-- **Semantic fix** Ep11/12/18 @ `be738e7` + lineage.
-- **HITL D4–D10:** pack decision-ready `docs/HITL_D4_D10_FINAL_2026-09-30.md` — **STOP attende one-line** (`D4A D5A …` o checkbox).
-- **D1:** fuori scope — pending dedicated session (I_tuoi_versetti API).
-- **Prossimo:** apply D4–D10 dopo risposta; online rooms design-only; Intro.jpg legacy.
+- **E2 QA i18n COMPLETATO 100%:** W1–W26 + D2/D3 applicati; D4–D10 keep/no-op (`D4A D5A D6A D7A D8A D9A D10B`); nessun APPLY dati.
+- **D1:** pending dedicated session (I_tuoi_versetti / wol.jw.org).
+- **Semantic / Brand / Onboarding / Multiplayer MVP / Online rooms design:** chiusi o consegnati (vedi §10/§11).
+- **Prossimo:** **F — Streak + Badge** — `docs/STREAK_BADGE_SPEC.md` (HITL F1–F5); Intro.jpg legacy.
 - **No deploy.** `app.js` intatto.
