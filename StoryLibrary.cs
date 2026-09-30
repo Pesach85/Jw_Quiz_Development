@@ -11,7 +11,7 @@ namespace Jw_Quiz_Development
             var list = new List<Story>
             {
             // AUTO-GENERATED — DO NOT EDIT — source: data/episodes.json
-            // source-sha256: 514e810093ef5fcbe776c81d8b149b85df37159ec86b31b4d16f4280c0761a4f
+            // source-sha256: a5c598e3efc3ec59d7918f298000254ed7b8e78178b6411563a124143dc40906
             new Story
             {
                 Id = 1,
@@ -496,6 +496,141 @@ namespace Jw_Quiz_Development
                     "Chi scelse di tirare dritto",
                     "Un gesto di misericordia",
                     "Conta chi si ferma ad aiutare",
+                }
+            },
+            new Story
+            {
+                Id = 19,
+                Title = "La Torre di Babele",
+                ScriptureReference = "Genesi 11:1-9",
+                Keyword = "Orgoglio",
+                Hint = "Una città, una torre verso il cielo e lingue che non si capiscono più.",
+                Solution = "A Babele l'umanità volle farsi un nome; Geova confuse le lingue e disperse le persone. Genesi 11:1-9.",
+                ScriptureQuote = "Genesi 11:7 — Dio interviene perché l'umanità non continui un progetto guidato dall'orgoglio.",
+                EngagementNote = "Collega l'orgoglio umano all'umiltà di ascoltare Dio invece di esaltare sé stessi.",
+                ImageResourceName = "Babel",
+                IsDynamic = true,
+                VisibleEmojis = new[] { "1F3DB", "093-users", "1F4AC", "1F632", "1F5FA" },
+                HiddenEmojis = new[] { "1F3F0", "1F334" },
+                HintEmoji = "1F3F0",
+                ImageCaptions = new[]
+                {
+                    "Un edificio imponente",
+                    "Tante persone insieme",
+                    "Voci che si sovrappongono",
+                    "Lo stupore sul volto",
+                    "Una mappa del mondo conosciuto",
+                    "Una torre che punta in alto",
+                    "Una pianta che cresce verso il cielo",
+                    "La stessa torre vista da lontano",
+                }
+            },
+            new Story
+            {
+                Id = 20,
+                Title = "Daniele nella fossa dei leoni",
+                ScriptureReference = "Daniele 6",
+                Keyword = "Fede",
+                Hint = "Finestre aperte verso Gerusalemme, una fossa e leoni che non divorano.",
+                Solution = "Daniele continuò a pregare nonostante il decreto; Geova lo protesse nella fossa dei leoni. Daniele 6.",
+                ScriptureQuote = "Daniele 6:22 — Dio manda aiuto e i leoni non fanno male al suo servo.",
+                EngagementNote = "La fedeltà nella preghiera vale più del favore dei potenti.",
+                ImageResourceName = "DanielLions",
+                IsDynamic = true,
+                VisibleEmojis = new[] { "1F932-1F3FC", "1F451", "1F440", "1F47C", "1F6B8" },
+                HiddenEmojis = new[] { "1F981", "2694" },
+                HintEmoji = "1F981",
+                ImageCaptions = new[]
+                {
+                    "Qualcuno in preghiera",
+                    "Una corona di autorità",
+                    "Occhi che osservano",
+                    "Una figura di protezione",
+                    "Un segnale di pericolo",
+                    "Un leone potente",
+                    "Un'arma che non decide il destino",
+                    "Lo stesso leone, da vicino",
+                }
+            },
+            new Story
+            {
+                Id = 21,
+                Title = "Saul diventa Paolo",
+                ScriptureReference = "Atti 9:1-22",
+                Keyword = "Conversione",
+                Hint = "Una luce accecante sulla via di Damasco e una voce che cambia tutto.",
+                Solution = "Gesù apparve a Saul sulla via di Damasco; da persecutore divenne apostolo. Atti 9:1-22.",
+                ScriptureQuote = "Atti 9:4-5 — Una voce chiede perché viene perseguitato; l'incontro cambia la direzione della vita.",
+                EngagementNote = "Nessuno è troppo lontano perché Dio possa cambiare il cuore.",
+                ImageResourceName = "SaulPaul",
+                IsDynamic = true,
+                VisibleEmojis = new[] { "1F6B6-1F3FF-200D-2642-FE0F", "1F525", "1F632", "1F4D6", "1F440" },
+                HiddenEmojis = new[] { "1F4AC", "1F318" },
+                HintEmoji = "1F4AC",
+                ImageCaptions = new[]
+                {
+                    "Un viaggio a piedi",
+                    "Una luce intensa",
+                    "Lo shock improvviso",
+                    "Un libro di istruzioni",
+                    "Occhi che devono riaprire",
+                    "Parole che guariscono",
+                    "La notte che lascia spazio al giorno",
+                    "Di nuovo le parole, come missione",
+                }
+            },
+            new Story
+            {
+                Id = 22,
+                Title = "Giosuè e Gerico",
+                ScriptureReference = "Giosuè 6",
+                Keyword = "Coraggio",
+                Hint = "Marce intorno alle mura, suoni di corni e un grido all'unisono.",
+                Solution = "Israele ubbidì al piano di Geova: dopo le marce e il grido, le mura di Gerico caddero. Giosuè 6.",
+                ScriptureQuote = "Giosuè 6:20 — Al grido del popolo, le mura crollano perché Dio combatte per loro.",
+                EngagementNote = "Il coraggio vero è obbedire anche quando il metodo sembra strano.",
+                ImageResourceName = "Jericho",
+                IsDynamic = true,
+                VisibleEmojis = new[] { "1F3DB", "1F6B6-200D-2640-FE0F", "1F3B6", "1F4E3", "1F463" },
+                HiddenEmojis = new[] { "1F3F0", "203C" },
+                HintEmoji = "1F3F0",
+                ImageCaptions = new[]
+                {
+                    "Mura antiche",
+                    "Passi in processione",
+                    "Musica e corni",
+                    "Un annuncio forte",
+                    "Orme sul terreno",
+                    "Una fortezza che sembra eterna",
+                    "Un'esclamazione improvvisa",
+                    "La fortezza vista da fuori",
+                }
+            },
+            new Story
+            {
+                Id = 23,
+                Title = "Marta e Maria",
+                ScriptureReference = "Luca 10:38-42",
+                Keyword = "Priorità",
+                Hint = "Una cucina piena di impegni e una sorella seduta ad ascoltare.",
+                Solution = "Maria scelse di ascoltare Gesù; Marta era distratta dai molti servizi. Gesù lodò la parte migliore. Luca 10:38-42.",
+                ScriptureQuote = "Luca 10:42 — C'è bisogno di poche cose, anzi di una sola: scegliere ciò che non sarà tolto.",
+                EngagementNote = "Il servizio è buono, ma non deve soffocare l'ascolto della Parola.",
+                ImageResourceName = "MarthaMary",
+                IsDynamic = true,
+                VisibleEmojis = new[] { "1F46D", "1F3DB", "1F52A", "1F37A", "1F442-1F3FE" },
+                HiddenEmojis = new[] { "1F4D6", "1F932-1F3FD" },
+                HintEmoji = "1F4D6",
+                ImageCaptions = new[]
+                {
+                    "Due persone in casa",
+                    "Un luogo di accoglienza",
+                    "Attrezzi per preparare cibo",
+                    "Una tavola apparecchiata",
+                    "Orecchie attente",
+                    "Un libro aperto",
+                    "Qualcuno in atteggiamento raccolto",
+                    "Di nuovo il libro, al centro",
                 }
             },
             };

@@ -157,6 +157,11 @@ Poi dal root: `python tools/sync_all.py` → `cd android` → `.\gradlew.bat ass
 | 16 | La Nascita di Mose' | Protezione | Dinamica |
 | 17 | Anna e Samuele | Preghiera | Dinamica |
 | 18 | Il Buon Samaritano | Amore per il Prossimo | Dinamica |
+| 19 | La Torre di Babele | Orgoglio | Dinamica |
+| 20 | Daniele nella fossa dei leoni | Fede | Dinamica |
+| 21 | Saul diventa Paolo | Conversione | Dinamica |
+| 22 | Giosuè e Gerico | Coraggio | Dinamica |
+| 23 | Marta e Maria | Priorità | Dinamica |
 
 ---
 
@@ -372,6 +377,7 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-09-29 | **D-CLI smoke Ep 10 adb-only**: reveal/hide + hint su `ZY22HFWMGV`; stelle peak ★1 dopo 2 reveal, invariate su hide/hint toggle (H4b/F3); hidden 1F981/1F5FA visibili | ✅ Verde |
 | 2026-09-29 | **Content — bozze episodi 19+**: `docs/NEW_STORIES_DRAFT.md` (Babel, Daniele, Saul→Paolo, Gerico, Marta/Maria); schema v1; citazioni solo ref+parafrasi pending OK; PNG esistenti | ⏳ review umana |
 | 2026-09-29 | **Design — classic flat deprecation**: `docs/CLASSIC_REBUS_DEPRECATION.md` — opzioni A/B/C/D; raccomandazione **A keep** post–F3C-A + trigger rivalutazione; no code | ⏳ review umana |
+| 2026-09-29 | **K2 — merge episodi 19–23 in catalogo**: Babel, Daniele, Saul→Paolo, Gerico, Marta/Maria; citazioni approvate (ref+parafrasi); DECOR 19–23; validator/generator → 23; parity OK (warn Ep10 hint=hidden[1] accettato) | ⏳ commit proposto |
 ---
 
 ## 11. Next Best Decisions (Proposte Attive)
@@ -385,7 +391,7 @@ Aggiornare questa sezione ad ogni sessione di lavoro.
 | P0 Alta | Git | ~~Allineare `main` locale a `origin/main`~~ ✅ **COMPLETATO** (ff-only → `3758d8d`) — prima del deploy: commit/stash KB+report per tree pulito |
 | P0 Alta | Webapp | ~~Configurare `ADMIN_SECRET` nelle env var di Cloudflare Pages → Settings → Environment Variables per attivare il pannello admin statistiche~~ ✅ **COMPLETATO** (env Production + redeploy; smoke API 2026-09-29 verde) |
 | P0 Alta | Android | **D-CLI smoke Ep10 ✅** (adb-only, H4b/F3). Commit KB proposto. G3 chiudibile dopo OK commit |
-| P1 Alta | Content | **Bozze 19+ in review umana** — `docs/NEW_STORIES_DRAFT.md` (id 19–23). Non merge in `episodes.json` finché OK citazioni + temi + PNG. Schema v1 invariato |
+| P1 Alta | Content | ~~Bozze 19+ in review~~ → **mergiate (23 totali)** in `data/episodes.json` (K2). Commit `feat(content): episodi 19-23…` in attesa OK |
 | P1 Alta | Design | **Classic flat deprecation — design in review** — `docs/CLASSIC_REBUS_DEPRECATION.md`. Raccomandazione A (keep). Nessun tocco `app.js` finché OK |
 | P1 Alta | Immersive | ~~Unificare dataset Q&A immersivo (G1)~~ ✅ **COMPLETATO** (Steps 0–5: `episodes.json` + generator + sync_all + adapter + `verify_episode_parity.py`) |
 | P1 Alta | Multilanguage | Rifinire QA linguistico delle storie 1-12 ora renderizzate nel runtime dinamico |
@@ -500,6 +506,7 @@ L’esperienza è **ispirata** allo stile didattico JW.org “Fai vivere il racc
 | Android CLI “SDK / gradlew missing” | `android/` senza wrapper o senza `local.properties`; tentazione di installare SDK | **Non** installare da zero. Riusa host Versetti: §1 path canonici (`D:\Android\Sdk`, `D:\JDK_17`, wrapper da `D:\I_Tuoi_Versetti`). Solo copia wrapper + `sdk.dir` |
 | `assembleDebug` useAndroidX | `:app:checkDebugAarMetadata` — AndroidX deps senza flag | Aggiungere `android/gradle.properties` con `android.useAndroidX=true` (file mancava; non tocca Manifest) |
 | `assembleDebug` kotlin duplicate | `:app:checkDebugDuplicateClasses` — `kotlin-stdlib:1.8.22` vs `kotlin-stdlib-jdk7/8:1.6.21` (transitivo da appcompat 1.7.0) | **Fix:** constraints in `android/app/build.gradle` — `require '1.8.22'` su `kotlin-stdlib-jdk7` e `kotlin-stdlib-jdk8`. Root cause: appcompat 1.7.0 tira stdlib 1.8.22 mentre altre transitive tirano jdk7/jdk8 1.6.21 |
+| Parity warn hint==hidden[1] | `verify_episode_parity.py` WARN Ep **10** (`hintKey==hiddenKeys[1]`) | **Accettato** (pattern documentato; Ep 9/12 usano hidden[0]). Non è FAIL. Ep 19–23 usano hint=hidden[0] |
 | Android smoke Ep 10 — toggle + stelle A | Verifica F3/H4b su device USB (WebView) | **OK 2026-09-29** Motorola edge 40 `ZY22HFWMGV`, solo `adb shell input`. Ep10 Rebus: reveal×2 → ★3→★2→★1; Nascondi → slot ? ma ★1 invariato (H4b); hint on/off ★1 invariato (F3). Screenshot `.local/smoke/04`–`12` (gitignored) |
 | `npx wrangler` Unknown arguments | due comandi incollati sulla stessa riga | Un comando per volta: `npx wrangler pages deploy webapp --project-name=jwquiz` |
 | Wrangler “Unknown arguments: wrangler, pages…” | `npx wrangler` invocato dopo un wrangler già globale/ambiguo | Dal root repo, una sola invocazione; se persiste: `npx --yes wrangler@4.124.0 pages deploy webapp --project-name=jwquiz` |
@@ -653,10 +660,10 @@ Commit se il tree deve tornare pulito (deploy Wrangler). Push solo se richiesto 
 
 ### Stato corrente (handoff) — 2026-09-29
 
-- **Android env:** `D:\I_Tuoi_Versetti` · `sdk.dir=D:\Android\Sdk` · `JAVA_HOME=D:\JDK_17` · wrapper 8.7 · kotlin constraints in `app/build.gradle`.
-- **APK:** `android/app/build/outputs/apk/debug/app-debug.apk` (non in git).
-- **Smoke Ep 10 (adb-only) ✅:** device `ZY22HFWMGV` Motorola edge 40. Reveal×2 ★3→★2→★1; Nascondi slot ma ★1 invariato; hint on/off ★1. Screenshot `.local/smoke/00`–`12` (gitignored). Bundle F2 Ep10/11/12 OK.
-- **Off-limits:** deploy; `www/**`; `local.properties`; APK; `.local/**`.
-- **Prossimo:** OK umano → commit `kb: android smoke Ep 10…` (se ancora aperto) e/o `docs(content): bozze episodi 19+ (review)`. Poi review citazioni in `NEW_STORIES_DRAFT.md` prima di merge catalogo.
-- **Content 19+:** bozze in `docs/NEW_STORIES_DRAFT.md` — **non** in `episodes.json`.
-- **Dev server:** MIME `.js` → `:8081` o `npx serve`.
+- **Catalogo:** **23** episodi in `data/episodes.json` (schema v1). Id 1–18 invariati; **19–23** mergiati (K2).
+- **Gate:** `validate --full-catalog` → 23; `sync_all` + `generate --check` + `verify_episode_parity` OK (warn Ep10 hint=hidden[1] accettato).
+- **DECOR_SYMBOLS:** 19–23 aggiunti in `index.html`; HUD usa `STORIES.length`.
+- **Smoke web (:8082):** griglia 23; Quiz Ep19 2 MCQ + morale; Rebus Ep19 Reveal/hint (stelle A, hint toggle ★ invariato); Adventure Ep19 Scene; IT→EN (Babel/Pride); classic selettore 23 + Ep20 rebus flat; anti-spoiler tile=tema. MSBuild Debug 0; StoryLibrary Id 19–23. Android UI non ri-smoke (bundle sync_all OK).
+- **Off-limits:** deploy; `www/**`; `app.js` salvo OK.
+- **Prossimo:** OK umano → commit `feat(content): episodi 19-23 in catalogo (K2)`.
+- **Dev server:** MIME `.js` → `:8081`/`:8082` o `npx serve`.

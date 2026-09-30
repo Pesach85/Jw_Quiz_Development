@@ -1782,6 +1782,501 @@
           "en": "“Go and do the same yourself.” — Luke 10:37"
         }
       }
+    },
+    {
+      "id": 19,
+      "scriptureReference": "Genesi 11:1-9",
+      "rebus": {
+        "titleIt": "La Torre di Babele",
+        "keywordIt": "Orgoglio",
+        "hintIt": "Una città, una torre verso il cielo e lingue che non si capiscono più.",
+        "solutionIt": "A Babele l'umanità volle farsi un nome; Geova confuse le lingue e disperse le persone. Genesi 11:1-9.",
+        "scriptureQuoteIt": "Genesi 11:7 — Dio interviene perché l'umanità non continui un progetto guidato dall'orgoglio.",
+        "engagementNoteIt": "Collega l'orgoglio umano all'umiltà di ascoltare Dio invece di esaltare sé stessi.",
+        "visibleKeys": [
+          "1F3DB",
+          "093-users",
+          "1F4AC",
+          "1F632",
+          "1F5FA"
+        ],
+        "hiddenKeys": [
+          "1F3F0",
+          "1F334"
+        ],
+        "hintKey": "1F3F0",
+        "imageCaptionsIt": [
+          "Un edificio imponente",
+          "Tante persone insieme",
+          "Voci che si sovrappongono",
+          "Lo stupore sul volto",
+          "Una mappa del mondo conosciuto",
+          "Una torre che punta in alto",
+          "Una pianta che cresce verso il cielo",
+          "La stessa torre vista da lontano"
+        ]
+      },
+      "immersive": {
+        "titleEn": "The Tower of Babel",
+        "themeIt": "Orgoglio",
+        "themeEn": "Pride",
+        "intro": {
+          "it": "Un popolo unito decide di costruire qualcosa di grandioso. Ma le intenzioni del cuore non sfuggono a Dio.",
+          "en": "A united people set out to build something magnificent. Yet the heart's motives are not hidden from God."
+        },
+        "questions": [
+          {
+            "prompt": {
+              "it": "Perché Geova intervenne a Babele?",
+              "en": "Why did Jehovah intervene at Babel?"
+            },
+            "answers": [
+              {
+                "it": "L'umanità stava agendo con orgoglio, non per onorare Dio",
+                "en": "Humanity was acting in pride, not to honor God",
+                "ok": true
+              },
+              {
+                "it": "Mancavano mattoni",
+                "en": "They lacked bricks",
+                "ok": false
+              },
+              {
+                "it": "Volevano solo dipingere la torre",
+                "en": "They only wanted to paint the tower",
+                "ok": false
+              }
+            ]
+          },
+          {
+            "prompt": {
+              "it": "Quale atteggiamento opposto all'orgoglio ci invita questa storia?",
+              "en": "Which attitude opposite to pride does this account invite?"
+            },
+            "answers": [
+              {
+                "it": "Umiltà e dipendenza da Dio",
+                "en": "Humility and dependence on God",
+                "ok": true
+              },
+              {
+                "it": "Competizione senza limiti",
+                "en": "Competition without limits",
+                "ok": false
+              },
+              {
+                "it": "Isolarsi da tutti",
+                "en": "Isolating from everyone",
+                "ok": false
+              }
+            ]
+          }
+        ],
+        "moral": {
+          "it": "I progetti grandi non bastano se il cuore è pieno di sé. L'umiltà apre la via alla benedizione di Dio.",
+          "en": "Grand projects are not enough if the heart is full of self. Humility opens the way to God's blessing."
+        },
+        "theaterQuote": {
+          "it": "Riferimento Genesi 11:7 — Dio ferma l'esaltazione umana confondendo le lingue.",
+          "en": "Reference Genesis 11:7 — God stops human self-exaltation by confusing languages."
+        }
+      }
+    },
+    {
+      "id": 20,
+      "scriptureReference": "Daniele 6",
+      "rebus": {
+        "titleIt": "Daniele nella fossa dei leoni",
+        "keywordIt": "Fede",
+        "hintIt": "Finestre aperte verso Gerusalemme, una fossa e leoni che non divorano.",
+        "solutionIt": "Daniele continuò a pregare nonostante il decreto; Geova lo protesse nella fossa dei leoni. Daniele 6.",
+        "scriptureQuoteIt": "Daniele 6:22 — Dio manda aiuto e i leoni non fanno male al suo servo.",
+        "engagementNoteIt": "La fedeltà nella preghiera vale più del favore dei potenti.",
+        "visibleKeys": [
+          "1F932-1F3FC",
+          "1F451",
+          "1F440",
+          "1F47C",
+          "1F6B8"
+        ],
+        "hiddenKeys": [
+          "1F981",
+          "2694"
+        ],
+        "hintKey": "1F981",
+        "imageCaptionsIt": [
+          "Qualcuno in preghiera",
+          "Una corona di autorità",
+          "Occhi che osservano",
+          "Una figura di protezione",
+          "Un segnale di pericolo",
+          "Un leone potente",
+          "Un'arma che non decide il destino",
+          "Lo stesso leone, da vicino"
+        ]
+      },
+      "immersive": {
+        "titleEn": "Daniel in the Lions' Den",
+        "themeIt": "Fede",
+        "themeEn": "Faith",
+        "intro": {
+          "it": "Un uomo fedele prega ogni giorno, anche quando una legge lo mette in pericolo.",
+          "en": "A faithful man keeps praying every day — even when a law puts him in danger."
+        },
+        "questions": [
+          {
+            "prompt": {
+              "it": "Cosa fece Daniele dopo il decreto che vietava la preghiera?",
+              "en": "What did Daniel do after the decree that forbade prayer?"
+            },
+            "answers": [
+              {
+                "it": "Continuò a pregare Dio come prima",
+                "en": "He kept praying to God as before",
+                "ok": true
+              },
+              {
+                "it": "Smise del tutto",
+                "en": "He stopped completely",
+                "ok": false
+              },
+              {
+                "it": "Fuggì in un altro paese",
+                "en": "He fled to another country",
+                "ok": false
+              }
+            ]
+          },
+          {
+            "prompt": {
+              "it": "Cosa insegna questa storia sulla protezione di Dio?",
+              "en": "What does this account teach about God's protection?"
+            },
+            "answers": [
+              {
+                "it": "Dio può proteggere chi gli obbedisce anche in pericolo",
+                "en": "God can protect those who obey him even in danger",
+                "ok": true
+              },
+              {
+                "it": "Solo i re sono al sicuro",
+                "en": "Only kings are safe",
+                "ok": false
+              },
+              {
+                "it": "La preghiera è inutile",
+                "en": "Prayer is useless",
+                "ok": false
+              }
+            ]
+          }
+        ],
+        "moral": {
+          "it": "La fedeltà quotidiana prepara il cuore alle prove. Dio vede chi gli resta vicino.",
+          "en": "Daily loyalty prepares the heart for tests. God sees those who stay close to him."
+        },
+        "theaterQuote": {
+          "it": "Riferimento Daniele 6:22 — Dio protegge chi gli resta fedele.",
+          "en": "Reference Daniel 6:22 — God protects those who remain loyal to him."
+        }
+      }
+    },
+    {
+      "id": 21,
+      "scriptureReference": "Atti 9:1-22",
+      "rebus": {
+        "titleIt": "Saul diventa Paolo",
+        "keywordIt": "Conversione",
+        "hintIt": "Una luce accecante sulla via di Damasco e una voce che cambia tutto.",
+        "solutionIt": "Gesù apparve a Saul sulla via di Damasco; da persecutore divenne apostolo. Atti 9:1-22.",
+        "scriptureQuoteIt": "Atti 9:4-5 — Una voce chiede perché viene perseguitato; l'incontro cambia la direzione della vita.",
+        "engagementNoteIt": "Nessuno è troppo lontano perché Dio possa cambiare il cuore.",
+        "visibleKeys": [
+          "1F6B6-1F3FF-200D-2642-FE0F",
+          "1F525",
+          "1F632",
+          "1F4D6",
+          "1F440"
+        ],
+        "hiddenKeys": [
+          "1F4AC",
+          "1F318"
+        ],
+        "hintKey": "1F4AC",
+        "imageCaptionsIt": [
+          "Un viaggio a piedi",
+          "Una luce intensa",
+          "Lo shock improvviso",
+          "Un libro di istruzioni",
+          "Occhi che devono riaprire",
+          "Parole che guariscono",
+          "La notte che lascia spazio al giorno",
+          "Di nuovo le parole, come missione"
+        ]
+      },
+      "immersive": {
+        "titleEn": "Saul Becomes Paul",
+        "themeIt": "Conversione",
+        "themeEn": "Conversion",
+        "intro": {
+          "it": "Un uomo sicuro delle sue ragioni viaggia per fermare una fede. Lungo la strada, qualcosa lo ferma.",
+          "en": "A man sure of his cause travels to stop a faith. Along the road, something stops him."
+        },
+        "questions": [
+          {
+            "prompt": {
+              "it": "Cosa accadde a Saul sulla via di Damasco?",
+              "en": "What happened to Saul on the road to Damascus?"
+            },
+            "answers": [
+              {
+                "it": "Incontrò Gesù e cambiò direzione di vita",
+                "en": "He met Jesus and changed the direction of his life",
+                "ok": true
+              },
+              {
+                "it": "Vinse una battaglia militare",
+                "en": "He won a military battle",
+                "ok": false
+              },
+              {
+                "it": "Costruì una torre",
+                "en": "He built a tower",
+                "ok": false
+              }
+            ]
+          },
+          {
+            "prompt": {
+              "it": "Cosa insegna questa conversione?",
+              "en": "What does this conversion teach?"
+            },
+            "answers": [
+              {
+                "it": "Dio può trasformare anche chi si oppone",
+                "en": "God can transform even those who oppose him",
+                "ok": true
+              },
+              {
+                "it": "Solo i perfetti possono servire",
+                "en": "Only the perfect can serve",
+                "ok": false
+              },
+              {
+                "it": "Il passato non può essere perdonato",
+                "en": "The past cannot be forgiven",
+                "ok": false
+              }
+            ]
+          }
+        ],
+        "moral": {
+          "it": "Il perdono di Dio apre una nuova missione. Il passato non blocca chi risponde alla chiamata.",
+          "en": "God's forgiveness opens a new mission. The past does not block those who answer the call."
+        },
+        "theaterQuote": {
+          "it": "Riferimento Atti 9:6 — Dopo l'incontro, resta solo da chiedere cosa fare.",
+          "en": "Reference Acts 9:6 — After the encounter, the only question left is what to do."
+        }
+      }
+    },
+    {
+      "id": 22,
+      "scriptureReference": "Giosuè 6",
+      "rebus": {
+        "titleIt": "Giosuè e Gerico",
+        "keywordIt": "Coraggio",
+        "hintIt": "Marce intorno alle mura, suoni di corni e un grido all'unisono.",
+        "solutionIt": "Israele ubbidì al piano di Geova: dopo le marce e il grido, le mura di Gerico caddero. Giosuè 6.",
+        "scriptureQuoteIt": "Giosuè 6:20 — Al grido del popolo, le mura crollano perché Dio combatte per loro.",
+        "engagementNoteIt": "Il coraggio vero è obbedire anche quando il metodo sembra strano.",
+        "visibleKeys": [
+          "1F3DB",
+          "1F6B6-200D-2640-FE0F",
+          "1F3B6",
+          "1F4E3",
+          "1F463"
+        ],
+        "hiddenKeys": [
+          "1F3F0",
+          "203C"
+        ],
+        "hintKey": "1F3F0",
+        "imageCaptionsIt": [
+          "Mura antiche",
+          "Passi in processione",
+          "Musica e corni",
+          "Un annuncio forte",
+          "Orme sul terreno",
+          "Una fortezza che sembra eterna",
+          "Un'esclamazione improvvisa",
+          "La fortezza vista da fuori"
+        ]
+      },
+      "immersive": {
+        "titleEn": "Joshua and Jericho",
+        "themeIt": "Coraggio",
+        "themeEn": "Courage",
+        "intro": {
+          "it": "Una città fortificata sembra impossibile da conquistare. Il piano di Dio chiede fiducia e pazienza.",
+          "en": "A fortified city looks impossible to take. God's plan asks for trust and patience."
+        },
+        "questions": [
+          {
+            "prompt": {
+              "it": "Come caddero le mura di Gerico?",
+              "en": "How did the walls of Jericho fall?"
+            },
+            "answers": [
+              {
+                "it": "Seguendo il piano di Dio con fede",
+                "en": "By following God's plan in faith",
+                "ok": true
+              },
+              {
+                "it": "Con macchine da guerra immense",
+                "en": "With huge war machines",
+                "ok": false
+              },
+              {
+                "it": "Comprando la città",
+                "en": "By buying the city",
+                "ok": false
+              }
+            ]
+          },
+          {
+            "prompt": {
+              "it": "Cosa richiede il coraggio in questa storia?",
+              "en": "What does courage require in this account?"
+            },
+            "answers": [
+              {
+                "it": "Fidarsi di Dio anche senza capire tutto",
+                "en": "Trusting God even without understanding everything",
+                "ok": true
+              },
+              {
+                "it": "Agire da soli senza ascoltare",
+                "en": "Acting alone without listening",
+                "ok": false
+              },
+              {
+                "it": "Aspettare in silenzio per sempre",
+                "en": "Waiting in silence forever",
+                "ok": false
+              }
+            ]
+          }
+        ],
+        "moral": {
+          "it": "Il coraggio biblico cammina con l'obbedienza. Dio apre strade dove l'uomo vede solo muri.",
+          "en": "Biblical courage walks with obedience. God opens ways where humans only see walls."
+        },
+        "theaterQuote": {
+          "it": "Riferimento Giosuè 6:2 — La vittoria è dono di Dio, non solo forza umana.",
+          "en": "Reference Joshua 6:2 — Victory is God's gift, not human strength alone."
+        }
+      }
+    },
+    {
+      "id": 23,
+      "scriptureReference": "Luca 10:38-42",
+      "rebus": {
+        "titleIt": "Marta e Maria",
+        "keywordIt": "Priorità",
+        "hintIt": "Una cucina piena di impegni e una sorella seduta ad ascoltare.",
+        "solutionIt": "Maria scelse di ascoltare Gesù; Marta era distratta dai molti servizi. Gesù lodò la parte migliore. Luca 10:38-42.",
+        "scriptureQuoteIt": "Luca 10:42 — C'è bisogno di poche cose, anzi di una sola: scegliere ciò che non sarà tolto.",
+        "engagementNoteIt": "Il servizio è buono, ma non deve soffocare l'ascolto della Parola.",
+        "visibleKeys": [
+          "1F46D",
+          "1F3DB",
+          "1F52A",
+          "1F37A",
+          "1F442-1F3FE"
+        ],
+        "hiddenKeys": [
+          "1F4D6",
+          "1F932-1F3FD"
+        ],
+        "hintKey": "1F4D6",
+        "imageCaptionsIt": [
+          "Due persone in casa",
+          "Un luogo di accoglienza",
+          "Attrezzi per preparare cibo",
+          "Una tavola apparecchiata",
+          "Orecchie attente",
+          "Un libro aperto",
+          "Qualcuno in atteggiamento raccolto",
+          "Di nuovo il libro, al centro"
+        ]
+      },
+      "immersive": {
+        "titleEn": "Martha and Mary",
+        "themeIt": "Priorità",
+        "themeEn": "Priorities",
+        "intro": {
+          "it": "In una casa ospitale due sorelle accolgono l'ospite in modi diversi. Una scelta rivela cosa conta di più.",
+          "en": "In a welcoming home two sisters receive the guest in different ways. One choice shows what matters most."
+        },
+        "questions": [
+          {
+            "prompt": {
+              "it": "Cosa scelse Maria mentre Marta era occupata?",
+              "en": "What did Mary choose while Martha was busy?"
+            },
+            "answers": [
+              {
+                "it": "Ascoltare l'insegnamento",
+                "en": "To listen to the teaching",
+                "ok": true
+              },
+              {
+                "it": "Uscire di casa",
+                "en": "To leave the house",
+                "ok": false
+              },
+              {
+                "it": "Contare i soldi",
+                "en": "To count the money",
+                "ok": false
+              }
+            ]
+          },
+          {
+            "prompt": {
+              "it": "Quale equilibrio ci invita questa storia?",
+              "en": "What balance does this account invite?"
+            },
+            "answers": [
+              {
+                "it": "Servire senza dimenticare di ascoltare Dio",
+                "en": "To serve without forgetting to listen to God",
+                "ok": true
+              },
+              {
+                "it": "Solo lavoro, mai ascolto",
+                "en": "Only work, never listening",
+                "ok": false
+              },
+              {
+                "it": "Solo riposo, mai servizio",
+                "en": "Only rest, never service",
+                "ok": false
+              }
+            ]
+          }
+        ],
+        "moral": {
+          "it": "Le priorità giuste mettono Dio al primo posto. Ascoltare la Parola nutre ogni altro servizio.",
+          "en": "Right priorities put God first. Listening to the Word feeds every other service."
+        },
+        "theaterQuote": {
+          "it": "Riferimento Luca 10:42 — La parte migliore è restare vicini all'insegnamento.",
+          "en": "Reference Luke 10:42 — The better part is staying close to the teaching."
+        }
+      }
     }
   ]
 }

@@ -1,10 +1,10 @@
 # Bozze episodi 19+ (review umana)
 
-**Stato:** DRAFT — **non** in `data/episodes.json`.  
+**Stato:** MERGED in `data/episodes.json` (K2) — citazioni approvate; marker rimossi.  
 **Data:** 2026-09-29  
 **Schema:** v1 (invariato — nessun campo nuovo proposto).  
 **Vincolo citazioni:** nessun testo di versetto inventato o copiato.  
-`scriptureQuoteIt` / `theaterQuote` sotto = **riferimento + parafrasi didattica neutra** in attesa di OK umano sul testo ufficiale (es. TNM).
+`scriptureQuoteIt` / `theaterQuote` = **riferimento + parafrasi didattica approvata** (K2).
 
 Dopo approvazione: inserire in `data/episodes.json` → `validate_episodes.py --full-catalog` → `sync_all.py` → `verify_episode_parity.py` + riga `DECOR_SYMBOLS` in `webapp/index.html`.
 
@@ -48,17 +48,16 @@ Dopo approvazione: inserire in `data/episodes.json` → `validate_episodes.py --
 - solutionIt: A Babele l’umanità volle farsi un nome; Geova confuse le lingue e disperse le persone. Genesi 11:1-9.
 - engagementNoteIt: Collega l’orgoglio umano all’umiltà di ascoltare Dio invece di esaltare sé stessi.
 
-**scriptureQuoteIt** (tier 2 — **pending OK testo ufficiale**)
+**scriptureQuoteIt** (tier 2 — **approvata**)
 
 > Genesi 11:7 — *[parafrasi didattica]* Dio interviene perché l’umanità non continui un progetto guidato dall’orgoglio.  
-> **Azione umana:** sostituire con citazione approvata (TNM o altra) prima del merge.
 
-**theaterQuote** (tier 1 — **pending OK**)
+**theaterQuote** (tier 1 — **approvata**)
 
 ```json
 {
-  "it": "[BOZZA] Riferimento Genesi 11:7 — Dio ferma l’esaltazione umana confondendo le lingue.",
-  "en": "[DRAFT] Reference Genesis 11:7 — God stops human self-exaltation by confusing languages."
+  "it": "Riferimento Genesi 11:7 — Dio ferma l’esaltazione umana confondendo le lingue.",
+  "en": "Reference Genesis 11:7 — God stops human self-exaltation by confusing languages."
 }
 ```
 
@@ -129,17 +128,16 @@ Dopo approvazione: inserire in `data/episodes.json` → `validate_episodes.py --
 - solutionIt: Daniele continuò a pregare nonostante il decreto; Geova lo protesse nella fossa dei leoni. Daniele 6.
 - engagementNoteIt: La fedeltà nella preghiera vale più del favore dei potenti.
 
-**scriptureQuoteIt** (**pending OK**)
+**scriptureQuoteIt** (**approvata**)
 
 > Daniele 6:22 — *[parafrasi]* Dio manda aiuto e i leoni non fanno male al suo servo.  
-> **Azione umana:** testo ufficiale da approvare.
 
-**theaterQuote** (**pending OK**)
+**theaterQuote** (**approvata**)
 
 ```json
 {
-  "it": "[BOZZA] Riferimento Daniele 6:22 — Dio protegge chi gli resta fedele.",
-  "en": "[DRAFT] Reference Daniel 6:22 — God protects those who remain loyal to him."
+  "it": "Riferimento Daniele 6:22 — Dio protegge chi gli resta fedele.",
+  "en": "Reference Daniel 6:22 — God protects those who remain loyal to him."
 }
 ```
 
@@ -206,17 +204,16 @@ Dopo approvazione: inserire in `data/episodes.json` → `validate_episodes.py --
 - solutionIt: Gesù apparve a Saul sulla via di Damasco; da persecutore divenne apostolo. Atti 9:1-22.
 - engagementNoteIt: Nessuno è troppo lontano perché Dio possa cambiare il cuore.
 
-**scriptureQuoteIt** (**pending OK**)
+**scriptureQuoteIt** (**approvata**)
 
 > Atti 9:4-5 — *[parafrasi]* Una voce chiede perché viene perseguitato; l’incontro cambia la direzione della vita.  
-> **Azione umana:** testo ufficiale da approvare.
 
-**theaterQuote** (**pending OK**)
+**theaterQuote** (**approvata**)
 
 ```json
 {
-  "it": "[BOZZA] Riferimento Atti 9:6 — Dopo l’incontro, resta solo da chiedere cosa fare.",
-  "en": "[DRAFT] Reference Acts 9:6 — After the encounter, the only question left is what to do."
+  "it": "Riferimento Atti 9:6 — Dopo l’incontro, resta solo da chiedere cosa fare.",
+  "en": "Reference Acts 9:6 — After the encounter, the only question left is what to do."
 }
 ```
 
@@ -283,17 +280,16 @@ Dopo approvazione: inserire in `data/episodes.json` → `validate_episodes.py --
 - solutionIt: Israele ubbidì al piano di Geova: dopo le marce e il grido, le mura di Gerico caddero. Giosuè 6.
 - engagementNoteIt: Il coraggio vero è obbedire anche quando il metodo sembra strano.
 
-**scriptureQuoteIt** (**pending OK**)
+**scriptureQuoteIt** (**approvata**)
 
 > Giosuè 6:20 — *[parafrasi]* Al grido del popolo, le mura crollano perché Dio combatte per loro.  
-> **Azione umana:** testo ufficiale da approvare.
 
-**theaterQuote** (**pending OK**)
+**theaterQuote** (**approvata**)
 
 ```json
 {
-  "it": "[BOZZA] Riferimento Giosuè 6:2 — La vittoria è dono di Dio, non solo forza umana.",
-  "en": "[DRAFT] Reference Joshua 6:2 — Victory is God’s gift, not human strength alone."
+  "it": "Riferimento Giosuè 6:2 — La vittoria è dono di Dio, non solo forza umana.",
+  "en": "Reference Joshua 6:2 — Victory is God’s gift, not human strength alone."
 }
 ```
 
@@ -360,17 +356,16 @@ Dopo approvazione: inserire in `data/episodes.json` → `validate_episodes.py --
 - solutionIt: Maria scelse di ascoltare Gesù; Marta era distratta dai molti servizi. Gesù lodò la parte migliore. Luca 10:38-42.
 - engagementNoteIt: Il servizio è buono, ma non deve soffocare l’ascolto della Parola.
 
-**scriptureQuoteIt** (**pending OK**)
+**scriptureQuoteIt** (**approvata**)
 
 > Luca 10:42 — *[parafrasi]* C’è bisogno di poche cose, anzi di una sola: scegliere ciò che non sarà tolto.  
-> **Azione umana:** testo ufficiale da approvare.
 
-**theaterQuote** (**pending OK**)
+**theaterQuote** (**approvata**)
 
 ```json
 {
-  "it": "[BOZZA] Riferimento Luca 10:42 — La parte migliore è restare vicini all’insegnamento.",
-  "en": "[DRAFT] Reference Luke 10:42 — The better part is staying close to the teaching."
+  "it": "Riferimento Luca 10:42 — La parte migliore è restare vicini all’insegnamento.",
+  "en": "Reference Luke 10:42 — The better part is staying close to the teaching."
 }
 ```
 
@@ -429,7 +424,7 @@ Se non approvate → restano le chiavi esistenti.
 
 ## Decisioni aperte per l’umano
 
-1. **Citazioni tier 1/2:** approvare testo ufficiale (TNM o altra) per `theaterQuote` + `scriptureQuoteIt` di ogni episodio; sostituire i placeholder `[BOZZA]` / parafrasi.
+1. **Citazioni tier 1/2:** approvare testo ufficiale (TNM o altra) per `theaterQuote` + `scriptureQuoteIt` di ogni episodio; sostituire i placeholder `` / parafrasi.
 2. **Temi:** Confermare le coppie Orgoglio / Fede / Conversione / Coraggio / Priorità (Coraggio già usato in catalogo esistente — ok riuso o preferisci sinonimo “Obbedienza coraggiosa”?).
 3. **Ordine id 19–23:** tenere l’ordine candidati o riordinare per difficoltà/tema?
 4. **`DECOR_SYMBOLS`:** scegliere 5 emoji intro (una per episodio) dopo merge — non in schema JSON.
