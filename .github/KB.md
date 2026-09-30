@@ -360,6 +360,7 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-09-30 | **L/Brand design**: `docs/BRAND_IDENTITY_PROPOSAL.md` (audit + HITL B1–B8) + `docs/ONLINE_ROOMS_DESIGN.md` (DO+WS); zero runtime | ⏳ HITL brand |
 | 2026-09-30 | **I2 — onboarding back/forward** + tastiera; **Brand — identity applicata (B1–B8)** system stack + favicon JQ + tono + Form1 palette | ✅ Apply |
 | 2026-09-30 | **SEMANTIC — Ep 11** (3 caption + 1 regen photoreal `1F410`) **+ Ep 12/18** placeholder `2753` → key photo (`1F5FA` / `1F932-1F3FC`) | ✅ Applicato |
+| 2026-09-30 | **HITL D4–D10 final pack** — `docs/HITL_D4_D10_FINAL_2026-09-30.md` (decision-ready; no apply) | ✅ Doc |
 | 2026-09-29 | **Prompt C (design G1)**: drift mappato STORIES vs `stories.js` vs `StoryLibrary.cs`; opzioni A/B/C valutate; **raccomandazione Option B** (`data/episodes.json` + generator Python → `stories.js` + `StoryLibrary.cs`); deliverable `docs/DATASET_UNIFICATION_DESIGN.md` — **build non avviato** | ✅ Design |
 | 2026-09-29 | **Prompt C build Step 0**: `data/episodes.schema.json`, `tools/validate_episodes.py`, fixture OK/broken; checkpoint validator exit 0/1; vincoli Q2 (no symbols in JSON), Q4 (theaterQuote vs scriptureQuoteIt) | ✅ Step 0 |
 | 2026-09-29 | **C-BUILD Step 1 — migrazione episodes.json (18 record)**: merge STORIES + `stories.js` + `StoryLibrary.cs`; validator `--full-catalog` verde; ep.8 titolo unificato; ep.10/12 keys+caption da C# (stories.js incompleto) | ✅ Step 1 |
@@ -410,7 +411,7 @@ Aggiornare questa sezione ad ogni sessione di lavoro.
 | P1 Alta | Content | ~~Bozze 19+ / K2~~ ✅ **COMPLETATO** — catalogo **23** (`cc92e8e`). Nota: leftover uncommitted `validate`/`generate`/`index.html` DECOR→23 |
 | P1 Alta | Design | **Classic flat — keep (M)** — `docs/CLASSIC_REBUS_DEPRECATION.md`. Nessun tocco `app.js` |
 | P1 Alta | Immersive | ~~Unificare dataset Q&A immersivo (G1)~~ ✅ **COMPLETATO** |
-| P1 Alta | Multilanguage | **HITL residui chiusi** (EP12/18 B, W16 keep). Aperti: D1, D4–D10 |
+| P1 Alta | Multilanguage | **HITL residui:** D4–D10 → pack `docs/HITL_D4_D10_FINAL_2026-09-30.md` (attende one-line). **D1** pending dedicated session (I_tuoi_versetti / wol.jw.org). EP12/18 placeholder ✅ semantic fix |
 | Alta | UX | ~~**I — Onboarding**~~ ✅ **COMPLETATO** (web W1–W8 + desktop D1–D6 empirico utente + C1–C5b incl. C4 retry) |
 | P1 Alta | Desktop | ~~Bug1+Bug3~~ ✅ `1390bd3`. ~~Bug2 fasce~~ ✅ `e95747e` |
 | Alta | Web Immersive | ~~Landing 3D + theater Q&A~~ ✅ **COMPLETATO** (`webapp/index.html`) |
@@ -688,10 +689,10 @@ Aggiornare questa KB:
 
 Commit se il tree deve tornare pulito (deploy Wrangler). Push solo se richiesto esplicitamente.
 
-### Stato corrente (handoff) — 2026-09-30 (post semantic fix Ep 11/12/18)
+### Stato corrente (handoff) — 2026-09-30 (post HITL D4–D10 pack)
 
-- **Semantic fix applicato:** Ep 11 caption slot 3/6/7; `1F410` emoji→photoreal 1.58 MB (`ep11-goat-photo`); Ep 12 slot2 `1F5FA`; Ep 18 slot5 `1F932-1F3FC`.
-- **Docs:** `docs/SEMANTIC_AUDIT_2026-09-30.md` + `docs/SEMANTIC_FIX_HITL_2026-09-30.md`.
-- **Evidence:** `.local/smoke/ep11_slot6_new.png`, `semantic_ep11/12/18_web.png` (gitignored).
-- **Prossimo:** review D1/D4–D10; online rooms design-only; Intro.jpg legacy.
+- **Semantic fix** Ep11/12/18 @ `be738e7` + lineage.
+- **HITL D4–D10:** pack decision-ready `docs/HITL_D4_D10_FINAL_2026-09-30.md` — **STOP attende one-line** (`D4A D5A …` o checkbox).
+- **D1:** fuori scope — pending dedicated session (I_tuoi_versetti API).
+- **Prossimo:** apply D4–D10 dopo risposta; online rooms design-only; Intro.jpg legacy.
 - **No deploy.** `app.js` intatto.
