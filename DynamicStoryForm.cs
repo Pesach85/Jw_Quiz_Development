@@ -388,7 +388,10 @@ namespace Jw_Quiz_Development
         {
             hintRevealed = !hintRevealed;
             if (hintRevealed)
+            {
                 hintEverUsed = true;
+                ProgressTracker.Instance.RecordHintUsed(story.Id);
+            }
             UpdateHintUi();
             UpdateXpLabel();
         }
@@ -503,7 +506,7 @@ namespace Jw_Quiz_Development
             }
 
             storyCompleted = true;
-            ProgressTracker.Instance.CompleteStory(story.Id, CalculateXp(), CalculateStars());
+            ProgressTracker.Instance.CompleteStory(story.Id, CalculateXp(), CalculateStars(), hintEverUsed);
         }
     }
 }

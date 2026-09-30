@@ -106,7 +106,14 @@ namespace Jw_Quiz_Development
             { "OnbExplore", "Esplora libero" },
             { "OnbResetLocal", "Cancella i miei dati locali" },
             { "OnbResetConfirm", "Cancellare onboarding e preferenze locali? (progressi storia: UserProgress.dat resta; admin non toccato)" },
-            { "OnbResetDone", "Onboarding locale cancellato." }
+            { "OnbResetDone", "Onboarding locale cancellato." },
+            { "streak_noHint", "Streak senza indizio" },
+            { "badge_Attento", "Attento" },
+            { "badge_Diligente", "Diligente" },
+            { "badge_Esperto", "Esperto" },
+            { "badge_tip_Attento", "5 episodi di fila senza indizio" },
+            { "badge_tip_Diligente", "10 episodi di fila senza indizio" },
+            { "badge_tip_Esperto", "20 episodi di fila senza indizio" }
         };
 
         private static readonly Dictionary<string, string> English = new Dictionary<string, string>
@@ -211,7 +218,14 @@ namespace Jw_Quiz_Development
             { "OnbExplore", "Explore freely" },
             { "OnbResetLocal", "Clear my local data" },
             { "OnbResetConfirm", "Clear local onboarding and preferences? (story progress UserProgress.dat kept; admin untouched)" },
-            { "OnbResetDone", "Local onboarding cleared." }
+            { "OnbResetDone", "Local onboarding cleared." },
+            { "streak_noHint", "No-hint streak" },
+            { "badge_Attento", "Attentive" },
+            { "badge_Diligente", "Diligent" },
+            { "badge_Esperto", "Expert" },
+            { "badge_tip_Attento", "5 episodes in a row with no hint" },
+            { "badge_tip_Diligente", "10 episodes in a row with no hint" },
+            { "badge_tip_Esperto", "20 episodes in a row with no hint" }
         };
 
         public static string Get(string key)

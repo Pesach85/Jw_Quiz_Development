@@ -10,6 +10,7 @@ namespace Jw_Quiz_Development
         private Label labelXP;
         private ProgressBar progressBar;
         private Label labelProgress;
+        private Label labelStreak;
         private Button buttonBadges;
     private Button buttonStats;
 
@@ -23,9 +24,9 @@ namespace Jw_Quiz_Development
         private void InitializeComponents()
         {
             // Panel Setup
-            this.Height = 92;
+            this.Height = 110;
             this.Dock = DockStyle.Bottom;
-            this.BackColor = Color.FromArgb(20, 32, 50);
+            this.BackColor = Color.FromArgb(11, 18, 32);
             this.BorderStyle = BorderStyle.None;
 
             // Label Livello
@@ -72,6 +73,16 @@ namespace Jw_Quiz_Development
             };
             this.Controls.Add(labelProgress);
 
+            labelStreak = new Label
+            {
+                Text = "Streak 0",
+                Location = new Point(170, 62),
+                Size = new Size(280, 20),
+                Font = new Font("Segoe UI", 8, FontStyle.Regular),
+                ForeColor = Color.FromArgb(240, 195, 106)
+            };
+            this.Controls.Add(labelStreak);
+
             // Button Badge
             buttonBadges = new Button
             {
@@ -114,11 +125,16 @@ namespace Jw_Quiz_Development
             progressBar.Value = tracker.CompletedStories.Count;
             int threeStars = tracker.GetThreeStarCount();
             labelProgress.Text = $"Storie {tracker.CompletedStories.Count}/{totalStories}  \u00b7  \u2605\u00d7{threeStars}";
+            string streakLabel = AppText.Get("streak_noHint");
+            labelStreak.Text = $"{streakLabel}: {tracker.NoHintStreak}  (max {tracker.MaxNoHintStreak})";
+            if (tracker.StreakBadges != null && tracker.StreakBadges.Count > 0)
+                labelStreak.Text += "  ·  " + string.Join(", ", tracker.StreakBadges);
             
-            buttonBadges.Text = $"Badge 🏆 ({tracker.UnlockedBadges.Count})";
+            buttonBadges.Text = $"Badge ({tracker.UnlockedBadges.Count})";
             buttonBadges.BackColor = tracker.UnlockedBadges.Count > 0 
-                ? Color.FromArgb(244, 196, 48)
+                ? Color.FromArgb(232, 197, 71)
                 : Color.FromArgb(130, 140, 160);
+            buttonBadges.ForeColor = Color.FromArgb(11, 18, 32);
             Invalidate();
         }
 
@@ -154,6 +170,7 @@ namespace Jw_Quiz_Development
                           $"Completamenti: {tracker.TotalCompletions}\n" +
                           $"Storie uniche: {tracker.CompletedStories.Count}/{StoryEngine.TotalStories}\n" +
                           $"Percentuale: {tracker.GetProgressPercentage()}%\n" +
+                          $"Streak no-hint: {tracker.NoHintStreak} (max {tracker.MaxNoHintStreak})\n" +
                           $"Badge: {tracker.UnlockedBadges.Count}";
             MessageBox.Show(text, "Statistiche Rapide", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
@@ -166,14 +183,14 @@ namespace Jw_Quiz_Development
                 e.Graphics.DrawLine(pen, 0, 1, Width, 1);
             }
 
-            using (var brush = new SolidBrush(Color.FromArgb(31, 56, 86)))
+            using (var brush = new SolidBrush(Color.FromArgb(19, 32, 51)))
             {
-                e.Graphics.FillRectangle(brush, new Rectangle(0, 66, Width, 26));
+                e.Graphics.FillRectangle(brush, new Rectangle(0, 84, Width, 26));
             }
 
             using (var textBrush = new SolidBrush(Color.FromArgb(170, 190, 220)))
             {
-                e.Graphics.DrawString("Progresso biblico", new Font("Segoe UI", 8, FontStyle.Italic), textBrush, 12, 71);
+                e.Graphics.DrawString("Progresso biblico", new Font("Segoe UI", 8, FontStyle.Italic), textBrush, 12, 89);
             }
         }
     }

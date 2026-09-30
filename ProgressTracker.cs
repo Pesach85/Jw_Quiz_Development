@@ -9,6 +9,13 @@ namespace Jw_Quiz_Development
     {
         private static ProgressTracker _instance;
         private const string PROGRESS_FILE = "UserProgress.dat";
+
+        public static readonly (string Id, string NameKey, int Min)[] StreakBadgeThresholds =
+        {
+            ("Attento", "badge_Attento", 5),
+            ("Diligente", "badge_Diligente", 10),
+            ("Esperto", "badge_Esperto", 20)
+        };
         
         public DateTime StartDate { get; set; }
         public int TotalCompletions { get; set; }
@@ -22,15 +29,23 @@ namespace Jw_Quiz_Development
         // Star ratings per story (1=bronze, 2=silver, 3=gold). Stores best rating.
         public Dictionary<int, int> StoryStars { get; set; }
 
+        // F — streak no-hint (persistenti; peak per badge)
+        public int NoHintStreak { get; set; }
+        public int MaxNoHintStreak { get; set; }
+        public List<string> StreakBadges { get; set; }
+
         private ProgressTracker()
         {
             CompletedStories = new HashSet<int>();
             StoryAttempts = new Dictionary<int, int>();
             UnlockedBadges = new List<Badge>();
             StoryStars = new Dictionary<int, int>();
+            StreakBadges = new List<string>();
             StartDate = DateTime.Now;
             CurrentXP = 0;
             TotalCompletions = 0;
+            NoHintStreak = 0;
+            MaxNoHintStreak = 0;
         }
 
         public static ProgressTracker Instance
@@ -49,6 +64,11 @@ namespace Jw_Quiz_Development
         /// Segna una storia come completata e assegna punti esperienza.
         /// </summary>
         public void CompleteStory(int storyId, int xpToAward = 100, int stars = 3)
+        {
+            CompleteStory(storyId, xpToAward, stars, hintUsed: false);
+        }
+
+        public void CompleteStory(int storyId, int xpToAward, int stars, bool hintUsed)
         {
             if (!CompletedStories.Contains(storyId))
             {
@@ -70,8 +90,51 @@ namespace Jw_Quiz_Development
             if (!StoryStars.TryGetValue(storyId, out currentStars) || stars > currentStars)
                 StoryStars[storyId] = stars;
 
+            if (hintUsed)
+                RecordHintUsed(storyId);
+            else
+                RecordStoryCompletedNoHint(storyId);
+
             CheckBadges();
             Save();
+        }
+
+        /// <summary>F3: reset streak corrente su hint usato (peak invariato).</summary>
+        public void RecordHintUsed(int storyId)
+        {
+            NoHintStreak = 0;
+            Save();
+        }
+
+        /// <summary>F: completa episodio senza hint → incrementa streak e peak; award badge.</summary>
+        public void RecordStoryCompletedNoHint(int storyId)
+        {
+            NoHintStreak++;
+            if (NoHintStreak > MaxNoHintStreak)
+                MaxNoHintStreak = NoHintStreak;
+            AwardStreakBadges();
+            Save();
+        }
+
+        public void AwardStreakBadges()
+        {
+            foreach (var th in StreakBadgeThresholds)
+            {
+                if (MaxNoHintStreak >= th.Min && !StreakBadges.Contains(th.Id))
+                {
+                    StreakBadges.Add(th.Id);
+                    if (!HasBadge(th.Id))
+                    {
+                        UnlockedBadges.Add(new Badge
+                        {
+                            Id = th.Id,
+                            Name = AppText.Get(th.NameKey),
+                            Description = AppText.Get("badge_tip_" + th.Id),
+                            UnlockedDate = DateTime.Now
+                        });
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -128,13 +191,13 @@ namespace Jw_Quiz_Development
                 });
             }
 
-            // Badge: "Esperto" - Completa tutte le 12 storie
-            // Threshold 12 = minimum for mastery (stays meaningful even as story count grows)
-            if (CompletedStories.Count >= 12 && !HasBadge("Esperto"))
+            // Badge: "Esperto Biblico" - Completa tutte le 12 storie
+            // Id distinto da streak "Esperto" (no-hint)
+            if (CompletedStories.Count >= 12 && !HasBadge("EspertoBiblico"))
             {
                 UnlockedBadges.Add(new Badge 
                 { 
-                    Id = "Esperto", 
+                    Id = "EspertoBiblico", 
                     Name = "Esperto Biblico", 
                     Description = "Completa tutte le 12 storie",
                     UnlockedDate = DateTime.Now
@@ -153,6 +216,8 @@ namespace Jw_Quiz_Development
                     UnlockedDate = DateTime.Now
                 });
             }
+
+            AwardStreakBadges();
         }
 
         private bool HasBadge(string badgeId)
@@ -180,23 +245,23 @@ namespace Jw_Quiz_Development
         {
             try
             {
-                // Implementazione semplice: salvataggio JSON
-                // In produzione, usare JSON.NET o similar
+                // Formato testo line-based (non BinaryFormatter). Linee 7–9 = streak F (opzionali, backward compat).
                 System.Text.StringBuilder sb = new System.Text.StringBuilder();
                 sb.AppendLine(StartDate.ToString("o"));
                 sb.AppendLine(TotalCompletions.ToString());
                 sb.AppendLine(CurrentXP.ToString());
                 sb.AppendLine(string.Join(",", CompletedStories.OrderBy(x => x)));
-                // Line 5: StoryAttempts  format  "id:count,id:count,..."
                 var attemptsStr = string.Join(",", StoryAttempts
                     .OrderBy(kv => kv.Key)
                     .Select(kv => kv.Key + ":" + kv.Value));
                 sb.AppendLine(attemptsStr);
-                // Line 5: StoryStars  format  "id:stars,id:stars,..."
                 var starsStr = string.Join(",", StoryStars
                     .OrderBy(kv => kv.Key)
                     .Select(kv => kv.Key + ":" + kv.Value));
-                sb.Append(starsStr);
+                sb.AppendLine(starsStr);
+                sb.AppendLine(NoHintStreak.ToString());
+                sb.AppendLine(MaxNoHintStreak.ToString());
+                sb.Append(string.Join(",", StreakBadges));
                 
                 File.WriteAllText(PROGRESS_FILE, sb.ToString());
             }
@@ -233,7 +298,6 @@ namespace Jw_Quiz_Development
                                     tracker.CompletedStories.Add(storyId);
                         }
 
-                        // Line 5 (optional): StoryAttempts  "id:count,id:count,..."
                         if (lines.Length >= 5 && !string.IsNullOrWhiteSpace(lines[4]))
                         {
                             foreach (var pair in lines[4].Split(','))
@@ -246,7 +310,6 @@ namespace Jw_Quiz_Development
                             }
                         }
 
-                        // Line 6 (optional): StoryStars  "id:stars,id:stars,..."
                         if (lines.Length >= 6 && !string.IsNullOrWhiteSpace(lines[5]))
                         {
                             foreach (var pair in lines[5].Split(','))
@@ -257,6 +320,21 @@ namespace Jw_Quiz_Development
                                     && int.TryParse(parts[1].Trim(), out int starsVal)
                                     && starsVal >= 1 && starsVal <= 3)
                                     tracker.StoryStars[storyId2] = starsVal;
+                            }
+                        }
+
+                        // Line 7–9 optional (F streak)
+                        if (lines.Length >= 7 && int.TryParse(lines[6].Trim(), out int nhs))
+                            tracker.NoHintStreak = Math.Max(0, nhs);
+                        if (lines.Length >= 8 && int.TryParse(lines[7].Trim(), out int mnhs))
+                            tracker.MaxNoHintStreak = Math.Max(0, mnhs);
+                        if (lines.Length >= 9 && !string.IsNullOrWhiteSpace(lines[8]))
+                        {
+                            foreach (var id in lines[8].Split(','))
+                            {
+                                var bid = id.Trim();
+                                if (bid.Length > 0 && !tracker.StreakBadges.Contains(bid))
+                                    tracker.StreakBadges.Add(bid);
                             }
                         }
                     }

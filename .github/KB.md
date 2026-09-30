@@ -363,6 +363,7 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-09-30 | **HITL D4–D10 final pack** — `docs/HITL_D4_D10_FINAL_2026-09-30.md` (decision-ready; no apply) | ✅ Doc |
 | 2026-09-30 | **E2 chiuso** — D4–D10 HITL confermati keep / no-op (`D4A…D9A D10B`); nessun APPLY dati | ✅ Chiuso |
 | 2026-09-30 | **F design** — `docs/STREAK_BADGE_SPEC.md` (streak no-hint + badge; HITL F1–F5) | ✅ Spec |
+| 2026-09-30 | **F — streak + badge (web + desktop)** — Attento/Diligente/Esperto @ 5/10/20; peak `maxNoHintStreak`; reset corrente su hint; HUD + ProgressPanel | ✅ MVP |
 | 2026-09-29 | **Prompt C (design G1)**: drift mappato STORIES vs `stories.js` vs `StoryLibrary.cs`; opzioni A/B/C valutate; **raccomandazione Option B** (`data/episodes.json` + generator Python → `stories.js` + `StoryLibrary.cs`); deliverable `docs/DATASET_UNIFICATION_DESIGN.md` — **build non avviato** | ✅ Design |
 | 2026-09-29 | **Prompt C build Step 0**: `data/episodes.schema.json`, `tools/validate_episodes.py`, fixture OK/broken; checkpoint validator exit 0/1; vincoli Q2 (no symbols in JSON), Q4 (theaterQuote vs scriptureQuoteIt) | ✅ Step 0 |
 | 2026-09-29 | **C-BUILD Step 1 — migrazione episodes.json (18 record)**: merge STORIES + `stories.js` + `StoryLibrary.cs`; validator `--full-catalog` verde; ep.8 titolo unificato; ep.10/12 keys+caption da C# (stories.js incompleto) | ✅ Step 1 |
@@ -416,7 +417,7 @@ Aggiornare questa sezione ad ogni sessione di lavoro.
 | P1 Alta | Multilanguage | ~~**E2 QA i18n**~~ ✅ **COMPLETATO 100%** — W1–W26 + D2/D3 applicati; D4–D10 keep/no-op (`D4A D5A D6A D7A D8A D9A D10B`). **D1** pending dedicated session (I_tuoi_versetti / wol.jw.org) |
 | P1 Alta | Content | ~~Semantic fix Ep 11/12/18~~ ✅ **COMPLETATO** |
 | Alta | UX | ~~**I2 — Onboarding**~~ ✅ **COMPLETATO**; ~~**Brand B1–B8**~~ ✅ **APPLICATO** |
-| Media | Gamification | ~~**Classifica sessione locale**~~ ✅ **COMPLETATO** (Prompt J); **Streak + Badge (F)** → spec `docs/STREAK_BADGE_SPEC.md` (HITL F1–F5) |
+| Media | Gamification | ~~**Classifica sessione locale**~~ ✅ **COMPLETATO** (Prompt J); ~~**Streak + Badge (F)**~~ ✅ **COMPLETATO (MVP)** — web HUD + desktop ProgressPanel |
 | Media | Design | **Online rooms DO+WS** — `docs/ONLINE_ROOMS_DESIGN.md` — design only |
 | Alta | UX | ~~**I — Onboarding**~~ ✅ **COMPLETATO** (web W1–W8 + desktop D1–D6 empirico utente + C1–C5b incl. C4 retry) |
 | P1 Alta | Desktop | ~~Bug1+Bug3~~ ✅ `1390bd3`. ~~Bug2 fasce~~ ✅ `e95747e` |
@@ -426,7 +427,7 @@ Aggiornare questa sezione ad ogni sessione di lavoro.
 | Alta | Cloudflare | Dopo restart agent: OAuth MCP Cloudflare al primo tool use; deploy Pages con wrangler |
 | Media | Multilanguage | Rifinire glossario rule-based it/en (vedi decisioni aperte in I18N_QA_REPORT) |
 | Media | Immersive | Aggiungere FR/ES come terze lingue riusando lo stesso schema `{ it, en, … }` |
-| Media | Gamification | ~~**Streak + Badge** (Saggio/Profeta/Apostolo)~~ → **F spec** `docs/STREAK_BADGE_SPEC.md` (nomi Attento/Diligente/Esperto — HITL F1–F5) |
+| Media | Gamification | ~~**Streak + Badge (F)**~~ ✅ **COMPLETATO (MVP)** — Attento(5)/Diligente(10)/Esperto(20); peak persistente |
 | Media | Gamification | ~~**Classifica sessione locale**: 2-8 partecipanti~~ ✅ **COMPLETATO** (Prompt J — Sfida layer, timer per-player, sequenceMode) |
 | Media | Design | ~~**Brand identity**~~ ✅ **APPLICATO** (B1–B8: system fonts, favicon JQ, tono, Form1 palette; no theme key) |
 | Media | Design | **Online rooms DO+WS** — `docs/ONLINE_ROOMS_DESIGN.md` — design only; dopo brand HITL |
@@ -546,6 +547,9 @@ L’esperienza è **ispirata** allo stile didattico JW.org “Fai vivere il racc
 | B7:A desktop palette | Form1 allineato web oro/blu | `ApplyBrandTheme()` Back `#0B1220` Fore `#E8EEF7` Menu `#132033`; **Intro.jpg resta viola legacy** → future PNG brand-compliant |
 | Ep 11 caption↔PNG + STYLE `1F410` | Caption “polli/mucche” vs PNG capra/pecora; slot 6 emoji 13.8 KB | **Fix 2026-09-30:** caption slot 3/6/7 → capre/pecore; regen photoreal `ep11-goat-photo` → alias `1F410` (1.58 MB) |
 | Ep 12/18 placeholder `2753` in visible | Slot 2 / slot 5 = punto interrogativo pack | **Fix 2026-09-30:** Ep12 `visibleKeys[1]=1F5FA` “Il cammino verso Gaza”; Ep18 `visibleKeys[4]=1F932-1F3FC` “Chi tende la mano?” |
+| F streak storage web | Progress senza campi streak | `jwquiz_immersive_progress_v1` `version:1` + `noHintStreak`/`maxNoHintStreak`/`badges` (default 0/[]); migrazione lazy in `loadProgress`/`saveProgress` |
+| F streak desktop | File `UserProgress.dat` vecchio senza linee 7–9 | Line-based (non migrare BinaryFormatter — G5 debt); linee 7–9 opzionali → default 0/[]; badge Attento(5)/Diligente(10)/Esperto(20) su `MaxNoHintStreak` |
+| F badge Id collision | Completion badge “Esperto” vs streak | Completion Id = `EspertoBiblico`; streak Id = `Esperto` |
 
 ### Checklist regressione (sessione Immersive)
 - [x] `webapp/app.js` invariato (o solo cambi deliberati) — Prompt H 2026-09-29
@@ -695,10 +699,10 @@ Aggiornare questa KB:
 
 Commit se il tree deve tornare pulito (deploy Wrangler). Push solo se richiesto esplicitamente.
 
-### Stato corrente (handoff) — 2026-09-30 (E2 chiuso; F spec)
+### Stato corrente (handoff) — 2026-09-30 (F streak+badge MVP)
 
-- **E2 QA i18n COMPLETATO 100%:** W1–W26 + D2/D3 applicati; D4–D10 keep/no-op (`D4A D5A D6A D7A D8A D9A D10B`); nessun APPLY dati.
-- **D1:** pending dedicated session (I_tuoi_versetti / wol.jw.org).
-- **Semantic / Brand / Onboarding / Multiplayer MVP / Online rooms design:** chiusi o consegnati (vedi §10/§11).
-- **Prossimo:** **F — Streak + Badge** — `docs/STREAK_BADGE_SPEC.md` (HITL F1–F5); Intro.jpg legacy.
-- **No deploy.** `app.js` intatto.
+- **F — streak + badge COMPLETATO (MVP):** web `index.html` (HUD chip + tray) + desktop `ProgressTracker`/`ProgressPanel`/`AppText`/`DynamicStoryForm`. Badge Attento(5)/Diligente(10)/Esperto(20) su `maxNoHintStreak`; reset `noHintStreak` su hint (policy F3); peak/badge persistono (F4).
+- **Storage:** `jwquiz_immersive_progress_v1` esteso; `UserProgress.dat` linee 7–9 (G5 BinaryFormatter debt residuo — non migrare).
+- **E2 / Semantic / Brand / Onboarding / Multiplayer MVP:** chiusi (vedi §10/§11).
+- **Prossimo:** D1 (versetti); Online rooms design-only; Intro.jpg legacy; backlog G5 JSON progress.
+- **No deploy.** `app.js` intatto. Smoke: `.local/smoke/f_*.png` (gitignored).
