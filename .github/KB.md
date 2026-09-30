@@ -380,7 +380,7 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-09-29 | **K2 — merge episodi 19–23 in catalogo**: Babel, Daniele, Saul→Paolo, Gerico, Marta/Maria; citazioni approvate (ref+parafrasi); DECOR 19–23; validator/generator → 23; parity OK (warn Ep10 hint=hidden[1] accettato) | ⏳ commit proposto |
 | 2026-09-30 | **A — KB gotcha `:8082`**: port conflict `:8081` → fallback documentato MIME `text/javascript` | ⏳ commit proposto |
 | 2026-09-30 | **E — QA i18n 1–23**: report `docs/I18N_QA_REPORT.md` (anti-spoiler caption, glossario, tier theater/scripture); nessun fix contenuti | ⏳ commit proposto |
-| 2026-09-30 | **I — Onboarding web + desktop**: overlay primo avvio (lingua, disclaimer, nome, mode, tutorial rebus policy A, preferenze); storage `jwquiz_onboarding_v1` separato | ⏳ pre-flight / blocked dirty tree |
+| 2026-09-30 | **I — onboarding primo avvio chiuso**: web W1–W8 + tutorial F3/policy A; desktop D1–D6 verificato empiricamente dall'utente; storage `jwquiz_onboarding_v1` / `jwquiz_player_name_v1` / `jwquiz_audio_v1` / `jwquiz_motion_v1`; `UserOnboarding.dat` gitignored | ✅ chiuso |
 ---
 
 ## 11. Next Best Decisions (Proposte Attive)
@@ -398,7 +398,7 @@ Aggiornare questa sezione ad ogni sessione di lavoro.
 | P1 Alta | Design | **Classic flat — keep (M)** — `docs/CLASSIC_REBUS_DEPRECATION.md`. Nessun tocco `app.js` |
 | P1 Alta | Immersive | ~~Unificare dataset Q&A immersivo (G1)~~ ✅ **COMPLETATO** |
 | P1 Alta | Multilanguage | **QA i18n 1–23** — report consegnato (`docs/I18N_QA_REPORT.md`); **fix in review umana** |
-| Alta | UX | **I — Onboarding** web+desktop — blocked finché tree pulito (commit A+C + leftover K2 tools/index) |
+| Alta | UX | ~~**I — Onboarding**~~ ✅ **COMPLETATO** (web W1–W8 + desktop D1–D6 empirico utente 2026-09-30 + CROSS C1–C5b) |
 | Alta | Web Immersive | ~~Landing 3D + theater Q&A~~ ✅ **COMPLETATO** (`webapp/index.html`) |
 | Alta | Immersive | ~~Pack fotorealistico rebus~~ ✅ **COMPLETATO** |
 | Alta | Docs | ~~Unificare documentazione human/agent + pipeline sync~~ ✅ **COMPLETATO** |
@@ -665,11 +665,14 @@ Commit se il tree deve tornare pulito (deploy Wrangler). Push solo se richiesto 
 
 ### Stato corrente (handoff) — 2026-09-30
 
-- **Catalogo:** 23 episodi (`cc92e8e`). Schema v1 frozen.
-- **Dirty tree (blocker B):** uncommitted leftover K2 — `tools/validate_episodes.py`, `tools/generate_story_artifacts.py`, `webapp/index.html` (DECOR/HUD 23). Serve commit separato tipo `fix(content): complete K2 tooling for 23` **prima** di A/C/B o insieme a decisione umana.
-- **Parte A:** §13 gotcha `:8082` aggiunto — commit proposto `kb: gotcha dev server port fallback :8082`.
-- **Parte C/E:** `docs/I18N_QA_REPORT.md` — commit proposto `docs(i18n): QA report 1-23`. Nessun fix contenuti.
-- **Parte B/I:** pre-flight mappa OK; **implementazione STOP** finché tree pulito post commit.
-- **Off-limits:** deploy; `www/**`; `app.js` salvo OK; `episodes.json` / StoryLibrary / generator/parity in B.
-- **Prossimo:** OK commit leftover→A→C, poi implementare onboarding (I). Poi J multiplayer.
-- **Dev server:** preferire `:8081`; fallback **`:8082`** se occupato (MIME `text/javascript`).
+- **Catalogo:** 23 episodi. Tooling+HUD: `540a57c`. Docs I+E: `4cea475`.
+- **Step I CHIUSO — Onboarding:**
+  - Web W1–W8 verdi (overlay, 7 step, reset, IT/EN, console).
+  - Tutorial rebus: F3 `0→1→2→0` + policy A (hide non ripristina stelle).
+  - Desktop D1–D6: **verificato empiricamente dall'utente 2026-09-30**.
+  - Storage: `jwquiz_onboarding_v1`, `jwquiz_player_name_v1`, `jwquiz_audio_v1`, `jwquiz_motion_v1` (admin session intatta).
+  - Desktop file: `UserOnboarding.dat` (gitignored).
+  - Commit `feat(onboarding): primo avvio webapp + desktop` (hash in post-commit).
+- **Off-limits:** deploy; `www/**`; `app.js`; wording `episodes.json`.
+- **Prossimo:** J — multiplayer MVP locale.
+- **Dev server:** `:8081` preferito; fallback `:8082`/`:8083`.

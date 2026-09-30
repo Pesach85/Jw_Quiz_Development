@@ -51,8 +51,49 @@ namespace Jw_Quiz_Development
             BuildDynamicMenus();
             BuildLanguageMenu();
             BuildWebBridgeMenu();
+            BuildOnboardingResetMenu();
             ApplyLocalization();
             RefreshUserStoriesMenu();
+            MaybeShowOnboarding();
+        }
+
+        private ToolStripMenuItem resetLocalDataMenuItem;
+
+        private void BuildOnboardingResetMenu()
+        {
+            if (resetLocalDataMenuItem != null)
+                return;
+            resetLocalDataMenuItem = new ToolStripMenuItem();
+            resetLocalDataMenuItem.Click += ResetLocalOnboarding_Click;
+            impostazioniToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
+            impostazioniToolStripMenuItem.DropDownItems.Add(resetLocalDataMenuItem);
+        }
+
+        private void ResetLocalOnboarding_Click(object sender, EventArgs e)
+        {
+            var confirm = MessageBox.Show(
+                AppText.Get("OnbResetConfirm"),
+                AppText.Get("OnbResetLocal"),
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+            if (confirm != DialogResult.Yes)
+                return;
+            UserOnboardingStore.Clear();
+            MessageBox.Show(AppText.Get("OnbResetDone"), AppText.Get("Settings"), MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MaybeShowOnboarding();
+        }
+
+        private void MaybeShowOnboarding()
+        {
+            if (UserOnboardingStore.IsCompleted())
+                return;
+            using (var dlg = new OnboardingForm())
+            {
+                if (dlg.ShowDialog(this) == DialogResult.OK && dlg.StartEpisode1)
+                {
+                    OpenStory(1);
+                }
+            }
         }
 
         private void BuildLanguageMenu()
@@ -129,6 +170,8 @@ namespace Jw_Quiz_Development
             englishMenuItem.Text = AppText.Get("English");
             if (openWebMenuItem != null)
                 openWebMenuItem.Text = AppText.Get("OpenWebImmersive");
+            if (resetLocalDataMenuItem != null)
+                resetLocalDataMenuItem.Text = AppText.Get("OnbResetLocal");
             italianoMenuItem.Checked = LanguageManager.CurrentLanguage == AppLanguage.Italian;
             englishMenuItem.Checked = LanguageManager.CurrentLanguage == AppLanguage.English;
 

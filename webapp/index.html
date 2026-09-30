@@ -649,6 +649,11 @@
       .symbol { width: 48px; height: 48px; margin: -24px; font-size: 1.3rem; }
     }
 
+    html.onb-reduce-motion *, html.onb-reduce-motion *::before, html.onb-reduce-motion *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
       *, *::before, *::after {
@@ -657,6 +662,56 @@
         transition-duration: 0.01ms !important;
       }
     }
+
+    /* ----- Onboarding overlay ----- */
+    .onb-overlay {
+      position: fixed; inset: 0; z-index: 12000;
+      background: rgba(8, 14, 28, 0.82);
+      backdrop-filter: blur(8px);
+      display: none; align-items: center; justify-content: center;
+      padding: 24px;
+    }
+    .onb-overlay.is-open { display: flex; }
+    .onb-card {
+      width: min(560px, 100%);
+      background: linear-gradient(160deg, #14233a 0%, #0c1524 100%);
+      border: 1px solid rgba(240,195,106,0.28);
+      border-radius: 18px;
+      padding: 28px 24px 20px;
+      color: #f4f1ea;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.45);
+    }
+    .onb-card h2 { margin: 0 0 8px; font-size: 1.35rem; color: #f0c36a; }
+    .onb-card p { margin: 0 0 16px; line-height: 1.45; opacity: 0.92; }
+    .onb-step { font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.65; margin-bottom: 10px; }
+    .onb-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+    .onb-actions .btn { flex: 1 1 auto; min-width: 120px; }
+    .onb-lang, .onb-modes, .onb-prefs { display: grid; gap: 10px; }
+    .onb-modes { grid-template-columns: 1fr; }
+    @media (min-width: 520px) { .onb-modes { grid-template-columns: repeat(3, 1fr); } }
+    .onb-choice {
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.04);
+      border-radius: 12px; padding: 12px; cursor: pointer; text-align: left; color: inherit;
+    }
+    .onb-choice.is-selected { border-color: #f0c36a; background: rgba(240,195,106,0.12); }
+    .onb-input {
+      width: 100%; padding: 10px 12px; border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.25); color: #fff;
+    }
+    .onb-tut-board {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 12px 0;
+    }
+    .onb-tut-slot {
+      aspect-ratio: 1; border-radius: 10px; background: rgba(255,255,255,0.06);
+      border: 1px dashed rgba(255,255,255,0.25);
+      display: flex; align-items: center; justify-content: center; overflow: hidden;
+    }
+    .onb-tut-slot img { width: 100%; height: 100%; object-fit: cover; }
+    .onb-tut-slot.is-empty::after { content: "?"; opacity: 0.45; font-size: 1.4rem; }
+    .onb-stars { letter-spacing: 0.12em; color: #f0c36a; margin: 8px 0; font-size: 1.1rem; }
+    .onb-tut-toolbar { display: flex; flex-wrap: wrap; gap: 8px; }
+
   </style>
 </head>
 <body>
@@ -668,6 +723,7 @@
       <div class="hud-chip" id="hudProgress" title="Progresso">0/23 · 0 XP</div>
       <button id="btnSound" class="btn btn-ghost sound-btn" type="button" data-i18n="soundOn" title="Audio">🔊</button>
       <select id="langSelect" class="select" aria-label="Language" title="Language"></select>
+      <button id="btnSettings" class="btn btn-ghost" type="button" data-i18n="onb_settings">Impostazioni</button>
       <a class="btn btn-ghost" href="classic.html" data-i18n="classicMode">Editor / Admin</a>
       <button id="btnStartStories" class="btn btn-primary" type="button" data-i18n="startJourney">Inizia il viaggio</button>
     </div>
@@ -770,6 +826,11 @@
     </div>
   </div>
 
+  <!-- ========== ONBOARDING OVERLAY ========== -->
+  <div id="onboardingOverlay" class="onb-overlay" role="dialog" aria-modal="true" aria-labelledby="onbTitle" hidden>
+    <div class="onb-card" id="onbCard"></div>
+  </div>
+
   <!-- Rebus PNG keys from shared catalog (same as classic webapp) -->
   <script src="stories.js"></script>
 
@@ -849,6 +910,37 @@
         captionDefault: "Tocca un’immagine fluttuante per un indizio breve",
         captionPrefix: "Indicazione",
         needSolution: "Rivela la soluzione del rebus per continuare.",
+
+        onb_skip: "Salta",
+        onb_next: "Continua",
+        onb_back: "Indietro",
+        onb_stepOf: "Passo {n} di 7",
+        onb_langTitle: "Scegli la lingua",
+        onb_langBody: "Potrai cambiarla in qualsiasi momento dalla barra in alto.",
+        onb_discTitle: "Avviso importante",
+        onb_discBody: "Prodotto didattico non ufficiale Watch Tower. Ispirato allo stile didattico JW.org. Link ufficiale in footer.",
+        onb_discCta: "Ho capito, continua",
+        onb_nameTitle: "Come ti chiami? (opzionale)",
+        onb_nameBody: "Max 20 caratteri. Se salti, useremo “Ospite”.",
+        onb_namePlaceholder: "Il tuo nome",
+        onb_guest: "Ospite",
+        onb_modeTitle: "Come vuoi giocare?",
+        onb_modeBody: "Puoi cambiare modalità anche dopo, dalla barra.",
+        onb_tutTitle: "Prova il rebus (senza spoiler)",
+        onb_tutBody: "Rivela le immagini nascoste, mostra l’indizio, poi nascondi. Le stelle non risalgono quando nascondi (policy A).",
+        onb_tutCta: "Ho capito, gioca",
+        onb_prefTitle: "Preferenze",
+        onb_prefAudio: "Audio di gioco",
+        onb_prefMotion: "Riduci movimento",
+        onb_finalTitle: "Sei pronto",
+        onb_finalBody: "Inizia dall’episodio 1 oppure esplora liberamente la griglia.",
+        onb_startEp1: "Inizia Ep 1",
+        onb_explore: "Esplora libero",
+        onb_settings: "Impostazioni",
+        onb_resetLocal: "Cancella i miei dati locali",
+        onb_resetConfirm: "Cancellare progressi, nome e preferenze locali? (la sessione admin non viene toccata)",
+        onb_resetDone: "Dati locali cancellati. Ricarica per rivedere l’introduzione.",
+        onb_tutHintCaption: "Un indizio generico: osserva i dettagli nascosti.",
         reducedMotionNote: "Modalità leggera attiva (mobile / risparmio)."
       },
       en: {
@@ -909,6 +1001,37 @@
         captionDefault: "Tap a floating image for a short clue",
         captionPrefix: "Clue",
         needSolution: "Reveal the rebus solution to continue.",
+
+        onb_skip: "Skip",
+        onb_next: "Continue",
+        onb_back: "Back",
+        onb_stepOf: "Step {n} of 7",
+        onb_langTitle: "Choose your language",
+        onb_langBody: "You can change it anytime from the top bar.",
+        onb_discTitle: "Important notice",
+        onb_discBody: "Unofficial educational product, not Watch Tower. Inspired by JW.org teaching style. Official link in the footer.",
+        onb_discCta: "Got it, continue",
+        onb_nameTitle: "What is your name? (optional)",
+        onb_nameBody: "Max 20 characters. Skip to use “Guest”.",
+        onb_namePlaceholder: "Your name",
+        onb_guest: "Guest",
+        onb_modeTitle: "How do you want to play?",
+        onb_modeBody: "You can change mode later from the bar.",
+        onb_tutTitle: "Try the rebus (no spoilers)",
+        onb_tutBody: "Reveal hidden images, show the hint, then hide. Stars do not go back up when you hide (policy A).",
+        onb_tutCta: "Got it, play",
+        onb_prefTitle: "Preferences",
+        onb_prefAudio: "Game audio",
+        onb_prefMotion: "Reduce motion",
+        onb_finalTitle: "You are ready",
+        onb_finalBody: "Start from episode 1 or explore the grid freely.",
+        onb_startEp1: "Start Ep 1",
+        onb_explore: "Explore freely",
+        onb_settings: "Settings",
+        onb_resetLocal: "Clear my local data",
+        onb_resetConfirm: "Clear local progress, name and preferences? (admin session is not touched)",
+        onb_resetDone: "Local data cleared. Reload to see the introduction again.",
+        onb_tutHintCaption: "A generic hint: look at the hidden details.",
         reducedMotionNote: "Lite mode active (mobile / power save)."
       }
     };
@@ -2212,6 +2335,299 @@
       loop();
     }
 
+
+    /* ========================================================================
+     * SECTION: ONBOARDING (Prompt I)
+     * ======================================================================== */
+    const ONB_KEY = "jwquiz_onboarding_v1";
+    const PLAYER_NAME_KEY = "jwquiz_player_name_v1";
+    const AUDIO_KEY = "jwquiz_audio_v1";
+    const MOTION_KEY = "jwquiz_motion_v1";
+    const NAME_BLOCK = /\b(cazzo|merda|puttana|fuck|shit|asshole|bastard)\b/i;
+
+    const onbState = {
+      step: 1,
+      name: "",
+      mode: state.mode || "journey",
+      audioOn: true,
+      reduceMotion: false,
+      tut: {
+        revealCount: 0,
+        maxRevealUsed: 0,
+        hintRevealed: false,
+        hintEverUsed: false,
+        stars: 3
+      }
+    };
+
+    const ONB_TUTORIAL = {
+      visible: ["1F333", "1F30A", "2601"],
+      hidden: ["2753", "1F525"],
+      hint: "1F440"
+    };
+
+    function onbT(key) {
+      const pack = (UI[lang] || UI.it);
+      return pack[key] || (UI.it[key] || key);
+    }
+
+    function sanitizePlayerName(raw) {
+      let s = String(raw || "").replace(/<[^>]*>/g, "").trim();
+      s = s.replace(/[^\p{L}\p{N}\s'\-.]/gu, "");
+      if (NAME_BLOCK.test(s)) s = "";
+      return s.slice(0, 20);
+    }
+
+    function recomputeOnbStars() {
+      const used = onbState.tut.maxRevealUsed + (onbState.tut.hintEverUsed ? 1 : 0);
+      onbState.tut.stars = Math.max(1, 3 - Math.min(2, used));
+    }
+
+    function starGlyphs(n) {
+      return "★".repeat(n) + "☆".repeat(Math.max(0, 3 - n));
+    }
+
+    function clearLocalPlayerData() {
+      localStorage.removeItem(ONB_KEY);
+      localStorage.removeItem(PLAYER_NAME_KEY);
+      localStorage.removeItem(AUDIO_KEY);
+      localStorage.removeItem(MOTION_KEY);
+      localStorage.removeItem(PROGRESS_KEY);
+      localStorage.removeItem(XP_KEY);
+      localStorage.removeItem(SOUND_STORAGE_KEY);
+      // intentionally leave jwquiz_admin_session (sessionStorage) untouched
+    }
+
+    function loadOnbPrefsIntoState() {
+      const audio = localStorage.getItem(AUDIO_KEY);
+      if (audio === "0" || audio === "1") {
+        state.soundOn = audio === "1";
+        localStorage.setItem(SOUND_STORAGE_KEY, state.soundOn ? "1" : "0");
+      }
+      const motion = localStorage.getItem(MOTION_KEY);
+      if (motion === "1") document.documentElement.classList.add("onb-reduce-motion");
+      else if (motion === "0") document.documentElement.classList.remove("onb-reduce-motion");
+      else if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        document.documentElement.classList.add("onb-reduce-motion");
+      }
+    }
+
+    function renderOnboarding() {
+      const overlay = document.getElementById("onboardingOverlay");
+      const card = document.getElementById("onbCard");
+      if (!overlay || !card) return;
+      const stepLabel = onbT("onb_stepOf").replace("{n}", String(onbState.step));
+      let body = `<div class="onb-step">${stepLabel}</div>`;
+
+      if (onbState.step === 1) {
+        body += `<h2 id="onbTitle">${onbT("onb_langTitle")}</h2><p>${onbT("onb_langBody")}</p>
+          <div class="onb-lang">
+            <button type="button" class="onb-choice ${lang === "it" ? "is-selected" : ""}" data-onb-lang="it">Italiano</button>
+            <button type="button" class="onb-choice ${lang === "en" ? "is-selected" : ""}" data-onb-lang="en">English</button>
+          </div>`;
+      } else if (onbState.step === 2) {
+        body += `<h2 id="onbTitle">${onbT("onb_discTitle")}</h2><p>${onbT("onb_discBody")}</p>`;
+      } else if (onbState.step === 3) {
+        body += `<h2 id="onbTitle">${onbT("onb_nameTitle")}</h2><p>${onbT("onb_nameBody")}</p>
+          <input id="onbNameInput" class="onb-input" maxlength="20" placeholder="${onbT("onb_namePlaceholder")}" value="${onbState.name.replace(/"/g, "&quot;")}" />`;
+      } else if (onbState.step === 4) {
+        body += `<h2 id="onbTitle">${onbT("onb_modeTitle")}</h2><p>${onbT("onb_modeBody")}</p>
+          <div class="onb-modes">
+            <button type="button" class="onb-choice ${onbState.mode === "quiz" ? "is-selected" : ""}" data-onb-mode="quiz"><strong>${t("modeQuiz")}</strong><br>${t("modeHelpQuiz")}</button>
+            <button type="button" class="onb-choice ${onbState.mode === "rebus" ? "is-selected" : ""}" data-onb-mode="rebus"><strong>${t("modeRebus")}</strong><br>${t("modeHelpRebus")}</button>
+            <button type="button" class="onb-choice ${onbState.mode === "journey" ? "is-selected" : ""}" data-onb-mode="journey"><strong>${t("modeJourney")}</strong><br>${t("modeHelpJourney")}</button>
+          </div>`;
+      } else if (onbState.step === 5) {
+        recomputeOnbStars();
+        const vis = ONB_TUTORIAL.visible.map((k) => `<div class="onb-tut-slot"><img src="${assetUrl(k)}" alt=""></div>`).join("");
+        const hid = ONB_TUTORIAL.hidden.map((k, i) => {
+          const show = onbState.tut.revealCount > i;
+          return show
+            ? `<div class="onb-tut-slot"><img src="${assetUrl(k)}" alt=""></div>`
+            : `<div class="onb-tut-slot is-empty"></div>`;
+        }).join("");
+        const hintShow = onbState.tut.hintRevealed;
+        const hintSlot = hintShow
+          ? `<div class="onb-tut-slot"><img src="${assetUrl(ONB_TUTORIAL.hint)}" alt=""></div>`
+          : `<div class="onb-tut-slot is-empty"></div>`;
+        const revealLabel = onbState.tut.revealCount >= 2 ? t("hideTwo") : t("revealTwo");
+        const hintLabel = onbState.tut.hintRevealed ? t("hideHint") : t("showHint");
+        body += `<h2 id="onbTitle">${onbT("onb_tutTitle")}</h2><p>${onbT("onb_tutBody")}</p>
+          <div class="onb-stars" id="onbStars">${starGlyphs(onbState.tut.stars)}</div>
+          <div class="onb-tut-board">${vis}${hid}${hintSlot}</div>
+          <p class="onb-tut-caption">${onbState.tut.hintRevealed ? onbT("onb_tutHintCaption") : t("captionDefault")}</p>
+          <div class="onb-tut-toolbar">
+            <button type="button" class="btn btn-reveal" id="onbBtnReveal">${revealLabel}</button>
+            <button type="button" class="btn btn-hint" id="onbBtnHint">${hintLabel}</button>
+          </div>`;
+      } else if (onbState.step === 6) {
+        body += `<h2 id="onbTitle">${onbT("onb_prefTitle")}</h2>
+          <div class="onb-prefs">
+            <label class="onb-choice"><input type="checkbox" id="onbAudio" ${onbState.audioOn ? "checked" : ""}/> ${onbT("onb_prefAudio")}</label>
+            <label class="onb-choice"><input type="checkbox" id="onbMotion" ${onbState.reduceMotion ? "checked" : ""}/> ${onbT("onb_prefMotion")}</label>
+          </div>`;
+      } else {
+        body += `<h2 id="onbTitle">${onbT("onb_finalTitle")}</h2><p>${onbT("onb_finalBody")}</p>`;
+      }
+
+      const primaryLabel = onbState.step === 2 ? onbT("onb_discCta")
+        : onbState.step === 5 ? onbT("onb_tutCta")
+        : onbState.step === 7 ? onbT("onb_startEp1")
+        : onbT("onb_next");
+
+      body += `<div class="onb-actions">
+        <button type="button" class="btn btn-ghost" id="onbSkip">${onbT("onb_skip")}</button>
+        ${onbState.step > 1 && onbState.step < 7 ? `<button type="button" class="btn" id="onbBack">${onbT("onb_back")}</button>` : ""}
+        ${onbState.step < 7 ? `<button type="button" class="btn btn-primary" id="onbNext">${primaryLabel}</button>` : ""}
+        ${onbState.step === 7 ? `<button type="button" class="btn btn-primary" id="onbStartEp1">${onbT("onb_startEp1")}</button>
+          <button type="button" class="btn" id="onbExplore">${onbT("onb_explore")}</button>` : ""}
+      </div>`;
+
+      card.innerHTML = body;
+      wireOnboardingHandlers();
+    }
+
+    function wireOnboardingHandlers() {
+      document.querySelectorAll("[data-onb-lang]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          lang = btn.getAttribute("data-onb-lang");
+          localStorage.setItem(LANG_STORAGE_KEY, lang);
+          const sel = document.getElementById("langSelect");
+          if (sel) sel.value = lang;
+          applyI18n();
+          renderOnboarding();
+        });
+      });
+      document.querySelectorAll("[data-onb-mode]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          onbState.mode = btn.getAttribute("data-onb-mode");
+          renderOnboarding();
+        });
+      });
+      const nameInput = document.getElementById("onbNameInput");
+      if (nameInput) {
+        nameInput.addEventListener("input", () => {
+          onbState.name = sanitizePlayerName(nameInput.value);
+        });
+      }
+      const reveal = document.getElementById("onbBtnReveal");
+      if (reveal) {
+        reveal.addEventListener("click", () => {
+          if (onbState.tut.revealCount >= 2) {
+            onbState.tut.revealCount = 0;
+          } else {
+            onbState.tut.revealCount += 1;
+            if (onbState.tut.revealCount > onbState.tut.maxRevealUsed) {
+              onbState.tut.maxRevealUsed = onbState.tut.revealCount;
+            }
+          }
+          recomputeOnbStars();
+          renderOnboarding();
+        });
+      }
+      const hint = document.getElementById("onbBtnHint");
+      if (hint) {
+        hint.addEventListener("click", () => {
+          onbState.tut.hintRevealed = !onbState.tut.hintRevealed;
+          if (onbState.tut.hintRevealed) onbState.tut.hintEverUsed = true;
+          recomputeOnbStars();
+          renderOnboarding();
+        });
+      }
+      const audio = document.getElementById("onbAudio");
+      if (audio) audio.addEventListener("change", () => { onbState.audioOn = audio.checked; });
+      const motion = document.getElementById("onbMotion");
+      if (motion) motion.addEventListener("change", () => { onbState.reduceMotion = motion.checked; });
+
+      const skip = document.getElementById("onbSkip");
+      if (skip) skip.addEventListener("click", () => onbAdvance(true));
+      const back = document.getElementById("onbBack");
+      if (back) back.addEventListener("click", () => { onbState.step = Math.max(1, onbState.step - 1); renderOnboarding(); });
+      const next = document.getElementById("onbNext");
+      if (next) next.addEventListener("click", () => onbAdvance(false));
+      const start = document.getElementById("onbStartEp1");
+      if (start) start.addEventListener("click", () => finishOnboarding("ep1"));
+      const explore = document.getElementById("onbExplore");
+      if (explore) explore.addEventListener("click", () => finishOnboarding("explore"));
+    }
+
+    function persistStepSideEffects() {
+      if (onbState.step === 3) {
+        const input = document.getElementById("onbNameInput");
+        if (input) onbState.name = sanitizePlayerName(input.value);
+      }
+      if (onbState.step === 4) {
+        setMode(onbState.mode);
+      }
+      if (onbState.step === 6) {
+        const audio = document.getElementById("onbAudio");
+        const motion = document.getElementById("onbMotion");
+        if (audio) onbState.audioOn = audio.checked;
+        if (motion) onbState.reduceMotion = motion.checked;
+        localStorage.setItem(AUDIO_KEY, onbState.audioOn ? "1" : "0");
+        localStorage.setItem(SOUND_STORAGE_KEY, onbState.audioOn ? "1" : "0");
+        state.soundOn = onbState.audioOn;
+        updateSoundButton();
+        localStorage.setItem(MOTION_KEY, onbState.reduceMotion ? "1" : "0");
+        document.documentElement.classList.toggle("onb-reduce-motion", onbState.reduceMotion);
+      }
+    }
+
+    function onbAdvance(isSkip) {
+      persistStepSideEffects();
+      if (onbState.step === 3 && isSkip) onbState.name = "";
+      if (onbState.step >= 7) {
+        finishOnboarding("explore");
+        return;
+      }
+      onbState.step += 1;
+      renderOnboarding();
+    }
+
+    function finishOnboarding(cta) {
+      persistStepSideEffects();
+      const name = sanitizePlayerName(onbState.name) || onbT("onb_guest");
+      localStorage.setItem(PLAYER_NAME_KEY, name);
+      localStorage.setItem(ONB_KEY, "completed");
+      setMode(onbState.mode);
+      closeOnboarding();
+      if (cta === "ep1") openTheater(0);
+    }
+
+    function openOnboarding(force) {
+      if (!force && localStorage.getItem(ONB_KEY) === "completed") return false;
+      onbState.step = 1;
+      onbState.name = localStorage.getItem(PLAYER_NAME_KEY) || "";
+      onbState.mode = state.mode || "journey";
+      const audio = localStorage.getItem(AUDIO_KEY);
+      onbState.audioOn = audio == null ? state.soundOn : audio !== "0";
+      const prefers = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const motion = localStorage.getItem(MOTION_KEY);
+      onbState.reduceMotion = motion == null ? prefers : motion === "1";
+      onbState.tut = { revealCount: 0, maxRevealUsed: 0, hintRevealed: false, hintEverUsed: false, stars: 3 };
+      const overlay = document.getElementById("onboardingOverlay");
+      overlay.hidden = false;
+      overlay.classList.add("is-open");
+      renderOnboarding();
+      return true;
+    }
+
+    function closeOnboarding() {
+      const overlay = document.getElementById("onboardingOverlay");
+      overlay.classList.remove("is-open");
+      overlay.hidden = true;
+    }
+
+    function openSettingsPanel() {
+      const reset = confirm(onbT("onb_resetConfirm"));
+      if (!reset) return;
+      clearLocalPlayerData();
+      alert(onbT("onb_resetDone"));
+      openOnboarding(true);
+      renderStoryGrid();
+      refreshHud();
+    }
+
     /* ========================================================================
      * SECTION: WIRE UI EVENTS
      * ======================================================================== */
@@ -2244,9 +2660,12 @@
       window.addEventListener(evt, () => { if (state.soundOn) audio.ensure(); }, { once: true, passive: true });
     });
 
+    document.getElementById("btnSettings").addEventListener("click", openSettingsPanel);
+    loadOnbPrefsIntoState();
     applyI18n();
     observeReveals();
     initHero();
+    openOnboarding(false);
   </script>
 </body>
 </html>
