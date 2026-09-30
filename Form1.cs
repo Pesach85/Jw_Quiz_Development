@@ -175,9 +175,10 @@ namespace Jw_Quiz_Development
             italianoMenuItem.Checked = LanguageManager.CurrentLanguage == AppLanguage.Italian;
             englishMenuItem.Checked = LanguageManager.CurrentLanguage == AppLanguage.English;
 
-            for (int id = 13; id <= 18 && id - 13 < nuoviEpisodiMenuItem.DropDownItems.Count; id++)
+            var dynamicStories = StoryEngine.GetDynamicStories();
+            for (int i = 0; i < dynamicStories.Count && i < nuoviEpisodiMenuItem.DropDownItems.Count; i++)
             {
-                nuoviEpisodiMenuItem.DropDownItems[id - 13].Text = AppText.Get("StoryPrefix") + " " + id;
+                nuoviEpisodiMenuItem.DropDownItems[i].Text = AppText.Get("StoryPrefix") + " " + dynamicStories[i].Id;
             }
         }
 
@@ -187,9 +188,9 @@ namespace Jw_Quiz_Development
                 return;
 
             nuoviEpisodiMenuItem = new ToolStripMenuItem(AppText.Get("NewEpisodes"));
-            for (int id = 13; id <= 18; id++)
+            foreach (var dyn in StoryEngine.GetDynamicStories())
             {
-                int capturedId = id;
+                int capturedId = dyn.Id;
                 var item = new ToolStripMenuItem(AppText.Get("StoryPrefix") + " " + capturedId);
                 item.Click += (s, e) => OpenStory(capturedId);
                 nuoviEpisodiMenuItem.DropDownItems.Add(item);

@@ -381,7 +381,8 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-09-30 | **A — KB gotcha `:8082`**: port conflict `:8081` → fallback documentato MIME `text/javascript` | ⏳ commit proposto |
 | 2026-09-30 | **E — QA i18n 1–23**: report `docs/I18N_QA_REPORT.md` (anti-spoiler caption, glossario, tier theater/scripture); nessun fix contenuti | ⏳ commit proposto |
 | 2026-09-30 | **I — onboarding chiuso (web W1-W8 + desktop A1-A6)**: commit `ebf63ed`; C4 retry MSBuild 0 (kill PID lock); storage `jwquiz_onboarding_v1` / `player_name` / `audio` / `motion`; `UserOnboarding.dat` gitignored | ✅ chiuso (`51ff6c9` kb) |
-| 2026-09-30 | **Desktop bugs indagine**: menu Nuovi Episodi hardcode 13–18; layout Storie ibrido Designer+runtime; PictureBox Left fisso 40 | ⏳ report `docs/DESKTOP_BUGS_2026-09-30.md` |
+| 2026-09-30 | **Desktop bugs indagine**: menu Nuovi Episodi hardcode 13–18; layout Storie ibrido Designer+runtime; PictureBox Left fisso 40 | ✅ report `docs/DESKTOP_BUGS_2026-09-30.md` (`551b064`) |
+| 2026-09-30 | **Fix Bug1+Bug3**: menu Nuovi Episodi via `StoryEngine.GetDynamicStories()` (13–23); `LayoutImageGrid()` centratura su Resize | ⏳ commit proposto |
 ---
 
 ## 11. Next Best Decisions (Proposte Attive)
@@ -400,7 +401,7 @@ Aggiornare questa sezione ad ogni sessione di lavoro.
 | P1 Alta | Immersive | ~~Unificare dataset Q&A immersivo (G1)~~ ✅ **COMPLETATO** |
 | P1 Alta | Multilanguage | **QA i18n 1–23** — report consegnato (`docs/I18N_QA_REPORT.md`); **fix in review umana** |
 | Alta | UX | ~~**I — Onboarding**~~ ✅ **COMPLETATO** (web W1–W8 + desktop D1–D6 empirico utente + C1–C5b incl. C4 retry) |
-| P1 Alta | Desktop | **3 bug post-I** — menu Nuovi Episodi 13–18 only; layout menu; centratura PictureBox. Indagine in `docs/DESKTOP_BUGS_2026-09-30.md` |
+| P1 Alta | Desktop | ~~Bug1 menu 19–23 / Bug3 centratura~~ ✅ fix in tree; Bug2 layout menu → design A/D in report |
 | Alta | Web Immersive | ~~Landing 3D + theater Q&A~~ ✅ **COMPLETATO** (`webapp/index.html`) |
 | Alta | Immersive | ~~Pack fotorealistico rebus~~ ✅ **COMPLETATO** |
 | Alta | Docs | ~~Unificare documentazione human/agent + pipeline sync~~ ✅ **COMPLETATO** |

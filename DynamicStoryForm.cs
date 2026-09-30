@@ -20,6 +20,7 @@ namespace Jw_Quiz_Development
         private Label referenceLabel;
         private PictureBox[] picBoxes;   // 0-4 visible, 5-6 hidden, 7 hint
         private Label captionLabel;      // shows image description on click
+        private Panel imagePanel;
         private Label solutionLabel;
         private Label xpLabel;
         private Label starsLabel;        // live star rating (★★★ degrades as hints used)
@@ -108,7 +109,7 @@ namespace Jw_Quiz_Development
             };
             header.Controls.Add(starsLabel);
 
-            var imagePanel = new Panel
+            imagePanel = new Panel
             {
                 Dock = DockStyle.Top,
                 Height = 410,
@@ -144,11 +145,6 @@ namespace Jw_Quiz_Development
                     Padding = new Padding(4)
                 };
 
-                int row = i / 4;
-                int col = i % 4;
-                pb.Left = 40 + col * 190;
-                pb.Top = 58 + row * 170;
-
                 int capturedIndex = i;
                 pb.Click += (s, e) => ShowCaption(capturedIndex);
                 pb.Cursor = Cursors.Hand;
@@ -156,6 +152,8 @@ namespace Jw_Quiz_Development
                 imagePanel.Controls.Add(pb);
                 picBoxes[i] = pb;
             }
+            imagePanel.Resize += (s, e) => LayoutImageGrid();
+            LayoutImageGrid();
 
             var center = new Panel
             {
@@ -246,8 +244,36 @@ namespace Jw_Quiz_Development
         protected override void OnShown(EventArgs e)
         {
             base.OnShown(e);
+            LayoutImageGrid();
             if (Screen_size.IsFullscreen)
                 Screen_size.GoFullscreen(true);
+        }
+
+        /// <summary>Center the 4x2 rebus grid horizontally in imagePanel (Bug 3).</summary>
+        private void LayoutImageGrid()
+        {
+            if (picBoxes == null || imagePanel == null)
+                return;
+
+            const int boxW = 150;
+            const int stepX = 190;
+            const int cols = 4;
+            int gridW = boxW + (cols - 1) * stepX;
+            int startX = Math.Max(16, (imagePanel.ClientSize.Width - gridW) / 2);
+
+            for (int i = 0; i < picBoxes.Length; i++)
+            {
+                int row = i / cols;
+                int col = i % cols;
+                picBoxes[i].Left = startX + col * stepX;
+                picBoxes[i].Top = 58 + row * 170;
+            }
+
+            if (captionLabel != null)
+            {
+                captionLabel.Left = startX;
+                captionLabel.Width = gridW;
+            }
         }
 
         private void ShowCaption(int slotIndex)
