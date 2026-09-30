@@ -61,6 +61,11 @@ CONCEPTS = {
         "Photorealistic white sheep in green pasture, soft daylight, pastoral Bible landscape feel, no text no logo, square",
         ["1F411", "1f411-w", "1f4112"],
     ),
+    "piccolo-gregge": (
+        "piccolo-gregge",
+        "Photorealistic small flock of sheep on a gentle hill, warm golden light, biblical pastoral landscape, multiple sheep together, no text no logo, square composition",
+        ["piccolo_gregge"],
+    ),
     "goat": (
         "goat",
         "Photorealistic goat standing on rocky hillside, natural daylight, no text no logo, square",
