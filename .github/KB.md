@@ -378,6 +378,9 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-09-29 | **Content — bozze episodi 19+**: `docs/NEW_STORIES_DRAFT.md` (Babel, Daniele, Saul→Paolo, Gerico, Marta/Maria); schema v1; citazioni solo ref+parafrasi pending OK; PNG esistenti | ⏳ review umana |
 | 2026-09-29 | **Design — classic flat deprecation**: `docs/CLASSIC_REBUS_DEPRECATION.md` — opzioni A/B/C/D; raccomandazione **A keep** post–F3C-A + trigger rivalutazione; no code | ⏳ review umana |
 | 2026-09-29 | **K2 — merge episodi 19–23 in catalogo**: Babel, Daniele, Saul→Paolo, Gerico, Marta/Maria; citazioni approvate (ref+parafrasi); DECOR 19–23; validator/generator → 23; parity OK (warn Ep10 hint=hidden[1] accettato) | ⏳ commit proposto |
+| 2026-09-30 | **A — KB gotcha `:8082`**: port conflict `:8081` → fallback documentato MIME `text/javascript` | ⏳ commit proposto |
+| 2026-09-30 | **E — QA i18n 1–23**: report `docs/I18N_QA_REPORT.md` (anti-spoiler caption, glossario, tier theater/scripture); nessun fix contenuti | ⏳ commit proposto |
+| 2026-09-30 | **I — Onboarding web + desktop**: overlay primo avvio (lingua, disclaimer, nome, mode, tutorial rebus policy A, preferenze); storage `jwquiz_onboarding_v1` separato | ⏳ pre-flight / blocked dirty tree |
 ---
 
 ## 11. Next Best Decisions (Proposte Attive)
@@ -391,21 +394,22 @@ Aggiornare questa sezione ad ogni sessione di lavoro.
 | P0 Alta | Git | ~~Allineare `main` locale a `origin/main`~~ ✅ **COMPLETATO** (ff-only → `3758d8d`) — prima del deploy: commit/stash KB+report per tree pulito |
 | P0 Alta | Webapp | ~~Configurare `ADMIN_SECRET` nelle env var di Cloudflare Pages → Settings → Environment Variables per attivare il pannello admin statistiche~~ ✅ **COMPLETATO** (env Production + redeploy; smoke API 2026-09-29 verde) |
 | P0 Alta | Android | **D-CLI smoke Ep10 ✅** (adb-only, H4b/F3). Commit KB proposto. G3 chiudibile dopo OK commit |
-| P1 Alta | Content | ~~Bozze 19+ in review~~ → **mergiate (23 totali)** in `data/episodes.json` (K2). Commit `feat(content): episodi 19-23…` in attesa OK |
-| P1 Alta | Design | **Classic flat deprecation — design in review** — `docs/CLASSIC_REBUS_DEPRECATION.md`. Raccomandazione A (keep). Nessun tocco `app.js` finché OK |
-| P1 Alta | Immersive | ~~Unificare dataset Q&A immersivo (G1)~~ ✅ **COMPLETATO** (Steps 0–5: `episodes.json` + generator + sync_all + adapter + `verify_episode_parity.py`) |
-| P1 Alta | Multilanguage | Rifinire QA linguistico delle storie 1-12 ora renderizzate nel runtime dinamico |
-| Alta | Web Immersive | ~~Landing 3D + theater Q&A episodi 1–18 (single HTML CDN)~~ ✅ **COMPLETATO** (`webapp/index.html`) |
-| Alta | Immersive | ~~Pack fotorealistico rebus (concept→alias) + sync web/desktop/Android~~ ✅ **COMPLETATO** |
-| Alta | Docs | ~~Unificare documentazione human/agent + pipeline sync~~ ✅ **COMPLETATO** (`docs/`, `tools/sync_all.py`) |
+| P1 Alta | Content | ~~Bozze 19+ / K2~~ ✅ **COMPLETATO** — catalogo **23** (`cc92e8e`). Nota: leftover uncommitted `validate`/`generate`/`index.html` DECOR→23 |
+| P1 Alta | Design | **Classic flat — keep (M)** — `docs/CLASSIC_REBUS_DEPRECATION.md`. Nessun tocco `app.js` |
+| P1 Alta | Immersive | ~~Unificare dataset Q&A immersivo (G1)~~ ✅ **COMPLETATO** |
+| P1 Alta | Multilanguage | **QA i18n 1–23** — report consegnato (`docs/I18N_QA_REPORT.md`); **fix in review umana** |
+| Alta | UX | **I — Onboarding** web+desktop — blocked finché tree pulito (commit A+C + leftover K2 tools/index) |
+| Alta | Web Immersive | ~~Landing 3D + theater Q&A~~ ✅ **COMPLETATO** (`webapp/index.html`) |
+| Alta | Immersive | ~~Pack fotorealistico rebus~~ ✅ **COMPLETATO** |
+| Alta | Docs | ~~Unificare documentazione human/agent + pipeline sync~~ ✅ **COMPLETATO** |
 | Alta | Cloudflare | Dopo restart agent: OAuth MCP Cloudflare al primo tool use; deploy Pages con wrangler |
-| Media | Multilanguage | Rifinire il glossario rule-based it/en del motore shared web/desktop con review manuale delle traduzioni bibliche piu' lunghe |
+| Media | Multilanguage | Rifinire glossario rule-based it/en (vedi decisioni aperte in I18N_QA_REPORT) |
 | Media | Immersive | Aggiungere FR/ES come terze lingue riusando lo stesso schema `{ it, en, … }` |
 | Media | Gamification | **Streak + Badge**: N storie consecutive senza hint = badge "Saggio/Profeta/Apostolo" |
 | Media | Gamification | **Classifica sessione locale**: 2-8 partecipanti inseriscono nome, XP aggregati, classifica finale |
 | Media | Gamification | **Percorsi Tematici**: raccolte storie per tema (Fede/Amore/Coraggio) con barra progresso sbloccabile |
 | Media | UX | ProgressPanel: aggiungere grafico barre XP e lista storie completate |
-| Media | Content | ~~Aggiungere storia ID 19+ (es. La Torre di Babele, Marta e Maria, Saul → Paolo)~~ → **bozze in** `docs/NEW_STORIES_DRAFT.md` (⏳ review); merge solo dopo OK umano |
+| Media | Content | ~~Aggiungere storia ID 19+~~ ✅ mergiate in catalogo (K2) |
 | Bassa | Gamification | **Timer di indovinamento**: 60s opzionale, bonus XP se risposta entro scadenza |
 | Bassa | Gamification | **Modalità Riflessione**: dopo soluzione, domanda aperta da leggere al gruppo |
 | Bassa | Gamification | **Storia del Giorno**: selezione automatica basata sulla data del calendario |
@@ -497,6 +501,7 @@ L’esperienza è **ispirata** allo stile didattico JW.org “Fai vivere il racc
 | Ep 12 reveal/hide + hint pre-reveal | Desktop: “Nascondi” non nasconde; Indizio prima del reveal → UI percepita bloccata. Web classic: stesso one-way. | **Causa (a)** Step1→2: Ep10/12 (e hint Ep9) da `stories.js` incompleto; **(b)** `DynamicStoryForm` Hide* senza ramo hide + `Enabled=false` (2026-04); **(c)** Ep11 overlap pre-esistente in C#. **Fix H3-bis:** F2 dati Ep9/10/11(E11-A)/12; F1 toggle desktop; F3 toggle reveal immersive (`index.html`); **F3C-A** toggle classic flat in `app.js` (policy A stelle). Editor/API invariati. Scope &lt; 40 righe. |
 | Stelle reveal/hint (policy) | Classic A vs desktop/immersive B (hide ripristina) | **Policy unica A (peak help)** — `docs/STARS_POLICY_DECISION.md`. **Desktop = A** (H4a). **Classic = A** (F3C-A). **Immersive = A** (H4b). Divergenza B chiusa. |
 | `python -m http.server` MIME `.js` | ES modules falliscono (`Content-type: text/plain` su Python 3.13) | Custom handler MIME `text/javascript`, oppure `npx serve`. Smoke locale preferire **:8081**. |
+| Dev server port conflict | `:8081` occupato → 3 tentativi falliti consecutivi | Usare **`:8082`** come fallback documentato. `python -m http.server 8082` con MIME `text/javascript` per ES modules. Non riusare `:8080`/`:8081` se occupati. |
 | app.js scope | Tocco accidentale editor/API | **`app.js` off-limits salvo OK esplicito + scope limitato al blocco rebus flat** (F3C-A). Editor / `/api/*` / i18n / admin / presence: non toccare. |
 | Memory leak theater | Tab rallenta dopo molti episodi | `disposeRebus3D()` su close/prev/next fuori dal rebus: dispose geometry/material/map + cancel rAF |
 | Spoiler titolo in intro | Titolo storia prima del rebus | Intro mostra solo `guessStory` + tema; titolo appare in soluzione rebus e atto morale |
@@ -658,12 +663,13 @@ Aggiornare questa KB:
 
 Commit se il tree deve tornare pulito (deploy Wrangler). Push solo se richiesto esplicitamente.
 
-### Stato corrente (handoff) — 2026-09-29
+### Stato corrente (handoff) — 2026-09-30
 
-- **Catalogo:** **23** episodi in `data/episodes.json` (schema v1). Id 1–18 invariati; **19–23** mergiati (K2).
-- **Gate:** `validate --full-catalog` → 23; `sync_all` + `generate --check` + `verify_episode_parity` OK (warn Ep10 hint=hidden[1] accettato).
-- **DECOR_SYMBOLS:** 19–23 aggiunti in `index.html`; HUD usa `STORIES.length`.
-- **Smoke web (:8082):** griglia 23; Quiz Ep19 2 MCQ + morale; Rebus Ep19 Reveal/hint (stelle A, hint toggle ★ invariato); Adventure Ep19 Scene; IT→EN (Babel/Pride); classic selettore 23 + Ep20 rebus flat; anti-spoiler tile=tema. MSBuild Debug 0; StoryLibrary Id 19–23. Android UI non ri-smoke (bundle sync_all OK).
-- **Off-limits:** deploy; `www/**`; `app.js` salvo OK.
-- **Prossimo:** OK umano → commit `feat(content): episodi 19-23 in catalogo (K2)`.
-- **Dev server:** MIME `.js` → `:8081`/`:8082` o `npx serve`.
+- **Catalogo:** 23 episodi (`cc92e8e`). Schema v1 frozen.
+- **Dirty tree (blocker B):** uncommitted leftover K2 — `tools/validate_episodes.py`, `tools/generate_story_artifacts.py`, `webapp/index.html` (DECOR/HUD 23). Serve commit separato tipo `fix(content): complete K2 tooling for 23` **prima** di A/C/B o insieme a decisione umana.
+- **Parte A:** §13 gotcha `:8082` aggiunto — commit proposto `kb: gotcha dev server port fallback :8082`.
+- **Parte C/E:** `docs/I18N_QA_REPORT.md` — commit proposto `docs(i18n): QA report 1-23`. Nessun fix contenuti.
+- **Parte B/I:** pre-flight mappa OK; **implementazione STOP** finché tree pulito post commit.
+- **Off-limits:** deploy; `www/**`; `app.js` salvo OK; `episodes.json` / StoryLibrary / generator/parity in B.
+- **Prossimo:** OK commit leftover→A→C, poi implementare onboarding (I). Poi J multiplayer.
+- **Dev server:** preferire `:8081`; fallback **`:8082`** se occupato (MIME `text/javascript`).
