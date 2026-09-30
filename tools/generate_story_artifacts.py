@@ -40,6 +40,11 @@ DESKTOP_META: dict[int, dict[str, Any]] = {
     16: {"ImageResourceName": "Moses", "IsDynamic": True},
     17: {"ImageResourceName": "Samuel", "IsDynamic": True},
     18: {"ImageResourceName": "Samaritan", "IsDynamic": True},
+    19: {"ImageResourceName": "Babel", "IsDynamic": True},
+    20: {"ImageResourceName": "DanielLions", "IsDynamic": True},
+    21: {"ImageResourceName": "SaulPaul", "IsDynamic": True},
+    22: {"ImageResourceName": "Jericho", "IsDynamic": True},
+    23: {"ImageResourceName": "MarthaMary", "IsDynamic": True},
 }
 
 
@@ -213,8 +218,8 @@ def generate(in_path: Path) -> tuple[str, str, str]:
     raw = in_path.read_bytes()
     source_hash = _sha256_bytes(raw)
     episodes = _load_episodes(in_path)
-    if len(episodes) != 18:
-        raise ValueError(f"Expected 18 episodes, got {len(episodes)}")
+    if len(episodes) != 23:
+        raise ValueError(f"Expected 23 episodes, got {len(episodes)}")
     js_text = _render_js(episodes, source_hash)
     cs_text = _render_cs(episodes, source_hash)
     return js_text, cs_text, source_hash

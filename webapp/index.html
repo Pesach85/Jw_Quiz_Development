@@ -665,7 +665,7 @@
     <div class="brand" data-i18n="brand">JW Quiz Immersive</div>
     <div class="nav-actions">
       <div class="mode-switch" id="modeSwitchNav" role="radiogroup" aria-label="Game mode"></div>
-      <div class="hud-chip" id="hudProgress" title="Progresso">0/18 · 0 XP</div>
+      <div class="hud-chip" id="hudProgress" title="Progresso">0/23 · 0 XP</div>
       <button id="btnSound" class="btn btn-ghost sound-btn" type="button" data-i18n="soundOn" title="Audio">🔊</button>
       <select id="langSelect" class="select" aria-label="Language" title="Language"></select>
       <a class="btn btn-ghost" href="classic.html" data-i18n="classicMode">Editor / Admin</a>
@@ -935,7 +935,12 @@
       15: ["🌾", "💍", "🚶‍♀️"],
       16: ["🧺", "🌊", "👀"],
       17: ["🙏", "👶", "🎶"],
-      18: ["🩹", "🐪", "❤️"]
+      18: ["🩹", "🐪", "❤️"],
+      19: ["🧱", "🗣️", "🌍"],
+      20: ["🦁", "🙏", "🛡️"],
+      21: ["💡", "🛤️", "📜"],
+      22: ["🏰", "📯", "⚔️"],
+      23: ["🏠", "👂", "📖"]
     };
 
     function pair(it, en) { return { it, en }; }
@@ -959,8 +964,8 @@
       };
     }).filter(Boolean);
 
-    if (STORIES.length !== 18) {
-      console.warn("Expected 18 immersive stories, got", STORIES.length);
+    if (STORIES.length !== 23) {
+      console.warn("Expected 23 immersive stories, got", STORIES.length);
     }
 
     /* ========================================================================
@@ -1099,7 +1104,7 @@
       const p = loadProgress();
       const done = Object.keys(p.episodes).length;
       const el = document.getElementById("hudProgress");
-      if (el) el.textContent = `${done}/18 · ${p.xp || 0} XP`;
+      if (el) el.textContent = `${done}/${STORIES.length} · ${p.xp || 0} XP`;
     }
     function completeEpisode() {
       const s = currentStory();

@@ -19,7 +19,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_WEB_ASSETS = ROOT / "webapp" / "assets"
 DEFAULT_DESKTOP_RESOURCES = ROOT / "Resources"
-BUILTIN_IDS = set(range(1, 19))
+BUILTIN_IDS = set(range(1, 24))  # production catalog ids 1-23
 PNG_KEY_RE = re.compile(r"^(custom:[A-Za-z0-9._-]+|[A-Za-z0-9._-]+)$")
 
 
@@ -241,7 +241,7 @@ def validate_document(
             if missing:
                 _err(errors, f"$.episodes: missing builtin ids {missing}")
             if extra:
-                _err(errors, f"$.episodes: unexpected ids outside 1-18 {extra}")
+                _err(errors, f"$.episodes: unexpected ids outside 1-23 {extra}")
 
     return errors
 
@@ -252,7 +252,7 @@ def main() -> int:
     parser.add_argument(
         "--full-catalog",
         action="store_true",
-        help="Require exactly episode ids 1-18 (production data/episodes.json).",
+        help="Require exactly episode ids 1-23 (production data/episodes.json).",
     )
     parser.add_argument(
         "--skip-png-files",
