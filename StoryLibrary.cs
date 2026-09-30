@@ -11,7 +11,7 @@ namespace Jw_Quiz_Development
             var list = new List<Story>
             {
             // AUTO-GENERATED — DO NOT EDIT — source: data/episodes.json
-            // source-sha256: 735ce2c2769e9a82d68838b43335bdeaa9be0052f73e93cfec20e1d85d56ae62
+            // source-sha256: e1ac14dedd83f63ad6470cb8c585a9be7760da659fbdc0aee5c6375185bbfbe2
             new Story
             {
                 Id = 1,
@@ -301,11 +301,11 @@ namespace Jw_Quiz_Development
                 {
                     "Una grande imbarcazione",
                     "Le mucche a coppie",
-                    "I polli a coppie",
+                    "Una coppia di capre",
                     "La pioggia torrenziale per 40 giorni",
                     "L’arcobaleno del patto",
-                    "Altre mucche (coppia per coppia)",
-                    "Altri polli (coppia per coppia)",
+                    "Ecco altre capre",
+                    "Pecore in coppia",
                     "Le acque che coprono la terra",
                 }
             },
@@ -321,13 +321,13 @@ namespace Jw_Quiz_Development
                 EngagementNote = "Mostra come Geova apre le porte per la predicazione e prepara cuori pronti.",
                 ImageResourceName = "Philip",
                 IsDynamic = false,
-                VisibleEmojis = new[] { "1F47C", "2753", "1F30A", "1F4D6", "Hackney-100" },
+                VisibleEmojis = new[] { "1F47C", "1F5FA", "1F30A", "1F4D6", "Hackney-100" },
                 HiddenEmojis = new[] { "203C", "1F4E3" },
                 HintEmoji = "203C",
                 ImageCaptions = new[]
                 {
                     "Una guida improvvisa",
-                    "Una domanda: cosa significa?",
+                    "Il cammino verso Gaza",
                     "L’acqua per il battesimo",
                     "Il rotolo di Isaia",
                     "Il carro etiope",
@@ -483,7 +483,7 @@ namespace Jw_Quiz_Development
                 EngagementNote = "L’amore per il prossimo non ha confini etnici o religiosi.",
                 ImageResourceName = "Samaritan",
                 IsDynamic = true,
-                VisibleEmojis = new[] { "1F6B6-1F3FF-200D-2642-FE0F", "1F4AA-1F3FD", "Hackney-100", "1F4B0", "2753" },
+                VisibleEmojis = new[] { "1F6B6-1F3FF-200D-2642-FE0F", "1F4AA-1F3FD", "Hackney-100", "1F4B0", "1F932-1F3FC" },
                 HiddenEmojis = new[] { "26D4", "1F498" },
                 HintEmoji = "1F440",
                 ImageCaptions = new[]
@@ -492,7 +492,7 @@ namespace Jw_Quiz_Development
                     "La violenza dei briganti",
                     "Un animale da viaggio",
                     "Un pagamento per le cure",
-                    "Chi si fermerà ad aiutare?",
+                    "Chi tende la mano?",
                     "Chi scelse di tirare dritto",
                     "Un gesto di misericordia",
                     "Conta chi si ferma ad aiutare",

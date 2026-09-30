@@ -1,5 +1,5 @@
 // AUTO-GENERATED — DO NOT EDIT — source: data/episodes.json
-// source-sha256: 735ce2c2769e9a82d68838b43335bdeaa9be0052f73e93cfec20e1d85d56ae62
+// source-sha256: e1ac14dedd83f63ad6470cb8c585a9be7760da659fbdc0aee5c6375185bbfbe2
 window.JW_STORIES = [
   // ── Episodio 1: Il Giardino di Eden ─────────────────────────────────────────
   {
@@ -267,11 +267,11 @@ window.JW_STORIES = [
     imageCaptions: [
       "Una grande imbarcazione",
       "Le mucche a coppie",
-      "I polli a coppie",
+      "Una coppia di capre",
       "La pioggia torrenziale per 40 giorni",
       "L’arcobaleno del patto",
-      "Altre mucche (coppia per coppia)",
-      "Altri polli (coppia per coppia)",
+      "Ecco altre capre",
+      "Pecore in coppia",
       "Le acque che coprono la terra",
     ]
   },
@@ -286,12 +286,12 @@ window.JW_STORIES = [
     solution: "Lo spirito di Dio guidò Filippo verso il carro dell’eunuco. Filippo spiegò la buona novella e l’eunuco chiese il battesimo. Atti 8:36.",
     scriptureQuote: "Filippo... gli dichiarò la buona notizia intorno a Gesù. - Atti 8:35 (TNM)",
     engagementNote: "Mostra come Geova apre le porte per la predicazione e prepara cuori pronti.",
-    visibleKeys: ["1F47C", "2753", "1F30A", "1F4D6", "Hackney-100"],
+    visibleKeys: ["1F47C", "1F5FA", "1F30A", "1F4D6", "Hackney-100"],
     hiddenKeys: ["203C", "1F4E3"],
     hintKey: "203C",
     imageCaptions: [
       "Una guida improvvisa",
-      "Una domanda: cosa significa?",
+      "Il cammino verso Gaza",
       "L’acqua per il battesimo",
       "Il rotolo di Isaia",
       "Il carro etiope",
@@ -436,7 +436,7 @@ window.JW_STORIES = [
     solution: "Gesù racconta come un Samaritano soccorse un uomo abbandonato. Luca 10:36-37: chi mostrò misericordia fu il vero prossimo.",
     scriptureQuote: "Gesù gli disse: ’Va’ e fa’ anche tu la stessa cosa.’ - Luca 10:37 (TNM)",
     engagementNote: "L’amore per il prossimo non ha confini etnici o religiosi.",
-    visibleKeys: ["1F6B6-1F3FF-200D-2642-FE0F", "1F4AA-1F3FD", "Hackney-100", "1F4B0", "2753"],
+    visibleKeys: ["1F6B6-1F3FF-200D-2642-FE0F", "1F4AA-1F3FD", "Hackney-100", "1F4B0", "1F932-1F3FC"],
     hiddenKeys: ["26D4", "1F498"],
     hintKey: "1F440",
     imageCaptions: [
@@ -444,7 +444,7 @@ window.JW_STORIES = [
       "La violenza dei briganti",
       "Un animale da viaggio",
       "Un pagamento per le cure",
-      "Chi si fermerà ad aiutare?",
+      "Chi tende la mano?",
       "Chi scelse di tirare dritto",
       "Un gesto di misericordia",
       "Conta chi si ferma ad aiutare",
