@@ -682,7 +682,7 @@ Commit se il tree deve tornare pulito (deploy Wrangler). Push solo se richiesto 
 ### Stato corrente (handoff) — 2026-09-30 (post J + design L/Brand)
 
 - **STEP J CHIUSO** — `99f7e59` feat(challenge); spec `2406475`.
-- **Design docs (no runtime):** `docs/BRAND_IDENTITY_PROPOSAL.md` (HITL **B1–B8**), `docs/ONLINE_ROOMS_DESIGN.md` (DO+WS, fallback locale).
+- **Design docs (no runtime):** `docs/BRAND_IDENTITY_PROPOSAL.md` (HITL **B1–B8**), `docs/ONLINE_ROOMS_DESIGN.md` (DO+WS, fallback locale) — committed.
 - **Prossimo:** risposta HITL branding → poi eventuale apply brand; online rooms solo dopo OK design R1–R3.
 - **Aperti defer:** D1, D4–D10; no deploy.
 - **Dev server:** `:8083`.
