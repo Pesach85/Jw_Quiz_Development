@@ -154,8 +154,19 @@ D: D1A D2A D3A D4A D5A D6A D7A D8A D9A D10B
 
 ---
 
+## Residui post-applicazione 2026-09-30
+
+| Voce | Stato | Nota |
+|------|-------|------|
+| EP13 | **APPLICATO** | `visibleKeys[4]=piccolo_gregge`; caption `Un gregge sul colle` (evita dup con V[1]) |
+| W1–W26 | **APPLICATI** | after primario HITL Sez.2; W16 stringa breve tipo D7-B |
+| D2 | **APPLICATO** | ASCII `'` → accenti Unicode / U+2019 su campi editoriali |
+| D3 | **APPLICATO** | policy B (hidden/hint) via W1/W2/W4/W12–W14/W18/W20/W24/W25 |
+| EP12/18 | **defer** | placeholder `2753` in visible — da rivedere |
+| D1 | **defer** | consultare I_tuoi_versetti API (jw.org / wol.jw.org) per stile editoriale/dottrinale |
+| D4–D10 | **defer** | review utente a fine sessione |
+
 ## Vincoli
 
-- Nessun apply in questa sessione.
-- Non toccare versetti senza HITL esplicito (D1/D2/D7/W16).
-- Dopo risposta → prompt **APPLY-HITL-MASTER** (separato).
+- Apply eseguito secondo decisioni utente 2026-09-30.
+- Residui sopra: nessun tocco finché non OK esplicito.
