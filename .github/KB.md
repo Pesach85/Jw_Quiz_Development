@@ -385,8 +385,8 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-09-30 | **Fix Bug1+Bug3**: menu Nuovi Episodi via `StoryEngine.GetDynamicStories()` (13–23); `LayoutImageGrid()` centratura su Resize | ✅ `1390bd3` |
 | 2026-09-30 | **Bug 2 design**: `docs/MENU_LAYOUT_DESIGN.md` — A/C/D; rec. **A+D leggero**; nessun runtime | ✅ `585acd4` |
 | 2026-09-30 | **E2 analisi i18n**: `docs/I18N_QA_FIX_PROPOSAL.md` — ovvi / wording / ambigui; stale FAILS 0 | ✅ `51ad6f2` |
-| 2026-09-30 | **E2 §1 fix ovvi**: 9 caption/hint/note (GRATUITO/OK-/ASCII→Unicode); sync+parity+MSBuild; no scripture/§2 | ⏳ commit in corso |
-| 2026-09-30 | **E2 §1 fix ovvi**: 9 caption/hint/note (GRATUITO/OK-/ASCII→Unicode); sync+parity+MSBuild; no scripture/§2 | ⏳ commit in corso |
+| 2026-09-30 | **E2 §1 fix ovvi**: 9 caption/hint/note (GRATUITO/OK-/ASCII→Unicode); sync+parity+MSBuild; no scripture/§2 | ✅ `74b61c7` |
+| 2026-09-30 | **Bug 2 A+D leggero**: `PopulateStoriesMenu` fasce 1–12/13–18/19–23; Designer Visible=false; no Nuovi Episodi; smoke 12/6/5 | ⏳ commit in corso |
 ---
 
 ## 11. Next Best Decisions (Proposte Attive)
@@ -405,7 +405,7 @@ Aggiornare questa sezione ad ogni sessione di lavoro.
 | P1 Alta | Immersive | ~~Unificare dataset Q&A immersivo (G1)~~ ✅ **COMPLETATO** |
 | P1 Alta | Multilanguage | **E2 §1 ovvi ✅** (in tree). §2+D1–D10 → `docs/I18N_HITL_DECISIONS.md` (HITL) |
 | Alta | UX | ~~**I — Onboarding**~~ ✅ **COMPLETATO** (web W1–W8 + desktop D1–D6 empirico utente + C1–C5b incl. C4 retry) |
-| P1 Alta | Desktop | ~~Bug1+Bug3~~ ✅ `1390bd3`. **Bug2** design `docs/MENU_LAYOUT_DESIGN.md` (rec. A+D leggero) — STOP: OK → **FIX-BUG-2** o deferire |
+| P1 Alta | Desktop | ~~Bug1+Bug3~~ ✅ `1390bd3`. ~~Bug2 fasce~~ ⏳ fix in tree (A+D leggero) |
 | Alta | Web Immersive | ~~Landing 3D + theater Q&A~~ ✅ **COMPLETATO** (`webapp/index.html`) |
 | Alta | Immersive | ~~Pack fotorealistico rebus~~ ✅ **COMPLETATO** |
 | Alta | Docs | ~~Unificare documentazione human/agent + pipeline sync~~ ✅ **COMPLETATO** |

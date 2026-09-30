@@ -14,13 +14,17 @@ namespace Jw_Quiz_Development
     public partial class Form1 : Form
     {
         private ProgressPanel progressPanel;
-        private ToolStripMenuItem nuoviEpisodiMenuItem;
+        private ToolStripMenuItem band1_12MenuItem;
+        private ToolStripMenuItem band13_18MenuItem;
+        private ToolStripMenuItem band19_23MenuItem;
         private ToolStripMenuItem storieUtenteMenuItem;
         private ToolStripMenuItem creaStoriaMenuItem;
         private ToolStripMenuItem linguaMenuItem;
         private ToolStripMenuItem italianoMenuItem;
         private ToolStripMenuItem englishMenuItem;
         private ToolStripMenuItem openWebMenuItem;
+        private bool storiesMenuDynamicOk;
+        private ToolStripMenuItem[] designerStoryItems;
 
         public Form1()
         {
@@ -48,7 +52,7 @@ namespace Jw_Quiz_Development
             // Sposta il groupBox1 sopra al panel
             this.groupBox1.Dock = DockStyle.Fill;
 
-            BuildDynamicMenus();
+            PopulateStoriesMenu();
             BuildLanguageMenu();
             BuildWebBridgeMenu();
             BuildOnboardingResetMenu();
@@ -162,9 +166,23 @@ namespace Jw_Quiz_Development
             toolStripMenuItem2.Text = AppText.Get("StoryPrefix") + " 11";
             storia10ToolStripMenuItem.Text = AppText.Get("StoryPrefix") + " 12";
 
-            nuoviEpisodiMenuItem.Text = AppText.Get("NewEpisodes");
-            creaStoriaMenuItem.Text = AppText.Get("CreateStory");
-            storieUtenteMenuItem.Text = AppText.Get("UserStories");
+            if (storiesMenuDynamicOk)
+            {
+                if (band1_12MenuItem != null)
+                    band1_12MenuItem.Text = AppText.Get("StoriesBand1_12");
+                if (band13_18MenuItem != null)
+                    band13_18MenuItem.Text = AppText.Get("StoriesBand13_18");
+                if (band19_23MenuItem != null)
+                    band19_23MenuItem.Text = AppText.Get("StoriesBand19_23");
+                LocalizeBandItems(band1_12MenuItem);
+                LocalizeBandItems(band13_18MenuItem);
+                LocalizeBandItems(band19_23MenuItem);
+            }
+
+            if (creaStoriaMenuItem != null)
+                creaStoriaMenuItem.Text = AppText.Get("CreateStory");
+            if (storieUtenteMenuItem != null)
+                storieUtenteMenuItem.Text = AppText.Get("UserStories");
             linguaMenuItem.Text = AppText.Get("Language");
             italianoMenuItem.Text = AppText.Get("Italian");
             englishMenuItem.Text = AppText.Get("English");
@@ -174,35 +192,119 @@ namespace Jw_Quiz_Development
                 resetLocalDataMenuItem.Text = AppText.Get("OnbResetLocal");
             italianoMenuItem.Checked = LanguageManager.CurrentLanguage == AppLanguage.Italian;
             englishMenuItem.Checked = LanguageManager.CurrentLanguage == AppLanguage.English;
+        }
 
-            var dynamicStories = StoryEngine.GetDynamicStories();
-            for (int i = 0; i < dynamicStories.Count && i < nuoviEpisodiMenuItem.DropDownItems.Count; i++)
+        private static void LocalizeBandItems(ToolStripMenuItem band)
+        {
+            if (band == null)
+                return;
+            foreach (ToolStripItem item in band.DropDownItems)
             {
-                nuoviEpisodiMenuItem.DropDownItems[i].Text = AppText.Get("StoryPrefix") + " " + dynamicStories[i].Id;
+                if (item.Tag is int id)
+                    item.Text = AppText.Get("StoryPrefix") + " " + id;
             }
         }
 
-        private void BuildDynamicMenus()
+        /// <summary>
+        /// A+D leggero: tre fasce da StoryEngine; Designer 1–12 nascosti (non rimossi).
+        /// Fallback: ripristina menu Designer + Nuovi Episodi se populate fallisce.
+        /// </summary>
+        private void PopulateStoriesMenu()
         {
-            if (nuoviEpisodiMenuItem != null)
+            if (creaStoriaMenuItem != null)
                 return;
 
-            nuoviEpisodiMenuItem = new ToolStripMenuItem(AppText.Get("NewEpisodes"));
+            designerStoryItems = new[]
+            {
+                storia1ToolStripMenuItem,
+                storia2ToolStripMenuItem,
+                storia2ToolStripMenuItem1,
+                storia2ToolStripMenuItem2,
+                storia2ToolStripMenuItem3,
+                storia2ToolStripMenuItem4,
+                storia2ToolStripMenuItem5,
+                storia2ToolStripMenuItem6,
+                storia9ToolStripMenuItem,
+                toolStripMenuItem1,
+                toolStripMenuItem2,
+                storia10ToolStripMenuItem
+            };
+
+            try
+            {
+                foreach (var item in designerStoryItems)
+                    item.Visible = false;
+
+                storieToolStripMenuItem.DropDownItems.Clear();
+
+                band1_12MenuItem = BuildStoryBand(AppText.Get("StoriesBand1_12"), 1, 12);
+                band13_18MenuItem = BuildStoryBand(AppText.Get("StoriesBand13_18"), 13, 18);
+                band19_23MenuItem = BuildStoryBand(AppText.Get("StoriesBand19_23"), 19, 23);
+
+                creaStoriaMenuItem = new ToolStripMenuItem(AppText.Get("CreateStory"));
+                creaStoriaMenuItem.Click += CreaStoriaMenuItem_Click;
+                storieUtenteMenuItem = new ToolStripMenuItem(AppText.Get("UserStories"));
+
+                storieToolStripMenuItem.DropDownItems.Add(band1_12MenuItem);
+                storieToolStripMenuItem.DropDownItems.Add(band13_18MenuItem);
+                storieToolStripMenuItem.DropDownItems.Add(band19_23MenuItem);
+                storieToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
+                storieToolStripMenuItem.DropDownItems.Add(creaStoriaMenuItem);
+                storieToolStripMenuItem.DropDownItems.Add(storieUtenteMenuItem);
+
+                storiesMenuDynamicOk = true;
+            }
+            catch
+            {
+                storiesMenuDynamicOk = false;
+                RestoreDesignerStoriesMenuFallback();
+            }
+        }
+
+        private ToolStripMenuItem BuildStoryBand(string title, int idFrom, int idTo)
+        {
+            var band = new ToolStripMenuItem(title);
+            var stories = StoryEngine.GetAllStories()
+                .Where(s => s.Id >= idFrom && s.Id <= idTo)
+                .OrderBy(s => s.Id);
+            foreach (var story in stories)
+            {
+                int capturedId = story.Id;
+                var item = new ToolStripMenuItem(AppText.Get("StoryPrefix") + " " + capturedId);
+                item.Tag = capturedId;
+                item.Click += (s, e) => OpenStory(capturedId);
+                band.DropDownItems.Add(item);
+            }
+            return band;
+        }
+
+        private void RestoreDesignerStoriesMenuFallback()
+        {
+            storieToolStripMenuItem.DropDownItems.Clear();
+            if (designerStoryItems != null)
+            {
+                foreach (var item in designerStoryItems)
+                {
+                    item.Visible = true;
+                    storieToolStripMenuItem.DropDownItems.Add(item);
+                }
+            }
+
+            var nuovi = new ToolStripMenuItem(AppText.Get("NewEpisodes"));
             foreach (var dyn in StoryEngine.GetDynamicStories())
             {
                 int capturedId = dyn.Id;
                 var item = new ToolStripMenuItem(AppText.Get("StoryPrefix") + " " + capturedId);
                 item.Click += (s, e) => OpenStory(capturedId);
-                nuoviEpisodiMenuItem.DropDownItems.Add(item);
+                nuovi.DropDownItems.Add(item);
             }
 
             creaStoriaMenuItem = new ToolStripMenuItem(AppText.Get("CreateStory"));
             creaStoriaMenuItem.Click += CreaStoriaMenuItem_Click;
-
             storieUtenteMenuItem = new ToolStripMenuItem(AppText.Get("UserStories"));
 
             storieToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
-            storieToolStripMenuItem.DropDownItems.Add(nuoviEpisodiMenuItem);
+            storieToolStripMenuItem.DropDownItems.Add(nuovi);
             storieToolStripMenuItem.DropDownItems.Add(creaStoriaMenuItem);
             storieToolStripMenuItem.DropDownItems.Add(storieUtenteMenuItem);
         }
