@@ -383,8 +383,10 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-09-30 | **I — onboarding chiuso (web W1-W8 + desktop A1-A6)**: commit `ebf63ed`; C4 retry MSBuild 0 (kill PID lock); storage `jwquiz_onboarding_v1` / `player_name` / `audio` / `motion`; `UserOnboarding.dat` gitignored | ✅ chiuso (`51ff6c9` kb) |
 | 2026-09-30 | **Desktop bugs indagine**: menu Nuovi Episodi hardcode 13–18; layout Storie ibrido Designer+runtime; PictureBox Left fisso 40 | ✅ report `docs/DESKTOP_BUGS_2026-09-30.md` (`551b064`) |
 | 2026-09-30 | **Fix Bug1+Bug3**: menu Nuovi Episodi via `StoryEngine.GetDynamicStories()` (13–23); `LayoutImageGrid()` centratura su Resize | ✅ `1390bd3` |
-| 2026-09-30 | **Bug 2 design**: `docs/MENU_LAYOUT_DESIGN.md` — opzioni A/C/D; raccomandazione **A+D leggero** (fasce dinamiche; Designer 1–12 deprecati); nessun runtime | ⏳ commit proposto |
-| 2026-09-30 | **E2 analisi i18n**: `docs/I18N_QA_FIX_PROPOSAL.md` — ovvi / wording / ambigui; verify stale FAILS 0; **nessun fix** a `episodes.json` | ⏳ commit proposto |
+| 2026-09-30 | **Bug 2 design**: `docs/MENU_LAYOUT_DESIGN.md` — A/C/D; rec. **A+D leggero**; nessun runtime | ✅ `585acd4` |
+| 2026-09-30 | **E2 analisi i18n**: `docs/I18N_QA_FIX_PROPOSAL.md` — ovvi / wording / ambigui; stale FAILS 0 | ✅ `51ad6f2` |
+| 2026-09-30 | **E2 §1 fix ovvi**: 9 caption/hint/note (GRATUITO/OK-/ASCII→Unicode); sync+parity+MSBuild; no scripture/§2 | ⏳ commit in corso |
+| 2026-09-30 | **E2 §1 fix ovvi**: 9 caption/hint/note (GRATUITO/OK-/ASCII→Unicode); sync+parity+MSBuild; no scripture/§2 | ⏳ commit in corso |
 ---
 
 ## 11. Next Best Decisions (Proposte Attive)
@@ -401,7 +403,7 @@ Aggiornare questa sezione ad ogni sessione di lavoro.
 | P1 Alta | Content | ~~Bozze 19+ / K2~~ ✅ **COMPLETATO** — catalogo **23** (`cc92e8e`). Nota: leftover uncommitted `validate`/`generate`/`index.html` DECOR→23 |
 | P1 Alta | Design | **Classic flat — keep (M)** — `docs/CLASSIC_REBUS_DEPRECATION.md`. Nessun tocco `app.js` |
 | P1 Alta | Immersive | ~~Unificare dataset Q&A immersivo (G1)~~ ✅ **COMPLETATO** |
-| P1 Alta | Multilanguage | **E2 proposta** (`docs/I18N_QA_FIX_PROPOSAL.md`) — STOP: OK umano → prompt **E2-APPLY**; citazioni/D1–D10 aperti |
+| P1 Alta | Multilanguage | **E2 §1 ovvi ✅** (in tree). §2+D1–D10 → `docs/I18N_HITL_DECISIONS.md` (HITL) |
 | Alta | UX | ~~**I — Onboarding**~~ ✅ **COMPLETATO** (web W1–W8 + desktop D1–D6 empirico utente + C1–C5b incl. C4 retry) |
 | P1 Alta | Desktop | ~~Bug1+Bug3~~ ✅ `1390bd3`. **Bug2** design `docs/MENU_LAYOUT_DESIGN.md` (rec. A+D leggero) — STOP: OK → **FIX-BUG-2** o deferire |
 | Alta | Web Immersive | ~~Landing 3D + theater Q&A~~ ✅ **COMPLETATO** (`webapp/index.html`) |

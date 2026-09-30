@@ -1,5 +1,5 @@
 // AUTO-GENERATED — DO NOT EDIT — source: data/episodes.json
-// source-sha256: a5c598e3efc3ec59d7918f298000254ed7b8e78178b6411563a124143dc40906
+// source-sha256: 32726ff113da59a21dac4a6c4c8403b0b967f70f862aaec6746b43f44a7b9150
 window.JW_STORIES = [
   // ── Episodio 1: Il Giardino di Eden ─────────────────────────────────────────
   {
@@ -119,7 +119,7 @@ window.JW_STORIES = [
       "Rane su tutta la terra",
       "Le orme nella polvere diventata zanzare",
       "La morte dei primogeniti",
-      "GRATUITO: la liberazione di Dio",
+      "Una liberazione donata",
       "Le tenebre su tutta la terra",
       "Le cavallette divorano tutto",
       "La goccia di sangue nel Nilo",
@@ -243,7 +243,7 @@ window.JW_STORIES = [
       "Una donna in preghiera",
       "La fine della violenza",
       "La freccia che diventa inutile",
-      "OK - tutto va bene nel nuovo mondo",
+      "Pace nel mondo nuovo",
       "La corona del re messianico",
       "Il leone che dimora con l'agnello",
       "La mappa del piano di Dio",
@@ -322,7 +322,7 @@ window.JW_STORIES = [
       "Qualcosa manca in questa storia...",
       "La caduta del nemico",
       "Una vittoria inattesa",
-      "Una forza piu' grande delle apparenze",
+      "Una forza più grande delle apparenze",
     ]
   },
 
@@ -332,15 +332,15 @@ window.JW_STORIES = [
     title: "Giuseppe Perdona i Fratelli",
     scriptureReference: "Genesi 45",
     keyword: "Perdono",
-    hint: "Anni di schiavitu' e prigione nascondevano un piano di Dio.",
+    hint: "Anni di schiavitù e prigione nascondevano un piano di Dio.",
     solution: "Giuseppe si fece conoscere ai fratelli in lacrime: 'Non sono io che vi ho mandato qui, ma Dio!' Genesi 45:5-7.",
     scriptureQuote: "...non siete stati voi a mandarmi qui, ma e' Dio; e mi ha posto come padre per il faraone e come signore di tutta la sua casa e come governante su tutto il paese d'Egitto. - Genesi 45:8 (TNM)",
-    engagementNote: "Anche le ingiustizie piu' dure possono far parte del piano di Dio.",
+    engagementNote: "Anche le ingiustizie più dure possono far parte del piano di Dio.",
     visibleKeys: ["1F468-1F3FB-200D-1F33E", "1F42A", "1F4B0", "1F629", "1F632"],
     hiddenKeys: ["1F46D", "1F498"],
     hintKey: "1F4D6",
     imageCaptions: [
-      "Un uomo con grande autorita'",
+      "Un uomo con grande autorità",
       "Il viaggio nel deserto",
       "Argento e commercio",
       "Anni di sofferenza",
@@ -360,7 +360,7 @@ window.JW_STORIES = [
     hint: "Una vedova straniera scelse di seguire il Dio della suocera.",
     solution: "Rut dicharo': 'Il tuo popolo sara' il mio popolo, il tuo Dio il mio Dio.' Boaz la sposo' ed ella divenne antenata del Messia. Rut 1:16.",
     scriptureQuote: "Dove tu andrai, io andro', e dove tu passerai la notte, anch'io passero' la notte. Il tuo popolo sara' il mio popolo e il tuo Dio sara' il mio Dio. - Rut 1:16 (TNM)",
-    engagementNote: "La lealta' a Geova va oltre le frontiere etniche e culturali.",
+    engagementNote: "La lealtà a Geova va oltre le frontiere etniche e culturali.",
     visibleKeys: ["1F6B6-200D-2640-FE0F", "094-user", "1F468-1F3FB-200D-1F33E", "036-man-1", "1F498"],
     hiddenKeys: ["1F4B0", "039-baby"],
     hintKey: "1F411",
@@ -385,7 +385,7 @@ window.JW_STORIES = [
     hint: "Una madre intreccia una cesta di giunchi per salvare il suo bambino dal Nilo.",
     solution: "La madre di Mose' lo mise in una cesta e la affido' al Nilo. La figlia del faraone lo salvo' e Mose' crebbe a palazzo. Esodo 2:1-10.",
     scriptureQuote: "Ma quando non pote' nasconderlo piu' a lungo, prese per lui una cesta di papiro e la spalmo' di asfalto e di pece; poi vi pose il bambino e mise la cesta tra i canneti lungo la sponda del fiume Nilo. - Esodo 2:3 (TNM)",
-    engagementNote: "Geova usa anche le circostanze piu' disperate per proteggere i Suoi servitori.",
+    engagementNote: "Geova usa anche le circostanze più disperate per proteggere i Suoi servitori.",
     visibleKeys: ["039-baby", "1F30A", "1F3F0", "1F451", "1F333"],
     hiddenKeys: ["1F932-1F3FC", "1F47C"],
     hintKey: "1F440",
@@ -444,7 +444,7 @@ window.JW_STORIES = [
       "La violenza dei briganti",
       "Un animale da viaggio",
       "Un pagamento per le cure",
-      "Chi si fermera' ad aiutare?",
+      "Chi si fermerà ad aiutare?",
       "Chi scelse di tirare dritto",
       "Un gesto di misericordia",
       "Conta chi si ferma ad aiutare",

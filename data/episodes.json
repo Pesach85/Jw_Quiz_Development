@@ -424,7 +424,7 @@
           "Rane su tutta la terra",
           "Le orme nella polvere diventata zanzare",
           "La morte dei primogeniti",
-          "GRATUITO: la liberazione di Dio",
+          "Una liberazione donata",
           "Le tenebre su tutta la terra",
           "Le cavallette divorano tutto",
           "La goccia di sangue nel Nilo"
@@ -918,7 +918,7 @@
           "Una donna in preghiera",
           "La fine della violenza",
           "La freccia che diventa inutile",
-          "OK - tutto va bene nel nuovo mondo",
+          "Pace nel mondo nuovo",
           "La corona del re messianico",
           "Il leone che dimora con l'agnello",
           "La mappa del piano di Dio",
@@ -1219,7 +1219,7 @@
           "Qualcosa manca in questa storia...",
           "La caduta del nemico",
           "Una vittoria inattesa",
-          "Una forza piu' grande delle apparenze"
+          "Una forza più grande delle apparenze"
         ]
       },
       "immersive": {
@@ -1294,10 +1294,10 @@
       "rebus": {
         "titleIt": "Giuseppe Perdona i Fratelli",
         "keywordIt": "Perdono",
-        "hintIt": "Anni di schiavitu' e prigione nascondevano un piano di Dio.",
+        "hintIt": "Anni di schiavitù e prigione nascondevano un piano di Dio.",
         "solutionIt": "Giuseppe si fece conoscere ai fratelli in lacrime: 'Non sono io che vi ho mandato qui, ma Dio!' Genesi 45:5-7.",
         "scriptureQuoteIt": "...non siete stati voi a mandarmi qui, ma e' Dio; e mi ha posto come padre per il faraone e come signore di tutta la sua casa e come governante su tutto il paese d'Egitto. - Genesi 45:8 (TNM)",
-        "engagementNoteIt": "Anche le ingiustizie piu' dure possono far parte del piano di Dio.",
+        "engagementNoteIt": "Anche le ingiustizie più dure possono far parte del piano di Dio.",
         "visibleKeys": [
           "1F468-1F3FB-200D-1F33E",
           "1F42A",
@@ -1311,7 +1311,7 @@
         ],
         "hintKey": "1F4D6",
         "imageCaptionsIt": [
-          "Un uomo con grande autorita'",
+          "Un uomo con grande autorità",
           "Il viaggio nel deserto",
           "Argento e commercio",
           "Anni di sofferenza",
@@ -1396,7 +1396,7 @@
         "hintIt": "Una vedova straniera scelse di seguire il Dio della suocera.",
         "solutionIt": "Rut dicharo': 'Il tuo popolo sara' il mio popolo, il tuo Dio il mio Dio.' Boaz la sposo' ed ella divenne antenata del Messia. Rut 1:16.",
         "scriptureQuoteIt": "Dove tu andrai, io andro', e dove tu passerai la notte, anch'io passero' la notte. Il tuo popolo sara' il mio popolo e il tuo Dio sara' il mio Dio. - Rut 1:16 (TNM)",
-        "engagementNoteIt": "La lealta' a Geova va oltre le frontiere etniche e culturali.",
+        "engagementNoteIt": "La lealtà a Geova va oltre le frontiere etniche e culturali.",
         "visibleKeys": [
           "1F6B6-200D-2640-FE0F",
           "094-user",
@@ -1495,7 +1495,7 @@
         "hintIt": "Una madre intreccia una cesta di giunchi per salvare il suo bambino dal Nilo.",
         "solutionIt": "La madre di Mose' lo mise in una cesta e la affido' al Nilo. La figlia del faraone lo salvo' e Mose' crebbe a palazzo. Esodo 2:1-10.",
         "scriptureQuoteIt": "Ma quando non pote' nasconderlo piu' a lungo, prese per lui una cesta di papiro e la spalmo' di asfalto e di pece; poi vi pose il bambino e mise la cesta tra i canneti lungo la sponda del fiume Nilo. - Esodo 2:3 (TNM)",
-        "engagementNoteIt": "Geova usa anche le circostanze piu' disperate per proteggere i Suoi servitori.",
+        "engagementNoteIt": "Geova usa anche le circostanze più disperate per proteggere i Suoi servitori.",
         "visibleKeys": [
           "039-baby",
           "1F30A",
@@ -1711,7 +1711,7 @@
           "La violenza dei briganti",
           "Un animale da viaggio",
           "Un pagamento per le cure",
-          "Chi si fermera' ad aiutare?",
+          "Chi si fermerà ad aiutare?",
           "Chi scelse di tirare dritto",
           "Un gesto di misericordia",
           "Conta chi si ferma ad aiutare"
