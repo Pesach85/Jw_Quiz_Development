@@ -357,6 +357,7 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-09-29 | **Prompt B**: inventario env admin (`ADMIN_SECRET` unica env var per smoke admin; `JWQUIZ_DATA` = binding KV); istruzioni Pages + smoke documentati; **stato prod ADMIN_SECRET non verificabile** da agent (no login CF); smoke non eseguito; G2 resta P0 | ✅ Documentato (in attesa umano) |
 | 2026-09-29 | **Smoke admin post-config**: pre-flight `.local/` in `.gitignore`; prod `jwquiz.pages.dev` — OPTIONS 200, heartbeat OK, `admin_stats` OK (4 metriche), wrong/no secret → 403; secret non loggato; UI classic.html confermata dall’umano | ✅ Verde (API agent + umano) |
 | 2026-09-30 | **J — multiplayer MVP (Sfida 2-8, timer per-player, sequenze)** — layer su Quiz/Rebus (no journey); storage `jwquiz_challenge_v1` `version:1`; HITL D-J1…D-J4 | ✅ Implementato |
+| 2026-09-30 | **L/Brand design**: `docs/BRAND_IDENTITY_PROPOSAL.md` (audit + HITL B1–B8) + `docs/ONLINE_ROOMS_DESIGN.md` (DO+WS); zero runtime | ⏳ HITL brand |
 | 2026-09-29 | **Prompt C (design G1)**: drift mappato STORIES vs `stories.js` vs `StoryLibrary.cs`; opzioni A/B/C valutate; **raccomandazione Option B** (`data/episodes.json` + generator Python → `stories.js` + `StoryLibrary.cs`); deliverable `docs/DATASET_UNIFICATION_DESIGN.md` — **build non avviato** | ✅ Design |
 | 2026-09-29 | **Prompt C build Step 0**: `data/episodes.schema.json`, `tools/validate_episodes.py`, fixture OK/broken; checkpoint validator exit 0/1; vincoli Q2 (no symbols in JSON), Q4 (theaterQuote vs scriptureQuoteIt) | ✅ Step 0 |
 | 2026-09-29 | **C-BUILD Step 1 — migrazione episodes.json (18 record)**: merge STORIES + `stories.js` + `StoryLibrary.cs`; validator `--full-catalog` verde; ep.8 titolo unificato; ep.10/12 keys+caption da C# (stories.js incompleto) | ✅ Step 1 |
@@ -418,6 +419,8 @@ Aggiornare questa sezione ad ogni sessione di lavoro.
 | Media | Immersive | Aggiungere FR/ES come terze lingue riusando lo stesso schema `{ it, en, … }` |
 | Media | Gamification | **Streak + Badge**: N storie consecutive senza hint = badge "Saggio/Profeta/Apostolo" |
 | Media | Gamification | ~~**Classifica sessione locale**: 2-8 partecipanti~~ ✅ **COMPLETATO** (Prompt J — Sfida layer, timer per-player, sequenceMode) |
+| Media | Design | **Brand identity** — `docs/BRAND_IDENTITY_PROPOSAL.md` — HITL B1–B8 in attesa |
+| Media | Design | **Online rooms DO+WS** — `docs/ONLINE_ROOMS_DESIGN.md` — design only; dopo brand HITL |
 | Media | Gamification | **Percorsi Tematici**: raccolte storie per tema (Fede/Amore/Coraggio) con barra progresso sbloccabile |
 | Media | UX | ProgressPanel: aggiungere grafico barre XP e lista storie completate |
 | Media | Content | ~~Aggiungere storia ID 19+~~ ✅ mergiate in catalogo (K2) |
@@ -676,12 +679,10 @@ Aggiornare questa KB:
 
 Commit se il tree deve tornare pulito (deploy Wrangler). Push solo se richiesto esplicitamente.
 
-### Stato corrente (handoff) — 2026-09-30 (post J)
+### Stato corrente (handoff) — 2026-09-30 (post J + design L/Brand)
 
-- **STEP J CHIUSO** — multiplayer MVP locale (Sfida 2–8).
-- **Spec:** `docs/MULTIPLAYER_MVP_SPEC.md` (HITL D-J1 A, D-J2 D, D-J2b 3, D-J3 B per-player, D-J4 version:1).
-- **Code:** `webapp/index.html` only (`#challenge-lobby|round|leaderboard`, toggle Sfida, `jwquiz_challenge_v1`).
-- **Evidence:** M1–M16 + streak table + storage cross OK; journey → Sfida disabled (`.local/smoke/j_journey_disabled.png`); X1–X6/X5=0; Ep13 V[4] preflight pixel_dist≠0; `app.js` intatto.
-- **Storage separation:** solo `jwquiz_challenge_v1` write/delete; onboarding/player/audio/motion/admin intatti.
-- **Aperti / prossimo:** **L** design online rooms; D1 + D4–D10 defer; no deploy.
-- **Dev server:** `:8083` (MIME `.js` = text/plain da `http.server` — ok in Chromium per questo smoke).
+- **STEP J CHIUSO** — `99f7e59` feat(challenge); spec `2406475`.
+- **Design docs (no runtime):** `docs/BRAND_IDENTITY_PROPOSAL.md` (HITL **B1–B8**), `docs/ONLINE_ROOMS_DESIGN.md` (DO+WS, fallback locale).
+- **Prossimo:** risposta HITL branding → poi eventuale apply brand; online rooms solo dopo OK design R1–R3.
+- **Aperti defer:** D1, D4–D10; no deploy.
+- **Dev server:** `:8083`.
