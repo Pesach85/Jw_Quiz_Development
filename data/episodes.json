@@ -8,9 +8,9 @@
         "titleIt": "Il Giardino di Eden",
         "keywordIt": "Obbedienza",
         "hintIt": "Un serpente, un albero proibito e una scelta fatale.",
-        "solutionIt": "Adamo ed Eva disobbedirono a Geova mangiando il frutto proibito. Le conseguenze toccano l'intera umanità, ma Dio promise la salvezza: Genesi 3:15.",
-        "scriptureQuoteIt": "Geova Dio... comandò all'uomo: '...dell'albero della conoscenza del bene e del male non devi mangiare, poiché nel giorno in cui ne mangerai positivamente morirai.' - Genesi 2:16-17 (TNM)",
-        "engagementNoteIt": "Sottolinea il valore dell'obbedienza e la promessa di redenzione già nell'Eden.",
+        "solutionIt": "Adamo ed Eva disobbedirono a Geova mangiando il frutto proibito. Le conseguenze toccano l’intera umanità, ma Dio promise la salvezza: Genesi 3:15.",
+        "scriptureQuoteIt": "Geova Dio... comandò all’uomo: ’...dell’albero della conoscenza del bene e del male non devi mangiare, poiché nel giorno in cui ne mangerai positivamente morirai.’ - Genesi 2:16-17 (TNM)",
+        "engagementNoteIt": "Sottolinea il valore dell’obbedienza e la promessa di redenzione già nell’Eden.",
         "visibleKeys": [
           "093-users",
           "1F333",
@@ -25,13 +25,13 @@
         "hintKey": "1F40D",
         "imageCaptionsIt": [
           "I primi due esseri umani",
-          "L'albero al centro del giardino",
+          "L’albero al centro del giardino",
           "Lo shock della scoperta",
           "Vestiti che coprono la vergogna",
           "Scarpe che camminano lontano dal Creatore",
           "Il frutto proibito",
-          "La morte entrò nel mondo",
-          "Il serpente ingannatore"
+          "Una conseguenza grave",
+          "Un inganno sottile"
         ]
       },
       "immersive": {
@@ -106,9 +106,9 @@
       "rebus": {
         "titleIt": "Sansone e Dalila",
         "keywordIt": "Fedeltà",
-        "hintIt": "La vera forza non sta nei capelli, ma nell'alleanza con Dio.",
+        "hintIt": "La vera forza non sta nei capelli, ma nell’alleanza con Dio.",
         "solutionIt": "Sansone tradì il suo voto nazireo cedendo a Dalila. Cieco e prigioniero, si pentì e Geova gli restituì la forza per sconfiggere i Filistei: Giudici 16:28-30.",
-        "scriptureQuoteIt": "Sansone invocò Geova e disse: 'Sovrano Signore Geova, ricordati ora di me... fammi vendicare dei Filistei per i miei due occhi.' - Giudici 16:28 (TNM)",
+        "scriptureQuoteIt": "Sansone invocò Geova e disse: ’Sovrano Signore Geova, ricordati ora di me... fammi vendicare dei Filistei per i miei due occhi.’ - Giudici 16:28 (TNM)",
         "engagementNoteIt": "Mostra come cedere ai desideri mondani possa indebolirci, e come il sincero pentimento apra la via al perdono di Dio.",
         "visibleKeys": [
           "1F4AA-1F3FD",
@@ -127,9 +127,9 @@
           "Un amore pericoloso",
           "La donna che taglia i capelli",
           "Gli occhi del guerriero",
-          "Il tempio di Dagon",
+          "Un tempio nemico",
           "La danzatrice seduttrice",
-          "La fine della forza",
+          "Una forza che viene meno",
           "Attenzione al tradimento!"
         ]
       },
@@ -208,7 +208,7 @@
         "hintIt": "Tre giorni nel buio insegnano cosa significa correre verso Dio, non lontano da Lui.",
         "solutionIt": "Giona fuggì dalla missione di Geova, ma dal ventre del pesce gridò a Lui. Dio lo liberò e Ninive si pentì. Giona 2:2.",
         "scriptureQuoteIt": "Quando la mia vita si stava esaurendo, mi ricordai di Geova, e la mia preghiera entrò da te, nel tuo santo tempio. - Giona 2:7 (TNM)",
-        "engagementNoteIt": "Evidenzia la misericordia di Dio per i peccatori pentiti e l'importanza di accettare la missione assegnataci.",
+        "engagementNoteIt": "Evidenzia la misericordia di Dio per i peccatori pentiti e l’importanza di accettare la missione assegnataci.",
         "visibleKeys": [
           "26F5",
           "1F3CA-1F3FB-200D-2642-FE0F",
@@ -225,7 +225,7 @@
           "Una nave verso Tarsis",
           "Un uomo gettato in mare",
           "Preghiera dal profondo",
-          "La grande città di Ninive",
+          "Una grande città",
           "Il messaggio proclamato",
           "Il grande pesce",
           "La pianta di ricino",
@@ -237,7 +237,7 @@
         "themeIt": "Misericordia",
         "themeEn": "Mercy",
         "intro": {
-          "it": "Fuggire da Dio non funziona. La misericordia, sì.",
+          "it": "Fuggire dalla missione non funziona.",
           "en": "Running from God does not work. Mercy does."
         },
         "questions": [
@@ -306,8 +306,8 @@
         "keywordIt": "Giudizio",
         "hintIt": "Il Re separa il gregge: a destra vita eterna, a sinistra distruzione eterna.",
         "solutionIt": "Gesù insegnò che al momento del giudizio finale sarà separato chi ha dimostrato amore e fedeltà (pecore) da chi non lo ha fatto (capre). Matteo 25:46.",
-        "scriptureQuoteIt": "Quando il Figlio dell'uomo arriverà nella sua gloria... separerà gli uni dagli altri, come il pastore separa le pecore dalle capre. - Matteo 25:31-32 (TNM)",
-        "engagementNoteIt": "Collega il giudizio finale all'amore pratico verso Dio e il prossimo.",
+        "scriptureQuoteIt": "Quando il Figlio dell’uomo arriverà nella sua gloria... separerà gli uni dagli altri, come il pastore separa le pecore dalle capre. - Matteo 25:31-32 (TNM)",
+        "engagementNoteIt": "Collega il giudizio finale all’amore pratico verso Dio e il prossimo.",
         "visibleKeys": [
           "1f411-w",
           "1f4112",
@@ -321,14 +321,14 @@
         ],
         "hintKey": "1F468-1F3FD-200D-2696-FE0F",
         "imageCaptionsIt": [
-          "Le pecore alla destra del Re",
-          "Le capre alla sinistra",
-          "Il canto della vittoria",
-          "La bandiera d'Israele",
-          "La corona del Regno",
-          "Il Figlio dell'uomo glorificato",
-          "L'arpa del giudizio",
-          "Il Giudice giusto"
+          "Due gruppi davanti al Re",
+          "Un altro gruppo in attesa",
+          "Un canto solenne",
+          "Uno stendardo alzato",
+          "Un segno di autorità",
+          "Una figura glorificata",
+          "Uno strumento solenne",
+          "Chi decide con giustizia"
         ]
       },
       "immersive": {
@@ -401,11 +401,11 @@
       "id": 5,
       "scriptureReference": "Esodo 7-12",
       "rebus": {
-        "titleIt": "Le 10 Piaghe d'Egitto",
+        "titleIt": "Le 10 Piaghe d’Egitto",
         "keywordIt": "Potere di Dio",
         "hintIt": "Dieci segni celesti provano che nessun dio egiziano può competere col Creatore.",
-        "solutionIt": "Attraverso dieci piaghe devastanti, Geova mostrò la Sua potenza superiore alle divinità d'Egitto. Esodo 12:12.",
-        "scriptureQuoteIt": "E certamente gli Egiziani sapranno che io sono Geova quando stenderò la mia mano contro l'Egitto. - Esodo 7:5 (TNM)",
+        "solutionIt": "Attraverso dieci piaghe devastanti, Geova mostrò la Sua potenza superiore alle divinità d’Egitto. Esodo 12:12.",
+        "scriptureQuoteIt": "E certamente gli Egiziani sapranno che io sono Geova quando stenderò la mia mano contro l’Egitto. - Esodo 7:5 (TNM)",
         "engagementNoteIt": "Usa le piaghe per illustrare che Geova agisce nella storia e difende il Suo nome e il Suo popolo.",
         "visibleKeys": [
           "1F51F",
@@ -423,7 +423,7 @@
           "Il segno della fine",
           "Rane su tutta la terra",
           "Le orme nella polvere diventata zanzare",
-          "La morte dei primogeniti",
+          "Una notte terribile in Egitto",
           "Una liberazione donata",
           "Le tenebre su tutta la terra",
           "Le cavallette divorano tutto",
@@ -433,7 +433,7 @@
       "immersive": {
         "titleEn": "The 10 Plagues of Egypt",
         "themeIt": "Potere di Dio",
-        "themeEn": "God's Power",
+        "themeEn": "God’s Power",
         "intro": {
           "it": "Faraone resistette. Il potere di Geova si rivelò chiaro.",
           "en": "Pharaoh resisted. Jehovah’s power became clear."
@@ -526,7 +526,7 @@
           "La pioggia torrenziale",
           "Il profeta in preghiera",
           "Il toro sacrificale",
-          "L'acqua versata sull'altare"
+          "L’acqua versata sull’altare"
         ]
       },
       "immersive": {
@@ -618,13 +618,13 @@
         ],
         "hintKey": "2694",
         "imageCaptionsIt": [
-          "La regina Ester",
+          "Una regina al bivio",
           "Il simbolo del bambino (il futuro del popolo)",
           "La lettera sigillata",
-          "L'orecchio che ascolta il complotto",
+          "L’orecchio che ascolta il complotto",
           "Il popolo persiano",
           "Il sonno del re disturbato",
-          "Lo shock di Aman smascherato",
+          "Uno shock a corte",
           "La battaglia per la giustizia"
         ]
       },
@@ -689,7 +689,7 @@
           "en": "God can use courageous people at the decisive moment. Courage loves neighbor."
         },
         "theaterQuote": {
-          "it": "«Chi sa se non sei giunta… proprio per un tempo come questo?» — Ester 4:14",
+          "it": "«…per un tempo come questo?» — Ester 4:14",
           "en": "“Who knows whether you have attained… for a time like this?” — Esther 4:14"
         }
       }
@@ -701,7 +701,7 @@
         "titleIt": "Abramo e Isacco al Monte Moria",
         "keywordIt": "Fede",
         "hintIt": "Un padre pronto a offrire il suo amato figlio dimostra la fede più grande.",
-        "solutionIt": "Abramo obbedì a Geova portando Isacco sull'altare. Un angelo lo fermò e Dio provvide un ariete. Genesi 22:18.",
+        "solutionIt": "Abramo obbedì a Geova portando Isacco sull’altare. Un angelo lo fermò e Dio provvide un ariete. Genesi 22:18.",
         "scriptureQuoteIt": "Per mezzo della tua discendenza tutte le nazioni della terra si benediranno certamente, perché hai ascoltato la mia voce. - Genesi 22:18 (TNM)",
         "engagementNoteIt": "Evidenzia come questa storia prefiguri il sacrificio di Cristo.",
         "visibleKeys": [
@@ -717,18 +717,18 @@
         ],
         "hintKey": "270B-1F3FD",
         "imageCaptionsIt": [
-          "Il patriarca Abramo",
+          "Un patriarca in cammino",
           "Il viaggio verso il monte",
           "Il coltello del sacrificio",
           "Il monte Moria",
-          "L'ariete provveduto",
+          "L’ariete provveduto",
           "Il cammello del viaggio",
-          "Isacco, il figlio promesso",
+          "Il figlio promesso",
           "La mano di Dio si rivela"
         ]
       },
       "immersive": {
-        "titleEn": "Abraham and Isaac",
+        "titleEn": "Abraham and Isaac on Mount Moriah",
         "themeIt": "Fede",
         "themeEn": "Faith",
         "intro": {
@@ -900,7 +900,7 @@
         "keywordIt": "Profezia",
         "hintIt": "Lupo e agnello, leone e vitello - pace tra animali che ora si combattono.",
         "solutionIt": "Isaia profetizzò una nuova era di pace paradisiaca sotto il governo del Messia. Isaia 11:6-9.",
-        "scriptureQuoteIt": "Il lupo risiederà temporaneamente con l'agnello... e un semplice ragazzino li condurrà. - Isaia 11:6 (TNM)",
+        "scriptureQuoteIt": "Il lupo risiederà temporaneamente con l’agnello... e un semplice ragazzino li condurrà. - Isaia 11:6 (TNM)",
         "engagementNoteIt": "Collega la profezia di Isaia al futuro paradiso terreno che Geova promette.",
         "visibleKeys": [
           "1F932-1F3FC",
@@ -920,7 +920,7 @@
           "La freccia che diventa inutile",
           "Pace nel mondo nuovo",
           "La corona del re messianico",
-          "Il leone che dimora con l'agnello",
+          "Il leone che dimora con l’agnello",
           "La mappa del piano di Dio",
           "Un percorso verso la pace promessa"
         ]
@@ -998,9 +998,9 @@
         "titleIt": "Noè e il Diluvio",
         "keywordIt": "Salvezza",
         "hintIt": "Un uomo giusto costruisce una grande arca mentre il mondo lo deride.",
-        "solutionIt": "Noè obbedì a Geova costruendo l'arca ed entrò con la sua famiglia. Genesi 6:22.",
+        "solutionIt": "Noè obbedì a Geova costruendo l’arca ed entrò con la sua famiglia. Genesi 6:22.",
         "scriptureQuoteIt": "Noè fece secondo tutto ciò che Dio gli aveva comandato. Fece proprio così. - Genesi 6:22 (TNM)",
-        "engagementNoteIt": "Noè è simbolo di salvezza attraverso l'obbedienza.",
+        "engagementNoteIt": "Noè è simbolo di salvezza attraverso l’obbedienza.",
         "visibleKeys": [
           "1F6A2",
           "1F404",
@@ -1014,11 +1014,11 @@
         ],
         "hintKey": "1F30A",
         "imageCaptionsIt": [
-          "L'arca di salvezza",
+          "Una grande imbarcazione",
           "Le mucche a coppie",
           "I polli a coppie",
           "La pioggia torrenziale per 40 giorni",
-          "L'arcobaleno del patto",
+          "L’arcobaleno del patto",
           "Altre mucche (coppia per coppia)",
           "Altri polli (coppia per coppia)",
           "Le acque che coprono la terra"
@@ -1094,10 +1094,10 @@
       "id": 12,
       "scriptureReference": "Atti 8:26-40",
       "rebus": {
-        "titleIt": "Filippo e l'Eunuco Etiope",
+        "titleIt": "Filippo e l’Eunuco Etiope",
         "keywordIt": "Buona Novella",
         "hintIt": "Un carro nel deserto, un rotolo di Isaia e un incontro guidato dagli angeli.",
-        "solutionIt": "Lo spirito di Dio guidò Filippo verso il carro dell'eunuco. Filippo spiegò la buona novella e l'eunuco chiese il battesimo. Atti 8:36.",
+        "solutionIt": "Lo spirito di Dio guidò Filippo verso il carro dell’eunuco. Filippo spiegò la buona novella e l’eunuco chiese il battesimo. Atti 8:36.",
         "scriptureQuoteIt": "Filippo... gli dichiarò la buona notizia intorno a Gesù. - Atti 8:35 (TNM)",
         "engagementNoteIt": "Mostra come Geova apre le porte per la predicazione e prepara cuori pronti.",
         "visibleKeys": [
@@ -1113,9 +1113,9 @@
         ],
         "hintKey": "203C",
         "imageCaptionsIt": [
-          "Un angelo guida Filippo",
+          "Una guida improvvisa",
           "Una domanda: cosa significa?",
-          "L'acqua per il battesimo",
+          "L’acqua per il battesimo",
           "Il rotolo di Isaia",
           "Il carro etiope",
           "Una conversazione guidata",
@@ -1196,15 +1196,15 @@
         "titleIt": "Davide e Golia",
         "keywordIt": "Coraggio",
         "hintIt": "Un giovane pastore sconfigge un guerriero gigante con la fede in Geova.",
-        "solutionIt": "Davide disse: 'Geova salvera', perche' questa e' la sua battaglia! Con una fionda e una pietra, abbatte' Golia. 1 Samuele 17:45-47.",
-        "scriptureQuoteIt": "...tutta questa assemblea sapra' che Geova non salva per mezzo di spada e lancia; perche' la battaglia appartiene a Geova, ed egli vi consegnera' nelle nostre mani. - 1 Samuele 17:47 (TNM)",
+        "solutionIt": "Davide disse: ’Geova salverà’, perché questa è la sua battaglia! Con una fionda e una pietra, abbatté Golia. 1 Samuele 17:45-47.",
+        "scriptureQuoteIt": "...tutta questa assemblea saprà che Geova non salva per mezzo di spada e lancia; perché la battaglia appartiene a Geova, ed egli vi consegnerà nelle nostre mani. - 1 Samuele 17:47 (TNM)",
         "engagementNoteIt": "Con Geova, anche i giganti cadono.",
         "visibleKeys": [
           "038-boy-1",
           "1F411",
           "2694",
           "1F632",
-          "2753"
+          "piccolo_gregge"
         ],
         "hiddenKeys": [
           "1F480",
@@ -1216,7 +1216,7 @@
           "Un piccolo gregge",
           "Armi e combattimento",
           "Paura nel campo",
-          "Qualcosa manca in questa storia...",
+          "Un gregge sul colle",
           "La caduta del nemico",
           "Una vittoria inattesa",
           "Una forza più grande delle apparenze"
@@ -1295,8 +1295,8 @@
         "titleIt": "Giuseppe Perdona i Fratelli",
         "keywordIt": "Perdono",
         "hintIt": "Anni di schiavitù e prigione nascondevano un piano di Dio.",
-        "solutionIt": "Giuseppe si fece conoscere ai fratelli in lacrime: 'Non sono io che vi ho mandato qui, ma Dio!' Genesi 45:5-7.",
-        "scriptureQuoteIt": "...non siete stati voi a mandarmi qui, ma e' Dio; e mi ha posto come padre per il faraone e come signore di tutta la sua casa e come governante su tutto il paese d'Egitto. - Genesi 45:8 (TNM)",
+        "solutionIt": "Giuseppe si fece conoscere ai fratelli in lacrime: ’Non sono io che vi ho mandato qui, ma Dio!’ Genesi 45:5-7.",
+        "scriptureQuoteIt": "...non siete stati voi a mandarmi qui, ma è Dio; e mi ha posto come padre per il faraone e come signore di tutta la sua casa e come governante su tutto il paese d’Egitto. - Genesi 45:8 (TNM)",
         "engagementNoteIt": "Anche le ingiustizie più dure possono far parte del piano di Dio.",
         "visibleKeys": [
           "1F468-1F3FB-200D-1F33E",
@@ -1394,8 +1394,8 @@
         "titleIt": "Rut e Boaz",
         "keywordIt": "Devozione",
         "hintIt": "Una vedova straniera scelse di seguire il Dio della suocera.",
-        "solutionIt": "Rut dicharo': 'Il tuo popolo sara' il mio popolo, il tuo Dio il mio Dio.' Boaz la sposo' ed ella divenne antenata del Messia. Rut 1:16.",
-        "scriptureQuoteIt": "Dove tu andrai, io andro', e dove tu passerai la notte, anch'io passero' la notte. Il tuo popolo sara' il mio popolo e il tuo Dio sara' il mio Dio. - Rut 1:16 (TNM)",
+        "solutionIt": "Rut dichiarò: ’Il tuo popolo sarà il mio popolo, il tuo Dio il mio Dio.’ Boaz la sposò ed ella divenne antenata del Messia. Rut 1:16.",
+        "scriptureQuoteIt": "Dove tu andrai, io andrò, e dove tu passerai la notte, anch’io passerò la notte. Il tuo popolo sarà il mio popolo e il tuo Dio sarà il mio Dio. - Rut 1:16 (TNM)",
         "engagementNoteIt": "La lealtà a Geova va oltre le frontiere etniche e culturali.",
         "visibleKeys": [
           "1F6B6-200D-2640-FE0F",
@@ -1493,8 +1493,8 @@
         "titleIt": "La Nascita di Mosè",
         "keywordIt": "Protezione",
         "hintIt": "Una madre intreccia una cesta di giunchi per salvare il suo bambino dal Nilo.",
-        "solutionIt": "La madre di Mose' lo mise in una cesta e la affido' al Nilo. La figlia del faraone lo salvo' e Mose' crebbe a palazzo. Esodo 2:1-10.",
-        "scriptureQuoteIt": "Ma quando non pote' nasconderlo piu' a lungo, prese per lui una cesta di papiro e la spalmo' di asfalto e di pece; poi vi pose il bambino e mise la cesta tra i canneti lungo la sponda del fiume Nilo. - Esodo 2:3 (TNM)",
+        "solutionIt": "La madre di Mosè lo mise in una cesta e la affidò al Nilo. La figlia del faraone lo salvò e Mosè crebbe a palazzo. Esodo 2:1-10.",
+        "scriptureQuoteIt": "Ma quando non poté nasconderlo più a lungo, prese per lui una cesta di papiro e la spalmò di asfalto e di pece; poi vi pose il bambino e mise la cesta tra i canneti lungo la sponda del fiume Nilo. - Esodo 2:3 (TNM)",
         "engagementNoteIt": "Geova usa anche le circostanze più disperate per proteggere i Suoi servitori.",
         "visibleKeys": [
           "039-baby",
@@ -1516,7 +1516,7 @@
           "Piante lungo la riva",
           "Le mani che lo tengono al sicuro",
           "Protetto in modo inatteso",
-          "Uno sguardo vigile dall'alto"
+          "Uno sguardo vigile dall’alto"
         ]
       },
       "immersive": {
@@ -1592,7 +1592,7 @@
         "titleIt": "Anna e Samuele",
         "keywordIt": "Preghiera",
         "hintIt": "Una donna in lacrime al tempio prega con tale fervore da sembrare ubriaca.",
-        "solutionIt": "Anna prego' Geova con tutto il cuore promettendo di consacrare il figlio. Geova la ascolto': nacque Samuele. 1 Samuele 1:27.",
+        "solutionIt": "Anna pregò Geova con tutto il cuore promettendo di consacrare il figlio. Geova la ascoltò: nacque Samuele. 1 Samuele 1:27.",
         "scriptureQuoteIt": "Per questo ragazzo ho pregato, e Geova ha concesso la mia richiesta che gli ho fatto. - 1 Samuele 1:27 (TNM)",
         "engagementNoteIt": "La preghiera sincera viene sempre ascoltata da Geova.",
         "visibleKeys": [
@@ -1690,10 +1690,10 @@
       "rebus": {
         "titleIt": "Il Buon Samaritano",
         "keywordIt": "Amore per il Prossimo",
-        "hintIt": "Sacerdote e levita passarono oltre. Solo uno straniero si fermo'.",
-        "solutionIt": "Gesu' racconta come un Samaritano soccorse un uomo abbandonato. Luca 10:36-37: chi mostro' misericordia fu il vero prossimo.",
-        "scriptureQuoteIt": "Gesu' gli disse: 'Va' e fa' anche tu la stessa cosa.' - Luca 10:37 (TNM)",
-        "engagementNoteIt": "L'amore per il prossimo non ha confini etnici o religiosi.",
+        "hintIt": "Sacerdote e levita passarono oltre. Solo uno straniero si fermò.",
+        "solutionIt": "Gesù racconta come un Samaritano soccorse un uomo abbandonato. Luca 10:36-37: chi mostrò misericordia fu il vero prossimo.",
+        "scriptureQuoteIt": "Gesù gli disse: ’Va’ e fa’ anche tu la stessa cosa.’ - Luca 10:37 (TNM)",
+        "engagementNoteIt": "L’amore per il prossimo non ha confini etnici o religiosi.",
         "visibleKeys": [
           "1F6B6-1F3FF-200D-2642-FE0F",
           "1F4AA-1F3FD",
@@ -1790,9 +1790,9 @@
         "titleIt": "La Torre di Babele",
         "keywordIt": "Orgoglio",
         "hintIt": "Una città, una torre verso il cielo e lingue che non si capiscono più.",
-        "solutionIt": "A Babele l'umanità volle farsi un nome; Geova confuse le lingue e disperse le persone. Genesi 11:1-9.",
-        "scriptureQuoteIt": "Genesi 11:7 — Dio interviene perché l'umanità non continui un progetto guidato dall'orgoglio.",
-        "engagementNoteIt": "Collega l'orgoglio umano all'umiltà di ascoltare Dio invece di esaltare sé stessi.",
+        "solutionIt": "A Babele l’umanità volle farsi un nome; Geova confuse le lingue e disperse le persone. Genesi 11:1-9.",
+        "scriptureQuoteIt": "Genesi 11:7 — Dio interviene perché l’umanità non continui un progetto guidato dall’orgoglio.",
+        "engagementNoteIt": "Collega l’orgoglio umano all’umiltà di ascoltare Dio invece di esaltare sé stessi.",
         "visibleKeys": [
           "1F3DB",
           "093-users",
@@ -1811,7 +1811,7 @@
           "Voci che si sovrappongono",
           "Lo stupore sul volto",
           "Una mappa del mondo conosciuto",
-          "Una torre che punta in alto",
+          "Un edificio che punta in alto",
           "Una pianta che cresce verso il cielo",
           "La stessa torre vista da lontano"
         ]
@@ -1822,7 +1822,7 @@
         "themeEn": "Pride",
         "intro": {
           "it": "Un popolo unito decide di costruire qualcosa di grandioso. Ma le intenzioni del cuore non sfuggono a Dio.",
-          "en": "A united people set out to build something magnificent. Yet the heart's motives are not hidden from God."
+          "en": "A united people set out to build something magnificent. Yet the heart’s motives are not hidden from God."
         },
         "questions": [
           {
@@ -1832,7 +1832,7 @@
             },
             "answers": [
               {
-                "it": "L'umanità stava agendo con orgoglio, non per onorare Dio",
+                "it": "L’umanità stava agendo con orgoglio, non per onorare Dio",
                 "en": "Humanity was acting in pride, not to honor God",
                 "ok": true
               },
@@ -1850,7 +1850,7 @@
           },
           {
             "prompt": {
-              "it": "Quale atteggiamento opposto all'orgoglio ci invita questa storia?",
+              "it": "Quale atteggiamento opposto all’orgoglio ci invita questa storia?",
               "en": "Which attitude opposite to pride does this account invite?"
             },
             "answers": [
@@ -1873,11 +1873,11 @@
           }
         ],
         "moral": {
-          "it": "I progetti grandi non bastano se il cuore è pieno di sé. L'umiltà apre la via alla benedizione di Dio.",
-          "en": "Grand projects are not enough if the heart is full of self. Humility opens the way to God's blessing."
+          "it": "I progetti grandi non bastano se il cuore è pieno di sé. L’umiltà apre la via alla benedizione di Dio.",
+          "en": "Grand projects are not enough if the heart is full of self. Humility opens the way to God’s blessing."
         },
         "theaterQuote": {
-          "it": "Riferimento Genesi 11:7 — Dio ferma l'esaltazione umana confondendo le lingue.",
+          "it": "Riferimento Genesi 11:7 — Dio ferma l’esaltazione umana confondendo le lingue.",
           "en": "Reference Genesis 11:7 — God stops human self-exaltation by confusing languages."
         }
       }
@@ -1910,13 +1910,13 @@
           "Occhi che osservano",
           "Una figura di protezione",
           "Un segnale di pericolo",
-          "Un leone potente",
-          "Un'arma che non decide il destino",
+          "Una belva potente",
+          "Un’arma che non decide il destino",
           "Lo stesso leone, da vicino"
         ]
       },
       "immersive": {
-        "titleEn": "Daniel in the Lions' Den",
+        "titleEn": "Daniel in the Lions’ Den",
         "themeIt": "Fede",
         "themeEn": "Faith",
         "intro": {
@@ -1950,7 +1950,7 @@
           {
             "prompt": {
               "it": "Cosa insegna questa storia sulla protezione di Dio?",
-              "en": "What does this account teach about God's protection?"
+              "en": "What does this account teach about God’s protection?"
             },
             "answers": [
               {
@@ -1989,7 +1989,7 @@
         "keywordIt": "Conversione",
         "hintIt": "Una luce accecante sulla via di Damasco e una voce che cambia tutto.",
         "solutionIt": "Gesù apparve a Saul sulla via di Damasco; da persecutore divenne apostolo. Atti 9:1-22.",
-        "scriptureQuoteIt": "Atti 9:4-5 — Una voce chiede perché viene perseguitato; l'incontro cambia la direzione della vita.",
+        "scriptureQuoteIt": "Atti 9:4-5 — Una voce chiede perché viene perseguitato; l’incontro cambia la direzione della vita.",
         "engagementNoteIt": "Nessuno è troppo lontano perché Dio possa cambiare il cuore.",
         "visibleKeys": [
           "1F6B6-1F3FF-200D-2642-FE0F",
@@ -2071,11 +2071,11 @@
           }
         ],
         "moral": {
-          "it": "Il perdono di Dio apre una nuova missione. Il passato non blocca chi risponde alla chiamata.",
-          "en": "God's forgiveness opens a new mission. The past does not block those who answer the call."
+          "it": "La conversione apre una nuova missione. Il passato non blocca chi risponde alla chiamata.",
+          "en": "God’s forgiveness opens a new mission. The past does not block those who answer the call."
         },
         "theaterQuote": {
-          "it": "Riferimento Atti 9:6 — Dopo l'incontro, resta solo da chiedere cosa fare.",
+          "it": "Riferimento Atti 9:6 — Dopo l’incontro, resta solo da chiedere cosa fare.",
           "en": "Reference Acts 9:6 — After the encounter, the only question left is what to do."
         }
       }
@@ -2086,7 +2086,7 @@
       "rebus": {
         "titleIt": "Giosuè e Gerico",
         "keywordIt": "Coraggio",
-        "hintIt": "Marce intorno alle mura, suoni di corni e un grido all'unisono.",
+        "hintIt": "Marce intorno alle mura, suoni di corni e un grido all’unisono.",
         "solutionIt": "Israele ubbidì al piano di Geova: dopo le marce e il grido, le mura di Gerico caddero. Giosuè 6.",
         "scriptureQuoteIt": "Giosuè 6:20 — Al grido del popolo, le mura crollano perché Dio combatte per loro.",
         "engagementNoteIt": "Il coraggio vero è obbedire anche quando il metodo sembra strano.",
@@ -2109,7 +2109,7 @@
           "Un annuncio forte",
           "Orme sul terreno",
           "Una fortezza che sembra eterna",
-          "Un'esclamazione improvvisa",
+          "Un’esclamazione improvvisa",
           "La fortezza vista da fuori"
         ]
       },
@@ -2119,7 +2119,7 @@
         "themeEn": "Courage",
         "intro": {
           "it": "Una città fortificata sembra impossibile da conquistare. Il piano di Dio chiede fiducia e pazienza.",
-          "en": "A fortified city looks impossible to take. God's plan asks for trust and patience."
+          "en": "A fortified city looks impossible to take. God’s plan asks for trust and patience."
         },
         "questions": [
           {
@@ -2130,7 +2130,7 @@
             "answers": [
               {
                 "it": "Seguendo il piano di Dio con fede",
-                "en": "By following God's plan in faith",
+                "en": "By following God’s plan in faith",
                 "ok": true
               },
               {
@@ -2170,12 +2170,12 @@
           }
         ],
         "moral": {
-          "it": "Il coraggio biblico cammina con l'obbedienza. Dio apre strade dove l'uomo vede solo muri.",
+          "it": "Il coraggio biblico cammina con l’obbedienza. Dio apre strade dove l’uomo vede solo muri.",
           "en": "Biblical courage walks with obedience. God opens ways where humans only see walls."
         },
         "theaterQuote": {
           "it": "Riferimento Giosuè 6:2 — La vittoria è dono di Dio, non solo forza umana.",
-          "en": "Reference Joshua 6:2 — Victory is God's gift, not human strength alone."
+          "en": "Reference Joshua 6:2 — Victory is God’s gift, not human strength alone."
         }
       }
     },
@@ -2187,8 +2187,8 @@
         "keywordIt": "Priorità",
         "hintIt": "Una cucina piena di impegni e una sorella seduta ad ascoltare.",
         "solutionIt": "Maria scelse di ascoltare Gesù; Marta era distratta dai molti servizi. Gesù lodò la parte migliore. Luca 10:38-42.",
-        "scriptureQuoteIt": "Luca 10:42 — C'è bisogno di poche cose, anzi di una sola: scegliere ciò che non sarà tolto.",
-        "engagementNoteIt": "Il servizio è buono, ma non deve soffocare l'ascolto della Parola.",
+        "scriptureQuoteIt": "Luca 10:42 — C’è bisogno di poche cose, anzi di una sola: scegliere ciò che non sarà tolto.",
+        "engagementNoteIt": "Il servizio è buono, ma non deve soffocare l’ascolto della Parola.",
         "visibleKeys": [
           "1F46D",
           "1F3DB",
@@ -2217,7 +2217,7 @@
         "themeIt": "Priorità",
         "themeEn": "Priorities",
         "intro": {
-          "it": "In una casa ospitale due sorelle accolgono l'ospite in modi diversi. Una scelta rivela cosa conta di più.",
+          "it": "In una casa ospitale due sorelle accolgono l’ospite in modi diversi. Una scelta rivela cosa conta di più.",
           "en": "In a welcoming home two sisters receive the guest in different ways. One choice shows what matters most."
         },
         "questions": [
@@ -2228,7 +2228,7 @@
             },
             "answers": [
               {
-                "it": "Ascoltare l'insegnamento",
+                "it": "Ascoltare l’insegnamento",
                 "en": "To listen to the teaching",
                 "ok": true
               },
@@ -2273,7 +2273,7 @@
           "en": "Right priorities put God first. Listening to the Word feeds every other service."
         },
         "theaterQuote": {
-          "it": "Riferimento Luca 10:42 — La parte migliore è restare vicini all'insegnamento.",
+          "it": "Riferimento Luca 10:42 — La parte migliore è restare vicini all’insegnamento.",
           "en": "Reference Luke 10:42 — The better part is staying close to the teaching."
         }
       }
