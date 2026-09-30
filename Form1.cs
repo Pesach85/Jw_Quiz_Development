@@ -29,7 +29,37 @@ namespace Jw_Quiz_Development
         public Form1()
         {
             InitializeComponent();
+            ApplyBrandTheme();
             LanguageManager.LanguageChanged += LanguageManager_LanguageChanged;
+        }
+
+        /// <summary>
+        /// HITL B7:A — align Form1 chrome to web immersive palette (oro/blu).
+        /// Does not recolor PictureBox rebus grids. Intro.jpg splash remains legacy purple (future work).
+        /// </summary>
+        private void ApplyBrandTheme()
+        {
+            Color bg = Color.FromArgb(0x0b, 0x12, 0x20);
+            Color mid = Color.FromArgb(0x13, 0x20, 0x33);
+            Color ink = Color.FromArgb(0xe8, 0xee, 0xf7);
+            this.BackColor = bg;
+            this.ForeColor = ink;
+            this.Font = new Font("Segoe UI", 9F);
+            if (groupBox1 != null)
+            {
+                groupBox1.BackColor = bg;
+                groupBox1.ForeColor = ink;
+            }
+            if (menuStrip1 != null)
+            {
+                menuStrip1.BackColor = mid;
+                menuStrip1.ForeColor = ink;
+                foreach (ToolStripItem item in menuStrip1.Items)
+                {
+                    item.ForeColor = ink;
+                    item.BackColor = mid;
+                }
+            }
         }
 
         private void LanguageManager_LanguageChanged(object sender, EventArgs e)

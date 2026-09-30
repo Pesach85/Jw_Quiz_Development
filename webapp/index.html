@@ -7,10 +7,7 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <title>JW Quiz Immersive</title>
 
-  <!-- ========== FONTS (CDN) ========== -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet" />
+  <!-- ========== FONTS — system stack (HITL B3:A, no CDN) ========== -->
 
   <!-- ========== IMPORT MAP — Three.js ESM via CDN ========== -->
   <script type="importmap">
@@ -35,8 +32,8 @@
       --bad: #e05a5a;
       --line: rgba(240, 195, 106, 0.28);
       --panel: rgba(19, 32, 51, 0.82);
-      --font-display: "Cormorant Garamond", Georgia, serif;
-      --font-body: "Outfit", "Segoe UI", sans-serif;
+      --font-display: Georgia, "Times New Roman", serif;
+      --font-body: system-ui, "Segoe UI", Roboto, sans-serif;
       --ease: cubic-bezier(0.22, 1, 0.36, 1);
       --max: 1120px;
     }
@@ -683,9 +680,17 @@
     }
     .onb-card h2 { margin: 0 0 8px; font-size: 1.35rem; color: #f0c36a; }
     .onb-card p { margin: 0 0 16px; line-height: 1.45; opacity: 0.92; }
-    .onb-step { font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.65; margin-bottom: 10px; }
+    .onb-step { font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.65; margin-bottom: 8px; }
+    .onb-dots { display: flex; gap: 6px; margin-bottom: 14px; }
+    .onb-dots span {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: rgba(255,255,255,0.22);
+    }
+    .onb-dots span.is-active { background: #f0c36a; }
+    .onb-dots span.is-done { background: rgba(240,195,106,0.55); }
     .onb-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
     .onb-actions .btn { flex: 1 1 auto; min-width: 120px; }
+    .onb-actions .btn:disabled { opacity: 0.4; cursor: not-allowed; }
     .onb-lang, .onb-modes, .onb-prefs { display: grid; gap: 10px; }
     .onb-modes { grid-template-columns: 1fr; }
     @media (min-width: 520px) { .onb-modes { grid-template-columns: repeat(3, 1fr); } }
@@ -1000,7 +1005,7 @@
         classicMode: "Editor / Admin",
         startJourney: "Inizia",
         heroTitle: "Fai vivere il racconto",
-        heroLead: "Tre modalità di gioco: Quiz, Rebus 3D o Avventura completa — immersiva, con audio e scene animate.",
+        heroLead: "Scegli come giocare: quiz, rebus 3D o l'avventura intera — con scene e audio.",
         modeQuiz: "Quiz",
         modeRebus: "Rebus 3D",
         modeJourney: "Avventura",
@@ -1045,8 +1050,8 @@
         actQuiz: "Quiz",
         actMoral: "Insegnamento",
         guessStory: "Indovina la storia!",
-        correct: "Ottimo! Risposta corretta.",
-        incorrect: "Non proprio. Rifletti e continua.",
+        correct: "Bene! Continua.",
+        incorrect: "Quasi — rifletti e vai avanti.",
         scoreLabel: "Stelle scena",
         play: "Gioca",
         moralHeading: "Cosa impariamo",
@@ -1069,7 +1074,7 @@
         onb_langTitle: "Scegli la lingua",
         onb_langBody: "Potrai cambiarla in qualsiasi momento dalla barra in alto.",
         onb_discTitle: "Avviso importante",
-        onb_discBody: "Prodotto didattico non ufficiale Watch Tower. Ispirato allo stile didattico JW.org. Link ufficiale in footer.",
+        onb_discBody: "Questa app è didattica e non ufficiale. Ci ispiriamo allo stile di jw.org — il link ufficiale è in fondo.",
         onb_discCta: "Ho capito, continua",
         onb_nameTitle: "Come ti chiami? (opzionale)",
         onb_nameBody: "Max 20 caratteri. Se salti, useremo “Ospite”.",
@@ -1129,7 +1134,7 @@
         classicMode: "Editor / Admin",
         startJourney: "Start",
         heroTitle: "Bring the account to life",
-        heroLead: "Three game modes: Quiz, 3D Rebus, or full Adventure — immersive, with audio and animated scenes.",
+        heroLead: "Pick how to play: quiz, 3D rebus, or the full adventure — with scenes and audio.",
         modeQuiz: "Quiz",
         modeRebus: "3D Rebus",
         modeJourney: "Adventure",
@@ -1165,8 +1170,8 @@
         actQuiz: "Quiz",
         actMoral: "Teaching",
         guessStory: "Guess the story!",
-        correct: "Great! Correct answer.",
-        incorrect: "Not quite. Reflect and continue.",
+        correct: "Nice! Keep going.",
+        incorrect: "Almost — think it over and continue.",
         scoreLabel: "Scene stars",
         play: "Play",
         moralHeading: "What we learn",
@@ -1189,7 +1194,7 @@
         onb_langTitle: "Choose your language",
         onb_langBody: "You can change it anytime from the top bar.",
         onb_discTitle: "Important notice",
-        onb_discBody: "Unofficial educational product, not Watch Tower. Inspired by JW.org teaching style. Official link in the footer.",
+        onb_discBody: "This app is educational and unofficial. Inspired by the jw.org teaching style — official link in the footer.",
         onb_discCta: "Got it, continue",
         onb_nameTitle: "What is your name? (optional)",
         onb_nameBody: "Max 20 characters. Skip to use “Guest”.",
@@ -2644,7 +2649,12 @@
       const card = document.getElementById("onbCard");
       if (!overlay || !card) return;
       const stepLabel = onbT("onb_stepOf").replace("{n}", String(onbState.step));
-      let body = `<div class="onb-step">${stepLabel}</div>`;
+      const dots = Array.from({ length: 7 }, (_, i) => {
+        const n = i + 1;
+        const cls = n === onbState.step ? "is-active" : (n < onbState.step ? "is-done" : "");
+        return `<span class="${cls}" aria-hidden="true"></span>`;
+      }).join("");
+      let body = `<div class="onb-step">${stepLabel}</div><div class="onb-dots" role="presentation">${dots}</div>`;
 
       if (onbState.step === 1) {
         body += `<h2 id="onbTitle">${onbT("onb_langTitle")}</h2><p>${onbT("onb_langBody")}</p>
@@ -2701,10 +2711,11 @@
         : onbState.step === 5 ? onbT("onb_tutCta")
         : onbState.step === 7 ? onbT("onb_startEp1")
         : onbT("onb_next");
+      const backDisabled = onbState.step <= 1 ? "disabled" : "";
 
       body += `<div class="onb-actions">
         <button type="button" class="btn btn-ghost" id="onbSkip">${onbT("onb_skip")}</button>
-        ${onbState.step > 1 && onbState.step < 7 ? `<button type="button" class="btn" id="onbBack">${onbT("onb_back")}</button>` : ""}
+        <button type="button" class="btn" id="onbBack" ${backDisabled}>${onbT("onb_back")}</button>
         ${onbState.step < 7 ? `<button type="button" class="btn btn-primary" id="onbNext">${primaryLabel}</button>` : ""}
         ${onbState.step === 7 ? `<button type="button" class="btn btn-primary" id="onbStartEp1">${onbT("onb_startEp1")}</button>
           <button type="button" class="btn" id="onbExplore">${onbT("onb_explore")}</button>` : ""}
@@ -2712,6 +2723,18 @@
 
       card.innerHTML = body;
       wireOnboardingHandlers();
+    }
+
+    function onbGoBack() {
+      if (onbState.step <= 1) return;
+      persistStepSideEffects();
+      onbState.step = Math.max(1, onbState.step - 1);
+      renderOnboarding();
+    }
+
+    function onbIsOpen() {
+      const overlay = document.getElementById("onboardingOverlay");
+      return !!(overlay && overlay.classList.contains("is-open") && !overlay.hidden);
     }
 
     function wireOnboardingHandlers() {
@@ -2769,7 +2792,7 @@
       const skip = document.getElementById("onbSkip");
       if (skip) skip.addEventListener("click", () => onbAdvance(true));
       const back = document.getElementById("onbBack");
-      if (back) back.addEventListener("click", () => { onbState.step = Math.max(1, onbState.step - 1); renderOnboarding(); });
+      if (back) back.addEventListener("click", () => onbGoBack());
       const next = document.getElementById("onbNext");
       if (next) next.addEventListener("click", () => onbAdvance(false));
       const start = document.getElementById("onbStartEp1");
@@ -2844,6 +2867,23 @@
       overlay.classList.remove("is-open");
       overlay.hidden = true;
     }
+
+    // Smoke / DevTools helpers (read + drive onboarding; no theme key)
+    window.__JWQ_ONB = {
+      isOpen: () => onbIsOpen(),
+      step: () => onbState.step,
+      state: () => ({
+        step: onbState.step,
+        name: onbState.name,
+        mode: onbState.mode,
+        audioOn: onbState.audioOn,
+        reduceMotion: onbState.reduceMotion
+      }),
+      open: (force) => openOnboarding(!!force),
+      next: () => onbAdvance(false),
+      back: () => onbGoBack(),
+      finish: () => finishOnboarding("explore")
+    };
 
     function openSettingsPanel() {
       const reset = confirm(onbT("onb_resetConfirm"));
@@ -3565,6 +3605,27 @@
     btnTheaterNext.addEventListener("click", nextStep);
     btnTheaterBack.addEventListener("click", prevStep);
     document.addEventListener("keydown", (e) => {
+      if (onbIsOpen()) {
+        const tag = (e.target && e.target.tagName) || "";
+        const typing = tag === "INPUT" || tag === "TEXTAREA";
+        if (e.key === "Escape") {
+          e.preventDefault();
+          finishOnboarding("explore");
+          return;
+        }
+        if (e.key === "ArrowLeft") {
+          e.preventDefault();
+          onbGoBack();
+          return;
+        }
+        if (e.key === "ArrowRight" || (e.key === "Enter" && !typing)) {
+          e.preventDefault();
+          if (onbState.step >= 7) finishOnboarding("ep1");
+          else onbAdvance(false);
+          return;
+        }
+        return;
+      }
       if (e.key === "Escape" && theater.classList.contains("is-open")) closeTheater();
     });
 

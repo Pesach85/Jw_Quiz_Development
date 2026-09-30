@@ -17,7 +17,7 @@
 
 body {
   margin: 0;
-  font-family: "Nunito Sans", "Segoe UI", sans-serif;
+  font-family: system-ui, "Segoe UI", Roboto, sans-serif;
   color: var(--ink);
   background: radial-gradient(circle at 15% 20%, #ffe8b6 0%, #fff7e5 35%, #f3f9ff 100%);
   min-height: 100vh;
@@ -48,7 +48,7 @@ body {
 
 .brand {
   margin: 0;
-  font-family: "Bree Serif", Georgia, serif;
+  font-family: Georgia, "Times New Roman", serif;
   font-size: 30px;
   letter-spacing: 0.2px;
   color: var(--brand);
@@ -87,7 +87,7 @@ body {
 
 .story-title {
   margin: 0;
-  font-family: "Bree Serif", Georgia, serif;
+  font-family: Georgia, "Times New Roman", serif;
   font-size: 34px;
   line-height: 1.12;
 }
@@ -200,7 +200,7 @@ a.btn {
 
 .solution h3 {
   margin: 0 0 8px;
-  font-family: "Bree Serif", Georgia, serif;
+  font-family: Georgia, "Times New Roman", serif;
   color: #8a4b00;
 }
 
@@ -248,7 +248,7 @@ a.btn {
 .editor-head h3,
 .picker-head h3 {
   margin: 0;
-  font-family: "Bree Serif", Georgia, serif;
+  font-family: Georgia, "Times New Roman", serif;
   font-size: 28px;
   color: var(--brand);
 }
@@ -306,7 +306,7 @@ a.btn {
 
 .editor-section h4 {
   margin: 0 0 12px;
-  font-family: "Bree Serif", Georgia, serif;
+  font-family: Georgia, "Times New Roman", serif;
   color: #7a4a00;
   font-size: 22px;
 }
@@ -520,7 +520,7 @@ a.btn {
   font-size: 24px;
   letter-spacing: 2px;
   transition: color 0.3s ease;
-  font-family: "Segoe UI", "Nunito Sans", sans-serif;
+  font-family: system-ui, "Segoe UI", Roboto, sans-serif;
   -webkit-user-select: none;
   user-select: none;
 }
@@ -580,7 +580,7 @@ a.btn {
 }
 .admin-head h3 {
   margin: 0;
-  font-family: "Bree Serif", Georgia, serif;
+  font-family: Georgia, "Times New Roman", serif;
   font-size: 26px;
   color: var(--brand);
 }
@@ -605,7 +605,7 @@ a.btn {
   font-size: 36px;
   font-weight: 800;
   color: var(--brand);
-  font-family: "Bree Serif", Georgia, serif;
+  font-family: Georgia, "Times New Roman", serif;
 }
 .admin-stat-lbl {
   font-size: 14px;

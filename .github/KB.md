@@ -358,6 +358,7 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-09-29 | **Smoke admin post-config**: pre-flight `.local/` in `.gitignore`; prod `jwquiz.pages.dev` — OPTIONS 200, heartbeat OK, `admin_stats` OK (4 metriche), wrong/no secret → 403; secret non loggato; UI classic.html confermata dall’umano | ✅ Verde (API agent + umano) |
 | 2026-09-30 | **J — multiplayer MVP (Sfida 2-8, timer per-player, sequenze)** — layer su Quiz/Rebus (no journey); storage `jwquiz_challenge_v1` `version:1`; HITL D-J1…D-J4 | ✅ Implementato |
 | 2026-09-30 | **L/Brand design**: `docs/BRAND_IDENTITY_PROPOSAL.md` (audit + HITL B1–B8) + `docs/ONLINE_ROOMS_DESIGN.md` (DO+WS); zero runtime | ⏳ HITL brand |
+| 2026-09-30 | **I2 — onboarding back/forward** + tastiera; **Brand — identity applicata (B1–B8)** system stack + favicon JQ + tono + Form1 palette | ✅ Apply |
 | 2026-09-29 | **Prompt C (design G1)**: drift mappato STORIES vs `stories.js` vs `StoryLibrary.cs`; opzioni A/B/C valutate; **raccomandazione Option B** (`data/episodes.json` + generator Python → `stories.js` + `StoryLibrary.cs`); deliverable `docs/DATASET_UNIFICATION_DESIGN.md` — **build non avviato** | ✅ Design |
 | 2026-09-29 | **Prompt C build Step 0**: `data/episodes.schema.json`, `tools/validate_episodes.py`, fixture OK/broken; checkpoint validator exit 0/1; vincoli Q2 (no symbols in JSON), Q4 (theaterQuote vs scriptureQuoteIt) | ✅ Step 0 |
 | 2026-09-29 | **C-BUILD Step 1 — migrazione episodes.json (18 record)**: merge STORIES + `stories.js` + `StoryLibrary.cs`; validator `--full-catalog` verde; ep.8 titolo unificato; ep.10/12 keys+caption da C# (stories.js incompleto) | ✅ Step 1 |
@@ -419,8 +420,9 @@ Aggiornare questa sezione ad ogni sessione di lavoro.
 | Media | Immersive | Aggiungere FR/ES come terze lingue riusando lo stesso schema `{ it, en, … }` |
 | Media | Gamification | **Streak + Badge**: N storie consecutive senza hint = badge "Saggio/Profeta/Apostolo" |
 | Media | Gamification | ~~**Classifica sessione locale**: 2-8 partecipanti~~ ✅ **COMPLETATO** (Prompt J — Sfida layer, timer per-player, sequenceMode) |
-| Media | Design | **Brand identity** — `docs/BRAND_IDENTITY_PROPOSAL.md` — HITL B1–B8 in attesa |
+| Media | Design | ~~**Brand identity**~~ ✅ **APPLICATO** (B1–B8: system fonts, favicon JQ, tono, Form1 palette; no theme key) |
 | Media | Design | **Online rooms DO+WS** — `docs/ONLINE_ROOMS_DESIGN.md` — design only; dopo brand HITL |
+| Alta | UX | ~~**I2 — Onboarding back/forward**~~ ✅ **COMPLETATO** (Indietro/Avanti + ArrowLeft/Right/Enter/Escape) |
 | Media | Gamification | **Percorsi Tematici**: raccolte storie per tema (Fede/Amore/Coraggio) con barra progresso sbloccabile |
 | Media | UX | ProgressPanel: aggiungere grafico barre XP e lista storie completate |
 | Media | Content | ~~Aggiungere storia ID 19+~~ ✅ mergiate in catalogo (K2) |
@@ -531,6 +533,8 @@ L’esperienza è **ispirata** allo stile didattico JW.org “Fai vivere il racc
 | Wrangler “Unknown arguments: wrangler, pages…” | `npx wrangler` invocato dopo un wrangler già globale/ambiguo | Dal root repo, una sola invocazione; se persiste: `npx --yes wrangler@4.124.0 pages deploy webapp --project-name=jwquiz` |
 | Challenge timer per-player UI | N countdown affiancati; race first-correct wall-clock | `#chTimers` chip per player; `challengeRecordAnswer` + speed bonus su timerSec del player; primo `ok` → +50 |
 | Challenge sequenceMode | Host deve scegliere preset/mixed/single | Lobby radios + dropdown anti-spoiler (`Episodio id · tema`); `sequenceEpisodes` persistito in `jwquiz_challenge_v1` |
+| B3:A Google Fonts rimosso | Dipendenza CDN / offline WebView | System stack: `--font-display: Georgia, "Times New Roman", serif`; `--font-body: system-ui, "Segoe UI", Roboto, sans-serif` (`index.html` + `classic.html`/`styles.css`) |
+| B7:A desktop palette | Form1 allineato web oro/blu | `ApplyBrandTheme()` Back `#0B1220` Fore `#E8EEF7` Menu `#132033`; **Intro.jpg resta viola legacy** → future PNG brand-compliant |
 
 ### Checklist regressione (sessione Immersive)
 - [x] `webapp/app.js` invariato (o solo cambi deliberati) — Prompt H 2026-09-29
@@ -679,10 +683,10 @@ Aggiornare questa KB:
 
 Commit se il tree deve tornare pulito (deploy Wrangler). Push solo se richiesto esplicitamente.
 
-### Stato corrente (handoff) — 2026-09-30 (post J + design L/Brand)
+### Stato corrente (handoff) — 2026-09-30 (post I2+Brand apply)
 
-- **STEP J CHIUSO** — `99f7e59` feat(challenge); spec `2406475`.
-- **Design docs (no runtime):** `docs/BRAND_IDENTITY_PROPOSAL.md` (HITL **B1–B8**), `docs/ONLINE_ROOMS_DESIGN.md` (DO+WS, fallback locale) — committed.
-- **Prossimo:** risposta HITL branding → poi eventuale apply brand; online rooms solo dopo OK design R1–R3.
-- **Aperti defer:** D1, D4–D10; no deploy.
-- **Dev server:** `:8083`.
+- **Onboarding v2:** back/forward + dots + tastiera; Escape → completed.
+- **Brand B1–B8 applicato:** no rename; palette invariata; no Google Fonts; favicon JQ; tono informale (hero/onb_disc/feedback); Form1 `ApplyBrandTheme`; no `jwquiz_theme_v1`.
+- **Evidence:** `.local/smoke/o9_hero_georgia.png`, `o10_favicon_jq.png`, `o14_*`; Form1 runtime `Back=FF0B1220 Fore=FFE8EEF7`.
+- **Prossimo:** review D1/D4–D10; online rooms ancora design-only; Intro.jpg legacy da sostituire.
+- **No deploy.** `app.js` intatto.
