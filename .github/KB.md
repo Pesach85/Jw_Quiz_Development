@@ -362,6 +362,7 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-09-30 | **SEMANTIC — Ep 11** (3 caption + 1 regen photoreal `1F410`) **+ Ep 12/18** placeholder `2753` → key photo (`1F5FA` / `1F932-1F3FC`) | ✅ Applicato |
 | 2026-09-30 | **HITL D4–D10 final pack** — `docs/HITL_D4_D10_FINAL_2026-09-30.md` (decision-ready; no apply) | ✅ Doc |
 | 2026-09-30 | **E2 chiuso** — D4–D10 HITL confermati keep / no-op (`D4A…D9A D10B`); nessun APPLY dati | ✅ Chiuso |
+| 2026-09-30 | **F design** — `docs/STREAK_BADGE_SPEC.md` (streak no-hint + badge; HITL F1–F5) | ✅ Spec |
 | 2026-09-29 | **Prompt C (design G1)**: drift mappato STORIES vs `stories.js` vs `StoryLibrary.cs`; opzioni A/B/C valutate; **raccomandazione Option B** (`data/episodes.json` + generator Python → `stories.js` + `StoryLibrary.cs`); deliverable `docs/DATASET_UNIFICATION_DESIGN.md` — **build non avviato** | ✅ Design |
 | 2026-09-29 | **Prompt C build Step 0**: `data/episodes.schema.json`, `tools/validate_episodes.py`, fixture OK/broken; checkpoint validator exit 0/1; vincoli Q2 (no symbols in JSON), Q4 (theaterQuote vs scriptureQuoteIt) | ✅ Step 0 |
 | 2026-09-29 | **C-BUILD Step 1 — migrazione episodes.json (18 record)**: merge STORIES + `stories.js` + `StoryLibrary.cs`; validator `--full-catalog` verde; ep.8 titolo unificato; ep.10/12 keys+caption da C# (stories.js incompleto) | ✅ Step 1 |
