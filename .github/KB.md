@@ -359,6 +359,7 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-09-30 | **J — multiplayer MVP (Sfida 2-8, timer per-player, sequenze)** — layer su Quiz/Rebus (no journey); storage `jwquiz_challenge_v1` `version:1`; HITL D-J1…D-J4 | ✅ Implementato |
 | 2026-09-30 | **L/Brand design**: `docs/BRAND_IDENTITY_PROPOSAL.md` (audit + HITL B1–B8) + `docs/ONLINE_ROOMS_DESIGN.md` (DO+WS); zero runtime | ⏳ HITL brand |
 | 2026-09-30 | **I2 — onboarding back/forward** + tastiera; **Brand — identity applicata (B1–B8)** system stack + favicon JQ + tono + Form1 palette | ✅ Apply |
+| 2026-09-30 | **SEMANTIC — Ep 11** (3 caption + 1 regen photoreal `1F410`) **+ Ep 12/18** placeholder `2753` → key photo (`1F5FA` / `1F932-1F3FC`) | ✅ Applicato |
 | 2026-09-29 | **Prompt C (design G1)**: drift mappato STORIES vs `stories.js` vs `StoryLibrary.cs`; opzioni A/B/C valutate; **raccomandazione Option B** (`data/episodes.json` + generator Python → `stories.js` + `StoryLibrary.cs`); deliverable `docs/DATASET_UNIFICATION_DESIGN.md` — **build non avviato** | ✅ Design |
 | 2026-09-29 | **Prompt C build Step 0**: `data/episodes.schema.json`, `tools/validate_episodes.py`, fixture OK/broken; checkpoint validator exit 0/1; vincoli Q2 (no symbols in JSON), Q4 (theaterQuote vs scriptureQuoteIt) | ✅ Step 0 |
 | 2026-09-29 | **C-BUILD Step 1 — migrazione episodes.json (18 record)**: merge STORIES + `stories.js` + `StoryLibrary.cs`; validator `--full-catalog` verde; ep.8 titolo unificato; ep.10/12 keys+caption da C# (stories.js incompleto) | ✅ Step 1 |
@@ -423,6 +424,7 @@ Aggiornare questa sezione ad ogni sessione di lavoro.
 | Media | Design | ~~**Brand identity**~~ ✅ **APPLICATO** (B1–B8: system fonts, favicon JQ, tono, Form1 palette; no theme key) |
 | Media | Design | **Online rooms DO+WS** — `docs/ONLINE_ROOMS_DESIGN.md` — design only; dopo brand HITL |
 | Alta | UX | ~~**I2 — Onboarding back/forward**~~ ✅ **COMPLETATO** (Indietro/Avanti + ArrowLeft/Right/Enter/Escape) |
+| Alta | Content | ~~**Semantic audit → fix Ep 11/12/18**~~ ✅ **COMPLETATO** (`docs/SEMANTIC_AUDIT_2026-09-30.md` + HITL apply) |
 | Media | Gamification | **Percorsi Tematici**: raccolte storie per tema (Fede/Amore/Coraggio) con barra progresso sbloccabile |
 | Media | UX | ProgressPanel: aggiungere grafico barre XP e lista storie completate |
 | Media | Content | ~~Aggiungere storia ID 19+~~ ✅ mergiate in catalogo (K2) |
@@ -535,6 +537,8 @@ L’esperienza è **ispirata** allo stile didattico JW.org “Fai vivere il racc
 | Challenge sequenceMode | Host deve scegliere preset/mixed/single | Lobby radios + dropdown anti-spoiler (`Episodio id · tema`); `sequenceEpisodes` persistito in `jwquiz_challenge_v1` |
 | B3:A Google Fonts rimosso | Dipendenza CDN / offline WebView | System stack: `--font-display: Georgia, "Times New Roman", serif`; `--font-body: system-ui, "Segoe UI", Roboto, sans-serif` (`index.html` + `classic.html`/`styles.css`) |
 | B7:A desktop palette | Form1 allineato web oro/blu | `ApplyBrandTheme()` Back `#0B1220` Fore `#E8EEF7` Menu `#132033`; **Intro.jpg resta viola legacy** → future PNG brand-compliant |
+| Ep 11 caption↔PNG + STYLE `1F410` | Caption “polli/mucche” vs PNG capra/pecora; slot 6 emoji 13.8 KB | **Fix 2026-09-30:** caption slot 3/6/7 → capre/pecore; regen photoreal `ep11-goat-photo` → alias `1F410` (1.58 MB) |
+| Ep 12/18 placeholder `2753` in visible | Slot 2 / slot 5 = punto interrogativo pack | **Fix 2026-09-30:** Ep12 `visibleKeys[1]=1F5FA` “Il cammino verso Gaza”; Ep18 `visibleKeys[4]=1F932-1F3FC` “Chi tende la mano?” |
 
 ### Checklist regressione (sessione Immersive)
 - [x] `webapp/app.js` invariato (o solo cambi deliberati) — Prompt H 2026-09-29
@@ -616,6 +620,7 @@ Obiettivo: working tree pulito **senza** cancellare sorgenti e **senza** committ
 | `android/app/src/main/assets/www/**` | `python tools/sync_all.py` dal **root** |
 | `android/app/src/main/assets/www/.gitkeep` | **Unica** eccezione tracciata: tiene la cartella in git dopo `rmtree` |
 | `tools/photo_masters/*.png` | Master fotorealistici; copie applicate in `Resources/` + `webapp/assets/` |
+| `tools/photo_masters/ep11-goat-photo.png` | **Eccezione tracciata** (2026-09-30): master one-shot Ep 11 slot 6; `git add -f` nonostante gitignore `tools/photo_masters/*.png` |
 | `UserProgress.dat`, `UserStories.dat` | Runtime locale WinForms (progressione / storie utente); **in `.gitignore`** — mai committare |
 | `android/.gradle/`, `android/build/`, `android/app/build/` | Cache Gradle |
 | `bin/`, `obj/`, `.vs/`, `.vscode/`, `.wrangler/`, `.local/` | Build / IDE / Wrangler local; `.local/` = secret locali (es. `ADMIN_SECRET` dev, mai in git) |
@@ -683,10 +688,10 @@ Aggiornare questa KB:
 
 Commit se il tree deve tornare pulito (deploy Wrangler). Push solo se richiesto esplicitamente.
 
-### Stato corrente (handoff) — 2026-09-30 (post I2+Brand apply)
+### Stato corrente (handoff) — 2026-09-30 (post semantic fix Ep 11/12/18)
 
-- **Onboarding v2:** back/forward + dots + tastiera; Escape → completed.
-- **Brand B1–B8 applicato:** no rename; palette invariata; no Google Fonts; favicon JQ; tono informale (hero/onb_disc/feedback); Form1 `ApplyBrandTheme`; no `jwquiz_theme_v1`.
-- **Evidence:** `.local/smoke/o9_hero_georgia.png`, `o10_favicon_jq.png`, `o14_*`; Form1 runtime `Back=FF0B1220 Fore=FFE8EEF7`.
-- **Prossimo:** review D1/D4–D10; online rooms ancora design-only; Intro.jpg legacy da sostituire.
+- **Semantic fix applicato:** Ep 11 caption slot 3/6/7; `1F410` emoji→photoreal 1.58 MB (`ep11-goat-photo`); Ep 12 slot2 `1F5FA`; Ep 18 slot5 `1F932-1F3FC`.
+- **Docs:** `docs/SEMANTIC_AUDIT_2026-09-30.md` + `docs/SEMANTIC_FIX_HITL_2026-09-30.md`.
+- **Evidence:** `.local/smoke/ep11_slot6_new.png`, `semantic_ep11/12/18_web.png` (gitignored).
+- **Prossimo:** review D1/D4–D10; online rooms design-only; Intro.jpg legacy.
 - **No deploy.** `app.js` intatto.
