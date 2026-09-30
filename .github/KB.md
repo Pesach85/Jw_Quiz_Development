@@ -386,7 +386,8 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-09-30 | **Bug 2 design**: `docs/MENU_LAYOUT_DESIGN.md` — A/C/D; rec. **A+D leggero**; nessun runtime | ✅ `585acd4` |
 | 2026-09-30 | **E2 analisi i18n**: `docs/I18N_QA_FIX_PROPOSAL.md` — ovvi / wording / ambigui; stale FAILS 0 | ✅ `51ad6f2` |
 | 2026-09-30 | **E2 §1 fix ovvi**: 9 caption/hint/note (GRATUITO/OK-/ASCII→Unicode); sync+parity+MSBuild; no scripture/§2 | ✅ `74b61c7` |
-| 2026-09-30 | **Bug 2 A+D leggero**: `PopulateStoriesMenu` fasce 1–12/13–18/19–23; Designer Visible=false; no Nuovi Episodi; smoke 12/6/5 | ⏳ commit in corso |
+| 2026-09-30 | **Bug 2 A+D leggero**: `PopulateStoriesMenu` fasce 1–12/13–18/19–23; Designer Visible=false; no Nuovi Episodi; smoke 12/6/5 | ✅ `e95747e` |
+| 2026-09-30 | **HITL i18n**: `docs/I18N_HITL_DECISIONS.md` — W1–W26 + D1–D10 one-line; nessun §2 applicato | ⏳ commit in corso |
 ---
 
 ## 11. Next Best Decisions (Proposte Attive)
@@ -403,9 +404,9 @@ Aggiornare questa sezione ad ogni sessione di lavoro.
 | P1 Alta | Content | ~~Bozze 19+ / K2~~ ✅ **COMPLETATO** — catalogo **23** (`cc92e8e`). Nota: leftover uncommitted `validate`/`generate`/`index.html` DECOR→23 |
 | P1 Alta | Design | **Classic flat — keep (M)** — `docs/CLASSIC_REBUS_DEPRECATION.md`. Nessun tocco `app.js` |
 | P1 Alta | Immersive | ~~Unificare dataset Q&A immersivo (G1)~~ ✅ **COMPLETATO** |
-| P1 Alta | Multilanguage | **E2 §1 ovvi ✅** (in tree). §2+D1–D10 → `docs/I18N_HITL_DECISIONS.md` (HITL) |
+| P1 Alta | Multilanguage | **E2 §1 ✅** `74b61c7`. §2+D1–D10 → rispondi su `docs/I18N_HITL_DECISIONS.md` |
 | Alta | UX | ~~**I — Onboarding**~~ ✅ **COMPLETATO** (web W1–W8 + desktop D1–D6 empirico utente + C1–C5b incl. C4 retry) |
-| P1 Alta | Desktop | ~~Bug1+Bug3~~ ✅ `1390bd3`. ~~Bug2 fasce~~ ⏳ fix in tree (A+D leggero) |
+| P1 Alta | Desktop | ~~Bug1+Bug3~~ ✅ `1390bd3`. ~~Bug2 fasce~~ ✅ `e95747e` |
 | Alta | Web Immersive | ~~Landing 3D + theater Q&A~~ ✅ **COMPLETATO** (`webapp/index.html`) |
 | Alta | Immersive | ~~Pack fotorealistico rebus~~ ✅ **COMPLETATO** |
 | Alta | Docs | ~~Unificare documentazione human/agent + pipeline sync~~ ✅ **COMPLETATO** |
