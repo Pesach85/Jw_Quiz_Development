@@ -380,7 +380,8 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-09-29 | **K2 — merge episodi 19–23 in catalogo**: Babel, Daniele, Saul→Paolo, Gerico, Marta/Maria; citazioni approvate (ref+parafrasi); DECOR 19–23; validator/generator → 23; parity OK (warn Ep10 hint=hidden[1] accettato) | ⏳ commit proposto |
 | 2026-09-30 | **A — KB gotcha `:8082`**: port conflict `:8081` → fallback documentato MIME `text/javascript` | ⏳ commit proposto |
 | 2026-09-30 | **E — QA i18n 1–23**: report `docs/I18N_QA_REPORT.md` (anti-spoiler caption, glossario, tier theater/scripture); nessun fix contenuti | ⏳ commit proposto |
-| 2026-09-30 | **I — onboarding chiuso (web W1-W8 + desktop A1-A6)**: commit `ebf63ed`; C4 retry MSBuild 0 (kill PID lock); storage `jwquiz_onboarding_v1` / `player_name` / `audio` / `motion`; `UserOnboarding.dat` gitignored | ✅ chiuso |
+| 2026-09-30 | **I — onboarding chiuso (web W1-W8 + desktop A1-A6)**: commit `ebf63ed`; C4 retry MSBuild 0 (kill PID lock); storage `jwquiz_onboarding_v1` / `player_name` / `audio` / `motion`; `UserOnboarding.dat` gitignored | ✅ chiuso (`51ff6c9` kb) |
+| 2026-09-30 | **Desktop bugs indagine**: menu Nuovi Episodi hardcode 13–18; layout Storie ibrido Designer+runtime; PictureBox Left fisso 40 | ⏳ report `docs/DESKTOP_BUGS_2026-09-30.md` |
 ---
 
 ## 11. Next Best Decisions (Proposte Attive)
