@@ -109,7 +109,8 @@ namespace Jw_Quiz_Development
         public static Story AddStory(Story story)
         {
             var userStories = GetUserStories();
-            int newId = userStories.Count == 0 ? USER_STORY_START_ID : userStories.Max(s => s.Id) + 1;
+            int next = userStories.Count == 0 ? USER_STORY_START_ID : userStories.Max(s => s.Id) + 1;
+            int newId = Math.Max(USER_STORY_START_ID, next);
 
             story.Id = newId;
             story.IsDynamic = true;

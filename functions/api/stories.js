@@ -2,7 +2,7 @@ import { ensureStoryTranslations, normalizeLanguage } from "../../webapp/story-i
 
 const STORIES_KEY = "user_stories";
 const STORY_COUNTER_KEY = "story_counter";
-const MIN_STORY_ID = 18;
+const MIN_STORY_ID = 1000;
 
 function json(data, status) {
   return new Response(JSON.stringify(data), {

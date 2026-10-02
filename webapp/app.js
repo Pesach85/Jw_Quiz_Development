@@ -862,7 +862,7 @@ import {
         state.sharedStories.push(sanitizeStory(newStory));
         state.sharedStories[state.sharedStories.length - 1].id = getAllStories().reduce(function (maxId, item) {
           return Math.max(maxId, Number(item.id || 0));
-        }, 18) + 1;
+        }, 999) + 1;
         saveLocalStories(state.sharedStories);
         setEditorStatus(getWebText(state.currentLanguage, "StorySavedLocal"), true);
       }
