@@ -230,7 +230,7 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 
 ## 6. Sistemi di Progressione
 
-- `ProgressTracker.cs`: singleton, carica/salva `UserProgress.dat` (BinaryFormatter)
+- `ProgressTracker.cs`: singleton, carica/salva `UserProgress.dat` come testo a linee (`File.WriteAllText` / `ReadAllLines`). Non è BinaryFormatter. G5 è chiuso per il milestone corrente (2026-10-02): il formato resta; la migrazione JSON è differita.
 - Metodo: `CompleteStory(int storyId)` e `CompleteStory(int storyId, int xp)`
 - XP totali, storie completate, badge sbloccati
 - `ProgressPanel.cs`: UI panel integrato in Form1
@@ -263,7 +263,7 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 - **PlaceholderText** non disponibile in .NET Framework 4.7.2 (solo .NET 5+) ÔÇö non usare
 - **ResourceManager.GetObject** con chiave esatta (senza estensione) per caricare PNG
 - Caricamento risorse centralizzato in `StoryResources.cs` (evitare accesso diretto duplicato al ResourceManager)
-- **BinaryFormatter** deprecato in .NET 5+ ma funziona in net472
+- Il salvataggio desktop di `UserProgress.dat` è testo a linee, non BinaryFormatter. La migrazione JSON resta future work (G5 chiuso per il milestone corrente, 2026-10-02).
 - **DockStyle.Fill** deve essere aggiunto per primo (`Controls.Add`) per corretta precedenza z-order
 - **Emoji come testo** nei Label: evitare ÔÇö usare PictureBox con PNG da Resources per coerenza visiva
 - **Cloudflare shared mode** richiede 2 binding configurati in Pages: KV `JWQUIZ_DATA` e R2 `JWQUIZ_UPLOADS`
@@ -398,6 +398,7 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-09-30 | **Audit immagini + HITL master**: `docs/IMAGES_AUDIT_2026-09-30.md` (184 slot); `docs/HITL_MASTER_2026-09-30.md` | ✅ `6ef6e53` |
 | 2026-09-30 | **HITL apply**: Ep13 `piccolo_gregge` + W1–W26 + D2/D3; residui EP12/18 + D1 + D4–D10 | ✅ `f554736`+`729a5f7`+`ddea5ee` |
 | 2026-09-30 | **Fix desktop ResourceManager**: registra `piccolo_gregge` (+`1F411`) in resx/Designer; EP12/18 B + W16 keep | ✅ `7054c1c`+`6e04efb` |
+| 2026-10-02 | **G5 chiuso per il milestone corrente** — `UserProgress.dat` resta testo a linee; migrazione JSON differita; non blocca il rilascio; nessuna dipendenza da N2 o dalla pubblicazione; conferma umana CONFIRM G5 CLOSURE | ✅ Chiuso |
 ---
 
 ## 11. Next Best Decisions (Proposte Attive)
@@ -439,7 +440,7 @@ Aggiornare questa sezione ad ogni sessione di lavoro.
 | Bassa | Gamification | **Timer di indovinamento**: 60s opzionale, bonus XP se risposta entro scadenza |
 | Bassa | Gamification | **Modalità Riflessione**: dopo soluzione, domanda aperta da leggere al gruppo |
 | Bassa | Gamification | **Storia del Giorno**: selezione automatica basata sulla data del calendario |
-| Bassa | Tecnica | Sostituire BinaryFormatter con `System.Text.Json` + file JSON per persistenza |
+| Bassa | Tecnica | Migrazione JSON di `UserProgress.dat` (testo a linee) — future work differito; G5 chiuso per il milestone corrente (2026-10-02), formato attuale mantenuto |
 | Bassa | UX grafiche | Hero image per ogni storia (immagine panoramica nell'header) |
 | Bassa | Distribuzione | Build script Release + copia automatica in cartella distribuzione |
 
@@ -548,7 +549,7 @@ L’esperienza è **ispirata** allo stile didattico JW.org “Fai vivere il racc
 | Ep 11 caption↔PNG + STYLE `1F410` | Caption “polli/mucche” vs PNG capra/pecora; slot 6 emoji 13.8 KB | **Fix 2026-09-30:** caption slot 3/6/7 → capre/pecore; regen photoreal `ep11-goat-photo` → alias `1F410` (1.58 MB) |
 | Ep 12/18 placeholder `2753` in visible | Slot 2 / slot 5 = punto interrogativo pack | **Fix 2026-09-30:** Ep12 `visibleKeys[1]=1F5FA` “Il cammino verso Gaza”; Ep18 `visibleKeys[4]=1F932-1F3FC` “Chi tende la mano?” |
 | F streak storage web | Progress senza campi streak | `jwquiz_immersive_progress_v1` `version:1` + `noHintStreak`/`maxNoHintStreak`/`badges` (default 0/[]); migrazione lazy in `loadProgress`/`saveProgress` |
-| F streak desktop | File `UserProgress.dat` vecchio senza linee 7–9 | Line-based (non migrare BinaryFormatter — G5 debt); linee 7–9 opzionali → default 0/[]; badge Attento(5)/Diligente(10)/Esperto(20) su `MaxNoHintStreak` |
+| F streak desktop | File `UserProgress.dat` vecchio senza linee 7–9 | Testo a linee; linee 7–9 opzionali → default 0/[]; G5 chiuso il 2026-10-02 (formato mantenuto, JSON differito); badge Attento(5)/Diligente(10)/Esperto(20) su `MaxNoHintStreak` |
 | F badge Id collision | Completion badge “Esperto” vs streak | Completion Id = `EspertoBiblico`; streak Id = `Esperto` |
 
 ### Checklist regressione (sessione Immersive)
@@ -702,7 +703,16 @@ Commit se il tree deve tornare pulito (deploy Wrangler). Push solo se richiesto 
 ### Stato corrente (handoff) — 2026-09-30 (F streak+badge MVP)
 
 - **F — streak + badge COMPLETATO (MVP):** web `index.html` (HUD chip + tray) + desktop `ProgressTracker`/`ProgressPanel`/`AppText`/`DynamicStoryForm`. Badge Attento(5)/Diligente(10)/Esperto(20) su `maxNoHintStreak`; reset `noHintStreak` su hint (policy F3); peak/badge persistono (F4).
-- **Storage:** `jwquiz_immersive_progress_v1` esteso; `UserProgress.dat` linee 7–9 (G5 BinaryFormatter debt residuo — non migrare).
+- **Storage:** `jwquiz_immersive_progress_v1` esteso; `UserProgress.dat` linee 7–9 (testo a linee; migrazione JSON non eseguita in questa sessione).
 - **E2 / Semantic / Brand / Onboarding / Multiplayer MVP:** chiusi (vedi §10/§11).
 - **Prossimo:** D1 (versetti); Online rooms design-only; Intro.jpg legacy; backlog G5 JSON progress.
 - **No deploy.** `app.js` intatto. Smoke: `.local/smoke/f_*.png` (gitignored).
+
+### G5 — chiusura (2026-10-02)
+
+- **G5:** CLOSED FOR CURRENT MILESTONE.
+- **Decisione:** mantenere `UserProgress.dat` nel formato testo a linee corrente.
+- **Migrazione:** JSON differita, future work.
+- **Blocco rilascio:** no.
+- **Dipendenze:** nessuna verso N2 o la pubblicazione.
+- **Chiusura:** approvata il 2026-10-02 (CONFIRM G5 CLOSURE).

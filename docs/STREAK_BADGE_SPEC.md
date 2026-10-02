@@ -138,7 +138,7 @@ on completeEpisode(storyId):
 ### 4.2 Desktop
 
 - `ProgressPanel`: riga “Streak senza indizio: N (max M)” + lista badge `streak_*` oltre ai badge completion esistenti.
-- Persistenza: estendere formato `UserProgress.dat` (linee aggiuntive) **oppure** future JSON (G5) — **MVP:** aggiungere campi al Save/Load testo attuale senza BinaryFormatter rewrite forzato.
+- Persistenza: il formato resta il testo a linee di `UserProgress.dat`, con le linee dello streak. La migrazione JSON (G5) è future work. G5 è chiuso per il milestone corrente (2026-10-02): nessun cambio di formato.
 
 ### 4.3 i18n (chiavi UI.it / UI.en)
 
@@ -161,7 +161,7 @@ on completeEpisode(storyId):
 | Desktop | `UserProgress.dat` / `ProgressTracker` | Campi streak paralleli; **no sync** web↔desktop in MVP |
 | Classic / challenge | — | Esclusi |
 
-Migrazione BinaryFormatter → JSON (G5): **future work**, non bloccante per F MVP se Save/Load testo attuale può appendere campi.
+Migrazione del testo a linee verso JSON (G5): **future work**, differita e non bloccante. G5 è chiuso per il milestone corrente (2026-10-02); il formato attuale resta.
 
 ---
 
