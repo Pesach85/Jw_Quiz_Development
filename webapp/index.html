@@ -293,7 +293,8 @@
     #rebusFallback {
       grid-template-columns: repeat(4, minmax(0, 1fr));
       grid-auto-rows: auto;
-      align-content: center;
+      align-content: start;
+      align-items: start;
       gap: clamp(8px, 1.2vw, 16px);
       padding: clamp(10px, 1.8vw, 20px);
       touch-action: manipulation;
@@ -301,41 +302,68 @@
     }
     @media (max-width: 719px) {
       #rebusFallback {
-        /* Two square tracks when they fit; one column when a pair would fall under ~148px. */
+        /* Two tracks when a pair stays at least ~148px; otherwise one column. */
         grid-template-columns: repeat(auto-fit, minmax(min(100%, 148px), 1fr));
       }
+      .rebus-act.is-fallback {
+        height: auto;
+        grid-template-rows: auto auto auto auto auto;
+      }
+      .rebus-act.is-fallback .rebus-viewport {
+        height: auto;
+        min-height: 0;
+        overflow: visible;
+      }
+      .rebus-act.is-fallback #rebusFallback {
+        position: relative;
+        inset: auto;
+        width: 100%;
+        height: auto;
+        overflow: visible;
+      }
+      .theater-stage.is-rebus {
+        overflow: auto;
+        align-items: start;
+      }
+      .theater {
+        grid-template-rows: auto minmax(0, 1fr) auto;
+        overflow: hidden;
+      }
+      .theater-footer { background: rgba(8, 12, 20, 0.96); }
     }
     .rebus-card {
       min-width: 0;
-      min-height: 0;
       width: 100%;
       height: auto;
-      aspect-ratio: 1;
+      align-self: start;
       border-radius: 14px;
       border: 1px solid var(--line);
       padding: 0;
+      line-height: 0;
       background: rgba(255,255,255,0.08);
-      display: grid;
-      place-items: center;
+      display: block;
       cursor: pointer;
       overflow: hidden;
-      transform-style: preserve-3d;
-      animation: floatY 3s ease-in-out infinite;
-      transition: transform 0.25s var(--ease), box-shadow 0.25s, border-color 0.25s;
+      transition: box-shadow 0.25s, border-color 0.25s;
     }
-    .rebus-card:hover { border-color: var(--brand); transform: translateY(-4px) scale(1.04); }
+    .rebus-card:hover { border-color: var(--brand); }
+    .rebus-card:focus-visible {
+      outline: 2px solid var(--brand);
+      outline-offset: 3px;
+    }
     .rebus-card img {
       width: 100%;
-      height: 100%;
+      height: auto;
+      display: block;
       object-fit: contain;
       pointer-events: none;
-      filter: contrast(1.08) saturate(1.12) drop-shadow(0 8px 16px rgba(0,0,0,0.35));
+      filter: contrast(1.08) saturate(1.12);
       image-rendering: auto;
     }
     .rebus-card.is-hint-pulse {
       border-color: #f0c36a;
       box-shadow: 0 0 0 2px rgba(240,195,106,0.35), 0 10px 28px rgba(240,195,106,0.25);
-      animation: hintPulse 0.6s ease-in-out infinite alternate, floatY 3s ease-in-out infinite;
+      animation: hintPulse 0.6s ease-in-out infinite alternate;
     }
     .rebus-card.is-reveal-pop { animation: revealPop 0.55s var(--ease) both; }
     @keyframes hintPulse {
@@ -343,8 +371,45 @@
       to { filter: brightness(1.25); }
     }
     @keyframes revealPop {
-      0% { transform: scale(0.7) rotateY(70deg); opacity: 0.2; }
-      100% { transform: scale(1) rotateY(0); opacity: 1; }
+      0% { opacity: 0.35; box-shadow: 0 0 0 0 rgba(240,195,106,0); }
+      100% { opacity: 1; box-shadow: 0 0 0 3px rgba(240,195,106,0.55); }
+    }
+    .rebus-focus {
+      position: relative;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 36px 16px 16px;
+      background: rgba(11, 18, 32, 0.97);
+      color: var(--ink);
+      max-width: 92vw;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.45);
+    }
+    .rebus-focus::backdrop { background: rgba(6, 10, 18, 0.78); }
+    .rebus-focus img {
+      display: block;
+      width: auto;
+      height: auto;
+      max-width: 92vw;
+      max-height: 78vh;
+      object-fit: contain;
+    }
+    .rebus-focus-close {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.06);
+      color: var(--brand);
+      width: 36px;
+      height: 36px;
+      font-size: 1.3rem;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .rebus-focus-close:focus-visible {
+      outline: 2px solid var(--brand);
+      outline-offset: 2px;
     }
     .rebus-toolbar {
       display: flex;
@@ -357,12 +422,17 @@
     .btn-hint { border-color: rgba(240,195,106,0.55); color: var(--brand); }
     .btn-solution { border-color: rgba(226,125,0,0.55); color: #ffb86b; }
     .rebus-caption {
+      margin: 0;
       min-height: 1.4em;
-      color: var(--muted);
+      color: var(--ink);
       font-weight: 600;
       text-align: center;
       max-width: 52ch;
       justify-self: center;
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: rgba(19, 32, 51, 0.78);
     }
     .rebus-solution {
       width: min(720px, 100%);
@@ -682,10 +752,72 @@
       50% { transform: translateY(-10px); }
     }
 
+    .hero-mark { display: none; width: 76px; height: 76px; margin: 0 0 12px; }
+    .hero-mark svg { width: 100%; height: 100%; display: block; }
+    .hero-kicker {
+      display: none;
+      margin: 0 0 6px;
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .hero-kicker strong { color: var(--brand); font-weight: 700; }
+
     @media (max-width: 640px) {
       .topnav { padding: 12px 14px; }
       .hero { place-items: end stretch; min-height: 92svh; }
       .symbol { width: 48px; height: 48px; margin: -24px; font-size: 1.3rem; }
+    }
+    @media (max-width: 719px) {
+      .theater-stage.is-rebus { overflow: auto; align-items: start; }
+      .topnav { flex-wrap: wrap; gap: 8px; }
+      .brand { font-size: 1.2rem; }
+      .nav-actions { width: 100%; gap: 8px; }
+      .nav-actions #modeSwitchNav { display: none; }
+      .nav-actions #btnStartStories {
+        background: transparent;
+        color: var(--muted);
+        border-color: transparent;
+        font-weight: 600;
+        padding: 6px 8px;
+      }
+      .nav-actions a[href="classic.html"] {
+        background: transparent;
+        border-color: transparent;
+        color: var(--muted);
+        padding: 6px 8px;
+        font-size: 0.82rem;
+      }
+      .hero {
+        min-height: 0;
+        place-items: start stretch;
+        padding: 18px 16px 8px;
+      }
+      .hero-mark, .hero-kicker { display: block; }
+      .hero-copy { max-width: none; }
+      .hero-copy h1 { font-size: clamp(1.85rem, 8vw, 2.45rem); margin-bottom: 8px; }
+      .hero-copy p { margin-bottom: 14px; }
+      .mode-panel { max-width: none; margin-top: 0; }
+      #modeSwitchHero {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        width: 100%;
+      }
+      #modeSwitchHero .mode-btn {
+        text-align: center;
+        border-radius: 12px;
+        padding: 12px 8px;
+        background: rgba(11, 18, 32, 0.92);
+      }
+      #modeSwitchHero .mode-btn.is-active {
+        background: linear-gradient(135deg, rgba(201,148,46,0.55), rgba(240,195,106,0.28));
+      }
+      .mode-panel { background: rgba(11, 18, 32, 0.88); }
+      .cta-row { display: grid; gap: 8px; }
+      #btnHeroPlay { width: 100%; padding: 14px 18px; font-size: 1.05rem; }
     }
 
     html.onb-reduce-motion *, html.onb-reduce-motion *::before, html.onb-reduce-motion *::after {
@@ -870,6 +1002,15 @@
     <canvas id="webglCanvas" aria-hidden="true"></canvas>
     <canvas id="fallbackCanvas" aria-hidden="true"></canvas>
     <div class="hero-copy">
+      <div class="hero-mark" aria-hidden="true">
+        <svg viewBox="0 0 76 76" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="14" width="40" height="50" rx="4" fill="none" stroke="#f0c36a" stroke-width="2.4"/>
+          <path d="M14 20h28M14 28h28M14 36h20" stroke="#3d8fd1" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="54" cy="48" r="14" fill="#132033" stroke="#f0c36a" stroke-width="2.2"/>
+          <text x="54" y="54" text-anchor="middle" fill="#f0c36a" font-family="Georgia, serif" font-size="18" font-weight="700">?</text>
+        </svg>
+      </div>
+      <p class="hero-kicker"><strong>JW Quiz</strong> Immersive</p>
       <h1 data-i18n="heroTitle">Fai vivere il racconto</h1>
       <p data-i18n="heroLead">Tre modalità di gioco: Quiz, Rebus 3D o Avventura completa — immersiva, con audio e scene animate.</p>
       <div class="mode-panel">
@@ -1031,6 +1172,11 @@
       </div>
     </div>
   </div>
+
+  <dialog id="rebusFocus" class="rebus-focus" aria-label="Indizio ingrandito">
+    <button type="button" class="rebus-focus-close" id="rebusFocusClose" aria-label="Chiudi">×</button>
+    <img id="rebusFocusImg" alt="">
+  </dialog>
 
   <!-- Rebus PNG keys from shared catalog (same as classic webapp) -->
   <script src="stories.js"></script>
@@ -2130,12 +2276,12 @@
             <canvas id="rebusCanvas" aria-label="Rebus 3D"></canvas>
             <div id="rebusFallback" aria-label="Rebus"></div>
           </div>
-          <p class="rebus-caption" id="rebusCaption">${caption}</p>
           <div class="rebus-toolbar">
             <button type="button" class="btn btn-reveal" id="btnRebusReveal">${state.rebus.revealCount >= 2 ? t("hideTwo") : t("revealTwo")}</button>
             <button type="button" class="btn btn-hint" id="btnRebusHint">${state.rebus.hintRevealed ? t("hideHint") : t("showHint")}</button>
             <button type="button" class="btn btn-solution" id="btnRebusSolution">${state.rebus.solutionVisible ? t("hideSolution") : t("revealSolution")}</button>
           </div>
+          <p class="rebus-caption" id="rebusCaption">${caption}</p>
           <div id="rebusSolutionBox" class="rebus-solution" ${state.rebus.solutionVisible ? "" : "hidden"}></div>
         </div>
       `;
@@ -2237,6 +2383,18 @@
       }
     }
 
+    function openRebusFocus(src, label) {
+      const dlg = document.getElementById("rebusFocus");
+      const img = document.getElementById("rebusFocusImg");
+      const closeBtn = document.getElementById("rebusFocusClose");
+      if (!dlg || !img || !src) return;
+      img.src = src;
+      img.alt = label || "";
+      if (closeBtn) closeBtn.setAttribute("aria-label", lang === "it" ? "Chiudi" : "Close");
+      dlg.setAttribute("aria-label", lang === "it" ? "Indizio ingrandito" : "Enlarged clue");
+      if (typeof dlg.showModal === "function" && !dlg.open) dlg.showModal();
+    }
+
     function paintRebusFallback(keys, popReveal) {
       const host = document.getElementById("rebusFallback");
       if (!host) return;
@@ -2246,14 +2404,20 @@
         card.type = "button";
         card.className = "rebus-card";
         card.style.animationDelay = `${(i % 4) * 0.12}s`;
+        card.setAttribute("aria-label", (lang === "it" ? "Indizio " : "Clue ") + (i + 1));
         if (i === 7 && !state.rebus.hintRevealed) card.classList.add("is-hint-pulse");
         if (popReveal && (i === 5 || i === 6) && key !== KEY_UNKNOWN) card.classList.add("is-reveal-pop");
         const img = document.createElement("img");
         img.src = assetUrl(key);
-        img.alt = `slot ${i + 1}`;
+        img.alt = "";
         img.onerror = () => { img.src = assetUrl(KEY_UNKNOWN); };
         card.appendChild(img);
-        card.addEventListener("click", () => onRebusSlotClick(i));
+        card.addEventListener("click", () => {
+          onRebusSlotClick(i);
+          if (window.matchMedia("(max-width: 719px)").matches) {
+            openRebusFocus(img.currentSrc || img.src, card.getAttribute("aria-label"));
+          }
+        });
         host.appendChild(card);
       });
     }
@@ -3817,6 +3981,7 @@
         }
         return;
       }
+      if (e.key === "Escape" && document.getElementById("rebusFocus")?.open) return;
       if (e.key === "Escape" && theater.classList.contains("is-open")) closeTheater();
     });
 
@@ -3826,6 +3991,11 @@
     });
 
     document.getElementById("btnSettings").addEventListener("click", openSettingsPanel);
+    const rebusFocus = document.getElementById("rebusFocus");
+    document.getElementById("rebusFocusClose").addEventListener("click", () => rebusFocus.close());
+    rebusFocus.addEventListener("click", (e) => {
+      if (e.target === rebusFocus) rebusFocus.close();
+    });
     loadOnbPrefsIntoState();
     applyI18n();
     observeReveals();
