@@ -11,7 +11,7 @@ namespace Jw_Quiz_Development
             var list = new List<Story>
             {
             // AUTO-GENERATED — DO NOT EDIT — source: data/episodes.json
-            // source-sha256: e1ac14dedd83f63ad6470cb8c585a9be7760da659fbdc0aee5c6375185bbfbe2
+            // source-sha256: 69b95628c516508fea5f9fabfde6c266e70f7b7e945e86d1980f0b3f71866370
             new Story
             {
                 Id = 1,
@@ -20,7 +20,7 @@ namespace Jw_Quiz_Development
                 Keyword = "Obbedienza",
                 Hint = "Un serpente, un albero proibito e una scelta fatale.",
                 Solution = "Adamo ed Eva disobbedirono a Geova mangiando il frutto proibito. Le conseguenze toccano l’intera umanità, ma Dio promise la salvezza: Genesi 3:15.",
-                ScriptureQuote = "Geova Dio... comandò all’uomo: ’...dell’albero della conoscenza del bene e del male non devi mangiare, poiché nel giorno in cui ne mangerai positivamente morirai.’ - Genesi 2:16-17 (TNM)",
+                ScriptureQuote = "Il comando proibiva di mangiare dall’albero della conoscenza del bene e del male e indicava la morte per il giorno in cui se ne mangiava.",
                 EngagementNote = "Sottolinea il valore dell’obbedienza e la promessa di redenzione già nell’Eden.",
                 ImageResourceName = "Eden",
                 IsDynamic = false,
