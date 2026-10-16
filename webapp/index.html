@@ -351,6 +351,8 @@
       .rebus-act > .rebus-viewport { order: 2; }
       .rebus-act > .rebus-toolbar { order: 3; }
       .rebus-act > .rebus-solution { order: 4; }
+      /* Enlarged clue: anchored to the top so the hint is readable before the image finishes loading. */
+      .rebus-focus { margin: 12px auto auto; max-height: calc(100% - 24px); overflow: auto; }
     }
     /* Landscape phone: let the act grow so the sticky caption stays pinned while the stage scrolls. */
     @media (max-height: 500px) and (orientation: landscape) {
