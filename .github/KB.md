@@ -399,6 +399,7 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-09-30 | **HITL apply**: Ep13 `piccolo_gregge` + W1–W26 + D2/D3; residui EP12/18 + D1 + D4–D10 | ✅ `f554736`+`729a5f7`+`ddea5ee` |
 | 2026-09-30 | **Fix desktop ResourceManager**: registra `piccolo_gregge` (+`1F411`) in resx/Designer; EP12/18 B + W16 keep | ✅ `7054c1c`+`6e04efb` |
 | 2026-10-02 | **G5 chiuso per il milestone corrente** — `UserProgress.dat` resta testo a linee; migrazione JSON differita; non blocca il rilascio; nessuna dipendenza da N2 o dalla pubblicazione; conferma umana CONFIRM G5 CLOSURE | ✅ Chiuso |
+| 2026-10-16 | **DSK-1 — parità binario Desktop a HEAD `67eb4f9`**: exe precedente (`bin\Debug`, 2026-10-02 16:15) anteriore a M1 `1eca051` e D1 `f9444a1`; `bin\Release\Jw_Quiz_Development.exe` assente. MSBuild Debug + Release exit 0; harness reflection sul binario costruito (cwd isolata) 10/10 PASS ×2: catalogo 23 id 1–23, parafrasi D1 Ep1, `USER_STORY_START_ID`=1000, round-trip `UserProgress.dat` a linee (XP/stelle/streak). Smoke Release: finestra `JW Quiz - Indovina la Storia` visibile+responsive, chiusura pulita, nessun evento `.NET Runtime`/`Application Error`. Nessun binario committato, nessuna distribuzione (canale non definito). | ✅ CLOSED (build+verifica; no release) |
 ---
 
 ## 11. Next Best Decisions (Proposte Attive)
@@ -443,6 +444,8 @@ Aggiornare questa sezione ad ogni sessione di lavoro.
 | Bassa | Tecnica | Migrazione JSON di `UserProgress.dat` (testo a linee) — future work differito; G5 chiuso per il milestone corrente (2026-10-02), formato attuale mantenuto |
 | Bassa | UX grafiche | Hero image per ogni storia (immagine panoramica nell'header) |
 | Bassa | Distribuzione | Build script Release + copia automatica in cartella distribuzione |
+| P1 Alta | Android | **AND-1 — APK stale**: `app-debug.apk` 2026-09-29 15:48 precede K2 `cc92e8e` (ep. 19–23), D1, M1 (16 commit su `data/`+`webapp/` dopo). Serve sync_all + `assembleDebug` + smoke a HEAD |
+| Decisione | Desktop | Canale di distribuzione del binario Release non definito (cartella / installer / nessuno): decisione umana prima di qualsiasi "release Desktop" |
 
 ---
 
@@ -716,3 +719,11 @@ Commit se il tree deve tornare pulito (deploy Wrangler). Push solo se richiesto 
 - **Blocco rilascio:** no.
 - **Dipendenze:** nessuna verso N2 o la pubblicazione.
 - **Chiusura:** approvata il 2026-10-02 (CONFIRM G5 CLOSURE).
+
+### Stato corrente (handoff) — 2026-10-16 (DSK-1)
+
+- **Clone canonico:** `D:\Jw_Quiz_Development` (`origin` = GitHub). `D:\Work\repos\Jw_Quiz_Development` è un clone Cursor divergente (`6fa11be` non presente su GitHub, base `3758d8d`): non usarlo come fonte.
+- **Web:** live `jwquiz.pages.dev` = contenuto di HEAD `67eb4f9` (`/`, `app.js`, `stories.js` identici dopo normalizzazione EOL; `core.autocrlf=true` → working tree CRLF, Pages serve LF). D1 presente live.
+- **Desktop:** DSK-1 CLOSED — `bin\Debug` + `bin\Release` costruiti a `67eb4f9` e verificati (vedi §10). Non distribuito.
+- **Android:** APK stale (AND-1, §11). Prossimo lavoro consigliato.
+- **Aperti:** canale distribuzione Desktop (umano); AND-1; migrazione JSON `UserProgress.dat` resta future work (G5 chiuso).
