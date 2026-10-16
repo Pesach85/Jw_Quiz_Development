@@ -400,6 +400,7 @@ Esempi di chiavi PNG particolarmente espressive per storie bibliche:
 | 2026-09-30 | **Fix desktop ResourceManager**: registra `piccolo_gregge` (+`1F411`) in resx/Designer; EP12/18 B + W16 keep | ✅ `7054c1c`+`6e04efb` |
 | 2026-10-02 | **G5 chiuso per il milestone corrente** — `UserProgress.dat` resta testo a linee; migrazione JSON differita; non blocca il rilascio; nessuna dipendenza da N2 o dalla pubblicazione; conferma umana CONFIRM G5 CLOSURE | ✅ Chiuso |
 | 2026-10-16 | **DSK-1 — parità binario Desktop a HEAD `67eb4f9`**: exe precedente (`bin\Debug`, 2026-10-02 16:15) anteriore a M1 `1eca051` e D1 `f9444a1`; `bin\Release\Jw_Quiz_Development.exe` assente. MSBuild Debug + Release exit 0; harness reflection sul binario costruito (cwd isolata) 10/10 PASS ×2: catalogo 23 id 1–23, parafrasi D1 Ep1, `USER_STORY_START_ID`=1000, round-trip `UserProgress.dat` a linee (XP/stelle/streak). Smoke Release: finestra `JW Quiz - Indovina la Storia` visibile+responsive, chiusura pulita, nessun evento `.NET Runtime`/`Application Error`. Nessun binario committato, nessuna distribuzione (canale non definito). | ✅ CLOSED (build+verifica; no release) |
+| 2026-10-16 | **AND-1 — rebuild APK Debug a `13224c4`** (codice = `67eb4f9`): fix `tools/sync_android_www.py` (skip `.wrangler`: `webapp/.wrangler/cache/wrangler-account.json` con account id/nome Cloudflare finiva in `www` e quindi nell'APK; l'APK 09-29 non lo conteneva). sync_all: file tracciati invariati. `assembleDebug` exit 0 → `app-debug.apk` 158,7 MB, `com.jwquiz.app` 1.0.0 (vc 1) debug, cert Android Debug. Statico 11/11 PASS (www == webapp byte-per-byte, provenance sha canon, 23 ep, D1, seed M1 `999`+1 in `app.js`, niente `.wrangler`). Motorola `ZY22HFWMGV` (Android 15, WebView 154): backup dati app (run-as tar) → `install -r` (update, localStorage identico all'hash pre-install) → cold start OK, bundle `file:///android_asset/www/index.html`, 3 modalità + 23 storie + D1 nel DOM, 0 eccezioni (sola lettura via DevTools). Navigazione interattiva sul telefono **non eseguita**: telefono in uso da una persona durante la sessione. Emulatore `Pixel_2_API_30` (WebView 83, AVD copiata su D: per spazio C:): logica onboarding 7 passi, 3 flussi distinti, gate Rebus Ep1 (titolo/D1 nascosti, Continua disabilitato → visibili/abilitato dopo reveal) PASS **solo con fallback CSS iniettato dal test harness** → difetto AND-2 | ⚠️ PARTIAL |
 ---
 
 ## 11. Next Best Decisions (Proposte Attive)
@@ -444,7 +445,8 @@ Aggiornare questa sezione ad ogni sessione di lavoro.
 | Bassa | Tecnica | Migrazione JSON di `UserProgress.dat` (testo a linee) — future work differito; G5 chiuso per il milestone corrente (2026-10-02), formato attuale mantenuto |
 | Bassa | UX grafiche | Hero image per ogni storia (immagine panoramica nell'header) |
 | Bassa | Distribuzione | Build script Release + copia automatica in cartella distribuzione |
-| P1 Alta | Android | **AND-1 — APK stale**: `app-debug.apk` 2026-09-29 15:48 precede K2 `cc92e8e` (ep. 19–23), D1, M1 (16 commit su `data/`+`webapp/` dopo). Serve sync_all + `assembleDebug` + smoke a HEAD |
+| P1 Alta | Android | **AND-1 — PARTIAL (2026-10-16)**: APK Debug ricostruito e verificato staticamente + avvio su Motorola. Manca: smoke interattivo (3 modalità + gate Rebus) su WebView moderna, da fare sul telefono quando libero (no `pm clear`; dati preservati con `install -r`) |
+| P1 Alta | Web/Android | **AND-2 — WebView < 87 (es. Android 7–11 senza aggiornamenti WebView)**: `.theater` e `.onb-overlay` usano solo `position:fixed; inset:0`; `inset` non supportato (Chrome 87+) → overlay aperti ma fuori viewport (misurato top 5012 px su 660), onboarding invisibile e tile che non aprono il teatro. Anche `aspect-ratio` (88+) non supportato. Fix candidato minimo: aggiungere `top/right/bottom/left:0` accanto a `inset` (verificato col harness). Tocca `webapp/index.html` → impatto Web + decisione umana sulla WebView minima supportata (minSdk 24 dichiarato) |
 | Decisione | Desktop | Canale di distribuzione del binario Release non definito (cartella / installer / nessuno): decisione umana prima di qualsiasi "release Desktop" |
 
 ---
@@ -638,7 +640,7 @@ Obiettivo: working tree pulito **senza** cancellare sorgenti e **senza** committ
 | `tools/photo_masters/ep11-goat-photo.png` | **Eccezione tracciata** (2026-09-30): master one-shot Ep 11 slot 6; `git add -f` nonostante gitignore `tools/photo_masters/*.png` |
 | `UserProgress.dat`, `UserStories.dat` | Runtime locale WinForms (progressione / storie utente); **in `.gitignore`** — mai committare |
 | `android/.gradle/`, `android/build/`, `android/app/build/` | Cache Gradle |
-| `bin/`, `obj/`, `.vs/`, `.vscode/`, `.wrangler/`, `.local/` | Build / IDE / Wrangler local; `.local/` = secret locali (es. `ADMIN_SECRET` dev, mai in git) |
+| `bin/`, `obj/`, `.vs/`, `.vscode/`, `.wrangler/`, `.local/` | Build / IDE / Wrangler local (`webapp/.wrangler/` è escluso anche da `sync_android_www.py`, mai nell'APK); `.local/` = secret locali (es. `ADMIN_SECRET` dev, mai in git) |
 
 ### Cosa fare (e non fare) quando il tree è sporco
 
@@ -725,5 +727,6 @@ Commit se il tree deve tornare pulito (deploy Wrangler). Push solo se richiesto 
 - **Clone canonico:** `D:\Jw_Quiz_Development` (`origin` = GitHub). `D:\Work\repos\Jw_Quiz_Development` è un clone Cursor divergente (`6fa11be` non presente su GitHub, base `3758d8d`): non usarlo come fonte.
 - **Web:** live `jwquiz.pages.dev` = contenuto di HEAD `67eb4f9` (`/`, `app.js`, `stories.js` identici dopo normalizzazione EOL; `core.autocrlf=true` → working tree CRLF, Pages serve LF). D1 presente live.
 - **Desktop:** DSK-1 CLOSED — `bin\Debug` + `bin\Release` costruiti a `67eb4f9` e verificati (vedi §10). Non distribuito.
-- **Android:** APK stale (AND-1, §11). Prossimo lavoro consigliato.
-- **Aperti:** canale distribuzione Desktop (umano); AND-1; migrazione JSON `UserProgress.dat` resta future work (G5 chiuso).
+- **Android:** AND-1 PARTIAL — APK Debug a HEAD costruito, verificato staticamente, installato (update, dati preservati) e avviato su `ZY22HFWMGV`; smoke interattivo su WebView moderna non eseguito (§10, §11). APK in `android/app/build/` (non committato, non distribuito).
+- **Emulatore:** C: ha < 3 GB liberi → l'AVD non crea userdata. Usare una copia AVD su D: con `ANDROID_AVD_HOME` solo per il processo; non liberare C: senza OK. L'AVD API 30 ha WebView 83 (non rappresentativa: vedi AND-2).
+- **Aperti:** smoke interattivo AND-1 sul telefono; AND-2 (decisione WebView minima + fix CSS `inset`); canale distribuzione Desktop (umano); migrazione JSON `UserProgress.dat` resta future work (G5 chiuso).
