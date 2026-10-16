@@ -36,3 +36,11 @@ UserOnboarding.dat
 # Agent session log (agentic_core progress.txt)
 progress.txt
 
+
+# Signing keys / certificates: never commit (see KB §11 security)
+*.pfx
+*.p12
+*.snk
+*.jks
+*.keystore
+keystore.properties
