@@ -36,9 +36,12 @@ UserOnboarding.dat
 # Agent session log (agentic_core progress.txt)
 progress.txt
 
-# Certificati e chiavi di firma: mai nel repo (HC-2026-10-21-017)
+# Certificati e chiavi di firma: mai nel repo (HC-2026-10-21-017, unione con il live 8d764ec)
 *.pfx
 *.p12
 *.snk
 *.pem
 *.key
+*.jks
+*.keystore
+keystore.properties
